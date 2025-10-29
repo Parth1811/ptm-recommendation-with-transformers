@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import logging
+from typing import Iterator
 from urllib.parse import urlparse
 
 import numpy as np
-from transformers import (AutoConfig, AutoImageProcessor, AutoModel,
-                          AutoModelForImageClassification)
+from transformers import AutoConfig, AutoModel, AutoModelForImageClassification
 
 from .base_extractor import BaseExtractor
 
@@ -28,12 +28,30 @@ class HuggingFacePipelineExtractor(BaseExtractor):
         self.model_id = model_id
         self.cache_dir = cache_dir
 
-    def load_parameters(self) -> np.ndarray:
+    def load_parameters(self) -> list[np.ndarray]:
         model = self._load_model()
+        state_dict = model.state_dict()
+        ordered_keys = list(self._ordered_state_keys(model))
+        seen_keys: set[str] = set()
+        sorted_tensors = []
+        for key in ordered_keys:
+            tensor = state_dict.get(key)
+            if tensor is None:
+                continue
+            sorted_tensors.append(tensor)
+            seen_keys.add(key)
+
+        # verify if any parameters were not seen during ordering
+        for key, tensor in state_dict.items():
+            if key not in seen_keys:
+                logger.warning(f"Unseen Key: {key}")
+                sorted_tensors.append(tensor)
+
         parameters = [
             tensor.detach().cpu().numpy().reshape(-1, 1)
-            for tensor in model.state_dict().values()
+            for tensor in sorted_tensors
         ]
+
         if not parameters:
             raise ValueError(f"No parameters discovered for model '{self.model_id}'.")
 
@@ -54,3 +72,13 @@ class HuggingFacePipelineExtractor(BaseExtractor):
         if parsed.scheme and parsed.netloc:
             return parsed.path.strip("/")
         return model_reference.strip("/")
+
+    @staticmethod
+    def _ordered_state_keys(model) -> Iterator[str]:
+        """Yield parameter and buffer keys following module registration order."""
+        for module_name, module in model.named_modules():
+            prefix = f"{module_name}." if module_name else ""
+            for name, _ in module.named_parameters(recurse=False):
+                yield f"{prefix}{name}"
+            for name, _ in module.named_buffers(recurse=False):
+                yield f"{prefix}{name}"

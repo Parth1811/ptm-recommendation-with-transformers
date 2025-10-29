@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-import json
+import ast
+import configparser
 import logging
 from pathlib import Path
-from typing import Any, Dict, Mapping, Type, TypeVar
+from typing import Any, Mapping, Type, TypeVar
 
 from .base import SubSectionParser
-from .extractor import ExtractorConfig
 
 T = TypeVar("T", bound=SubSectionParser)
 
@@ -16,9 +16,8 @@ T = TypeVar("T", bound=SubSectionParser)
 class ConfigParser:
     """Instantiate configuration subsections from a shared config file."""
 
-    CONFIG_FILENAME = "config.json"
+    CONFIG_FILENAME = "config.ini"
     _payload: Mapping[str, Any] | None = None
-
 
     @classmethod
     def load(cls, config_path: str | Path | None = None) -> None:
@@ -29,12 +28,53 @@ class ConfigParser:
             else Path.cwd() / cls.CONFIG_FILENAME
         )
         logging.info(f"Loading configuration from {config_path}")
-        if cls._payload is None:
-            cls._payload = json.loads(config_path.read_text())
+        if cls._payload is not None:
+            return
+
+        parser = configparser.ConfigParser()
+        parser.optionxform = str  # preserve case for downstream dataclasses
+        with config_path.open(encoding="utf-8") as handle:
+            parser.read_file(handle)
+
+        cls._payload = cls._build_payload(parser)
+
+    @staticmethod
+    def _coerce_value(raw_value: str) -> Any:
+        """Best-effort conversion from INI string values to Python primitives."""
+        value = raw_value.strip()
+        lower_value = value.lower()
+        if lower_value in {"true", "false"}:
+            return lower_value == "true"
+
+        try:
+            return ast.literal_eval(value)
+        except (ValueError, SyntaxError):
+            return value
+
+    @classmethod
+    def _build_payload(cls, parser: configparser.ConfigParser) -> Mapping[str, Any]:
+        """Convert the configparser contents to a Mapping usable by dataclasses."""
+        payload: dict[str, Any] = {}
+
+        if parser.defaults():
+            payload.update(
+                {key: cls._coerce_value(value) for key, value in parser.defaults().items()}
+            )
+
+        for section in parser.sections():
+            options = {
+                key: cls._coerce_value(value)
+                for key, value in parser.items(section, raw=True)
+            }
+            payload[section] = options
+
+        return payload
 
     @classmethod
     def get(cls, parser_type: Type[T]) -> T:
         """Return an instantiated configuration subsection parser."""
+        if cls._payload is None:
+            cls.load()
 
         if issubclass(parser_type, SubSectionParser):
             return parser_type.from_dict(cls._payload)

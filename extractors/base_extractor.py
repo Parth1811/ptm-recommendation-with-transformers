@@ -9,9 +9,13 @@ from typing import Iterable, Sequence
 
 import numpy as np
 import torch
-from sklearn.cluster import KMeans
+import torch.nn.functional as F
 
 from config import ConfigParser, ExtractorConfig
+from models import KMeans
+
+# from sklearn.cluster import KMeans
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,42 +27,54 @@ class BaseExtractor(ABC):
         self.name = name
 
     @abstractmethod
-    def load_parameters(self) -> list[np.ndarray]:
+    def load_parameters(self) -> list[torch.Tensor]:
         """Return model weights and biases as a NumPy array."""
 
-    def extract(self) -> list[list[float]]:
+    def extract(self) -> torch.Tensor:
         """Cluster each parameter column down to a fixed number of centers."""
         matrix = self.load_parameters()
+        matrix.reverse()
+
+        self.cluster_count = self.config.output_stack_size // len(matrix)
 
         if len(matrix) == 0:
             raise ValueError("No parameters found to extract.")
 
-        clustered_columns = [
-            self.k_means_clustering(column) for column in matrix
+        # clustered_columns = [
+        #     self.k_means_clustering(column, self.cluster_count)
+        #     if len(column) >= self.cluster_count else column.flatten()
+        #     for column in matrix
+        # ]
+
+        clustered_columns = KMeans(n_clusters=self.cluster_count).fit(matrix)
+        output = self.output_transform(clustered_columns)
+        logger.info(f"Extracted output shape: {output.shape}, dtype: {output.dtype}, device: {output.device}")
+        return output
+
+
+    def output_transform(self, clustered_columns: Sequence[np.ndarray]) -> np.ndarray:
+        """
+        Make the output is of fixed size output_stack_size by padding or truncating.
+        """
+
+        tensors = [
+            torch.as_tensor(column, dtype=torch.float32).flatten()
+            for column in clustered_columns
+            if column.size
         ]
-        return np.array(clustered_columns)
 
-    def k_means_clustering(
-        self,
-        values: Sequence[float] | np.ndarray,
-        n_clusters: int | None = None,
-    ) -> np.ndarray:
-        """Cluster scalar values using scikit-learn's KMeans implementation."""
-        data = np.asarray(values, dtype=float).reshape(-1, 1)
-        if data.size == 0:
-            raise ValueError("k_means_clustering requires at least one value.")
+        concatenated = torch.cat(tensors, dim=0)
+        current_size = concatenated.numel()
 
-        model = KMeans(
-            n_clusters=n_clusters or self.config.cluster_count,
-            n_init="auto",
-        ).fit(data)
-        centers = np.sort(model.cluster_centers_.ravel())[::-1]
-        return centers[: self.config.cluster_count]
+        if current_size < self.output_stack_size:
+            pad_amount = self.output_stack_size - current_size
+            concatenated = F.pad(concatenated, (0, pad_amount))
+        elif current_size > self.output_stack_size:
+            concatenated = concatenated.narrow(0, 0, self.output_stack_size)
+        return concatenated
 
-    def save(
-        self,
-        data: Iterable[Iterable[float]] | np.ndarray,
-    ) -> Path:
+
+    def save(self, data: Iterable[Iterable[float]] | np.ndarray) -> Path:
         """Save extracted parameters to a compressed .npz file."""
         array = np.asarray(data, dtype=float)
         if array.ndim == 1:

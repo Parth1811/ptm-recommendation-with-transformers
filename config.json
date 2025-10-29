@@ -1,6 +1,0 @@
-{
-  "extractor": {
-    "cluster_count": 10,
-    "model_output_folder": "extracted/models"
-  }
-}
