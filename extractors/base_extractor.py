@@ -2,25 +2,18 @@
 
 from __future__ import annotations
 
+import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Iterable, Sequence
 
 import numpy as np
+import torch
 from sklearn.cluster import KMeans
-
-try:  # pragma: no cover - optional dependency
-    import torch
-except ImportError:  # pragma: no cover - optional dependency
-    torch = None  # type: ignore[assignment]
-
-try:  # pragma: no cover - optional dependency
-    from keras.utils import set_random_seed as keras_set_random_seed
-except ImportError:  # pragma: no cover - optional dependency
-    keras_set_random_seed = None  # type: ignore[assignment]
 
 from config import ConfigParser, ExtractorConfig
 
+logger = logging.getLogger(__name__)
 
 class BaseExtractor(ABC):
     """Base class for extracting and compressing model parameters."""
@@ -30,21 +23,20 @@ class BaseExtractor(ABC):
         self.name = name
 
     @abstractmethod
-    def load_parameters(self) -> np.ndarray:
+    def load_parameters(self) -> list[np.ndarray]:
         """Return model weights and biases as a NumPy array."""
 
     def extract(self) -> list[list[float]]:
         """Cluster each parameter column down to a fixed number of centers."""
-        matrix = np.asarray(self.load_parameters(), dtype=float)
-        if matrix.size == 0:
+        matrix = self.load_parameters()
+
+        if len(matrix) == 0:
             raise ValueError("No parameters found to extract.")
-        if matrix.ndim == 1:
-            matrix = matrix.reshape(-1, 1)
 
         clustered_columns = [
-            self.k_means_clustering(matrix[:, idx]) for idx in range(matrix.shape[1])
+            self.k_means_clustering(column) for column in matrix
         ]
-        return np.stack(clustered_columns, axis=1).tolist()
+        return np.array(clustered_columns)
 
     def k_means_clustering(
         self,

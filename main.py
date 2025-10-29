@@ -5,6 +5,8 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
+from beautilog import logger
+
 from config import ConfigParser
 from extractors import HuggingFacePipelineExtractor
 
@@ -31,7 +33,7 @@ def main() -> None:
     extractor = HuggingFacePipelineExtractor(model_url=model_url, name=model_name)
     compressed = extractor.extract()
     output_path = extractor.save(compressed)
-    print(f"Compressed parameters for {model_name} saved to {output_path}")
+    logger.info(f"Compressed parameters for {model_name} saved to {output_path}")
 
 
 if __name__ == "__main__":

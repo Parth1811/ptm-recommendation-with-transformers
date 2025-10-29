@@ -2,18 +2,16 @@
 
 from __future__ import annotations
 
+import logging
 from urllib.parse import urlparse
 
 import numpy as np
-from transformers import (
-    AutoConfig,
-    AutoImageProcessor,
-    AutoModel,
-    AutoModelForImageClassification,
-)
+from transformers import (AutoConfig, AutoImageProcessor, AutoModel,
+                          AutoModelForImageClassification)
 
 from .base_extractor import BaseExtractor
 
+logger = logging.getLogger(__name__)
 
 class HuggingFacePipelineExtractor(BaseExtractor):
     """Extract model weights from a Hugging Face repository."""
@@ -38,7 +36,8 @@ class HuggingFacePipelineExtractor(BaseExtractor):
         ]
         if not parameters:
             raise ValueError(f"No parameters discovered for model '{self.model_id}'.")
-        return np.vstack(parameters)
+
+        return parameters
 
     def _load_model(self):
         config = AutoConfig.from_pretrained(self.model_id, cache_dir=self.cache_dir)
