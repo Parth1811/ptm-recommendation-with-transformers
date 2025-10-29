@@ -1,0 +1,4 @@
+torch==2.8.0
+numpy==2.2.6
+scikit-learn==1.7.2
+kearas==3.12.0

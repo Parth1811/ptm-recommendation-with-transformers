@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Extracted Data
+extracted/**
+
 # C extensions
 *.so
 
@@ -150,7 +153,6 @@ cython_debug/
 *.joblib
 *.npz
 *.npy
-*.csv
 *.tsv
 *.parquet
 *.feather
