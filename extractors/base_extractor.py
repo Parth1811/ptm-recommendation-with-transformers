@@ -10,11 +10,12 @@ from typing import Iterable, Sequence
 import numpy as np
 import torch
 import torch.nn.functional as F
+from sklearn.cluster import KMeans
 
 from config import ConfigParser, ExtractorConfig
-from models import KMeans
 
-# from sklearn.cluster import KMeans
+# from models import KMeans
+
 
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,7 @@ class BaseExtractor(ABC):
     def __init__(self, name: str) -> None:
         self.config = ConfigParser.get(ExtractorConfig)
         self.name = name
+        self.output_stack_size = self.config.output_stack_size
 
     @abstractmethod
     def load_parameters(self) -> list[torch.Tensor]:
@@ -40,13 +42,13 @@ class BaseExtractor(ABC):
         if len(matrix) == 0:
             raise ValueError("No parameters found to extract.")
 
-        # clustered_columns = [
-        #     self.k_means_clustering(column, self.cluster_count)
-        #     if len(column) >= self.cluster_count else column.flatten()
-        #     for column in matrix
-        # ]
+        clustered_columns = [
+            self.k_means_clustering(column, self.cluster_count)
+            if len(column) >= self.cluster_count else column.flatten()
+            for column in matrix
+        ]
 
-        clustered_columns = KMeans(n_clusters=self.cluster_count).fit(matrix)
+        # clustered_columns = KMeans(n_clusters=self.cluster_count).fit(matrix)
         output = self.output_transform(clustered_columns)
         logger.info(f"Extracted output shape: {output.shape}, dtype: {output.dtype}, device: {output.device}")
         return output
@@ -56,23 +58,27 @@ class BaseExtractor(ABC):
         """
         Make the output is of fixed size output_stack_size by padding or truncating.
         """
-
-        tensors = [
-            torch.as_tensor(column, dtype=torch.float32).flatten()
-            for column in clustered_columns
-            if column.size
-        ]
-
-        concatenated = torch.cat(tensors, dim=0)
-        current_size = concatenated.numel()
+        concatenated = np.concatenate(clustered_columns)
+        current_size = concatenated.size
 
         if current_size < self.output_stack_size:
             pad_amount = self.output_stack_size - current_size
-            concatenated = F.pad(concatenated, (0, pad_amount))
+            concatenated = np.pad(concatenated, (0, pad_amount))
         elif current_size > self.output_stack_size:
             concatenated = concatenated.narrow(0, 0, self.output_stack_size)
         return concatenated
 
+    def k_means_clustering(self, values: Sequence[float] | np.ndarray, n_clusters: int) -> np.ndarray:
+        """
+        Cluster scalar values using scikit-learn's KMeans implementation.
+        """
+        data = np.asarray(values, dtype=float).reshape(-1, 1)
+        if data.size == 0:
+            raise ValueError("k_means_clustering requires at least one value.")
+
+        model = KMeans(n_clusters=n_clusters, n_init="auto").fit(data)
+        centers = np.sort(model.cluster_centers_.ravel())[::-1]
+        return centers[: n_clusters]
 
     def save(self, data: Iterable[Iterable[float]] | np.ndarray) -> Path:
         """Save extracted parameters to a compressed .npz file."""
@@ -86,4 +92,5 @@ class BaseExtractor(ABC):
         output_name = f"{self.name}.npz"
         output_path = target_dir / output_name
         np.savez_compressed(output_path, parameters=array)
+        return output_path
         return output_path
