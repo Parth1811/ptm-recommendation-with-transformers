@@ -29,3 +29,5 @@ resnet18_cifar10,https://huggingface.co/SamAdamDay/resnet18_cifar10
 resnet34_cifar100,https://huggingface.co/edadaltocg/resnet34_cifar100
 resnet18_cifar100,https://huggingface.co/edadaltocg/resnet18_cifar100
 Vit-Cifar100,https://huggingface.co/Ahmed9275/Vit-Cifar100
+Dermacare_Skin_Lesion_classification,https://huggingface.co/sreejith782/Dermacare_Skin_Lesion_classification
+dermanalisys-model,https://huggingface.co/victormattosli/dermanalisys-model
