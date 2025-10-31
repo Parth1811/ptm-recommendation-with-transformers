@@ -1,7 +1,6 @@
-from __future__ import annotations
-
 """Extractor interfaces for model parameter handling."""
 
+from __future__ import annotations
 
 from .base_extractor import BaseExtractor
 from .detector_based_extractor import DetectorBasedExtractor

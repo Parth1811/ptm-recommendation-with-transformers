@@ -167,6 +167,7 @@ artifacts/
 checkpoints/
 logs/
 data/
+artifacts/
 
 # VS Code
 .vscode/
