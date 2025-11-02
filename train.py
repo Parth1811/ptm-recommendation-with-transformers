@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 from typing import Iterable
 
 from beautilog import logger
@@ -74,7 +75,11 @@ def main(argv: Iterable[str] | None = None) -> int:
         return 1
 
     trainer = trainer_cls()
+
+    start_time = time.perf_counter()
     trainer.train()
+    elapsed = time.perf_counter() - start_time
+    logger.info("Training completed in %.2f seconds (%.2f minutes).", elapsed, elapsed / 60.0)
     return 0
 
 
