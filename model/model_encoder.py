@@ -13,16 +13,7 @@ from config import ConfigParser, ModelAutoEncoderConfig
 class AutoEncoder(nn.Module):
     """Simple configurable autoencoder built from linear layers."""
 
-    def __init__(
-        self,
-        encoder_input_size: int,
-        encoder_output_size: int,
-        encoder_hidden_layers: Sequence[int] | None = None,
-        decoder_hidden_layers: Sequence[int] | None = None,
-        decoder_output_size: int | None = None,
-        *,
-        use_activation: bool = True,
-    ) -> None:
+    def __init__(self, encoder_input_size: int, encoder_output_size: int, encoder_hidden_layers: Sequence[int] | None = None, decoder_hidden_layers: Sequence[int] | None = None, decoder_output_size: int | None = None, *, use_activation: bool = True, dropout: float = 0.0) -> None:
         super().__init__()
         decoder_output_size = decoder_output_size or encoder_input_size
 
@@ -30,27 +21,25 @@ class AutoEncoder(nn.Module):
         self.encoder_output_size = encoder_output_size
         self.decoder_output_size = decoder_output_size
         self.use_activation = use_activation
+        self.dropout = max(0.0, float(dropout))
 
         self.encoder = self._build_mlp(
             input_dim=encoder_input_size,
             hidden_layers=encoder_hidden_layers or (),
             output_dim=encoder_output_size,
             use_activation=use_activation,
+            dropout=self.dropout,
         )
         self.decoder = self._build_mlp(
             input_dim=encoder_output_size,
             hidden_layers=decoder_hidden_layers or (),
             output_dim=decoder_output_size,
             use_activation=use_activation,
+            dropout=self.dropout,
         )
 
     @staticmethod
-    def _build_mlp(
-        input_dim: int,
-        hidden_layers: Iterable[int],
-        output_dim: int,
-        use_activation: bool,
-    ) -> nn.Sequential:
+    def _build_mlp(input_dim: int, hidden_layers: Iterable[int], output_dim: int, use_activation: bool, dropout: float) -> nn.Sequential:
         """Construct a feed-forward stack of Linear layers."""
         layers: list[nn.Module] = []
         previous_dim = input_dim
@@ -59,8 +48,11 @@ class AutoEncoder(nn.Module):
         for index, layer_dim in enumerate(all_layers):
             layers.append(nn.Linear(previous_dim, layer_dim))
             is_last_layer = index == len(all_layers) - 1
-            if use_activation and not is_last_layer:
-                layers.append(nn.ReLU())
+            if not is_last_layer:
+                if use_activation:
+                    layers.append(nn.ReLU())
+                if dropout > 0.0:
+                    layers.append(nn.Dropout(dropout))
             previous_dim = layer_dim
 
         return nn.Sequential(*layers)
@@ -75,13 +67,7 @@ class AutoEncoder(nn.Module):
 class ModelAutoEncoder(AutoEncoder):
     """AutoEncoder initialized directly from configuration values."""
 
-    def __init__(
-        self,
-        config: ModelAutoEncoderConfig | None = None,
-        *,
-        device: torch.device | str | None = None,
-        auto_configure_device: bool = True,
-    ) -> None:
+    def __init__(self, config: ModelAutoEncoderConfig | None = None, *, device: torch.device | str | None = None, auto_configure_device: bool = True) -> None:
         ConfigParser.load()
         self.config = config or ConfigParser.get(ModelAutoEncoderConfig)
         resolved_device = self._resolve_device(device) if auto_configure_device else device
@@ -93,6 +79,7 @@ class ModelAutoEncoder(AutoEncoder):
             decoder_hidden_layers=list(self.config.decoder_hidden_layers),
             decoder_output_size=self.config.decoder_output_size,
             use_activation=self.config.use_activation,
+            dropout=self.config.dropout,
         )
 
         if resolved_device is not None:
