@@ -18,6 +18,7 @@ from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
 from config import BaseTrainerConfig
+from torch.optim.lr_scheduler import LRScheduler, ReduceLROnPlateau
 
 
 class Trainer:
@@ -25,18 +26,39 @@ class Trainer:
 
     progress_bar_colour: str = "yellow"
 
-    def __init__(self, model: nn.Module, dataloader: DataLoader | Iterable[torch.Tensor], optimizer: torch.optim.Optimizer,
-                 config: BaseTrainerConfig, run_name: str | None = None, run_directory: Path | None = None) -> None:
+    def __init__(
+        self,
+        model: nn.Module,
+        dataloader: DataLoader | Iterable[torch.Tensor],
+        optimizer: torch.optim.Optimizer,
+        config: BaseTrainerConfig,
+        *,
+        run_name: str | None = None,
+        run_directory: Path | None = None,
+        scheduler: LRScheduler | ReduceLROnPlateau | None = None,
+    ) -> None:
         if getattr(config, "num_epochs", None) is None:
             raise ValueError("Training configuration must provide a num_epochs attribute.")
 
         self.model = model
         self.dataloader = dataloader
         self.optimizer = optimizer
+        self.scheduler = scheduler
         self.config = config
         self.device = getattr(model, "device", torch.device("cpu"))
         self.num_epochs = config.num_epochs
         self.history: list[dict[str, Any]] = []
+        self.gradient_clip_norm = getattr(config, "gradient_clip_norm", None)
+        if self.gradient_clip_norm is not None:
+            self.gradient_clip_norm = float(self.gradient_clip_norm)
+
+        self.early_stopping_patience = getattr(config, "early_stopping_patience", None)
+        if self.early_stopping_patience is not None and self.early_stopping_patience <= 0:
+            self.early_stopping_patience = None
+        self.early_stopping_min_delta = float(getattr(config, "early_stopping_min_delta", 0.0))
+        self._best_monitored_loss = float("inf")
+        self._epochs_without_improvement = 0
+        self._stop_requested = False
 
         base_run_dir = run_directory or Path(getattr(config, "model_save_directory", Path("artifacts/runs"))) / "runs"
         base_run_dir.mkdir(parents=True, exist_ok=True)
@@ -96,8 +118,12 @@ class Trainer:
             progress_bar.set_description(f"Training {progress_desc} (Epoch {epoch}/{self.num_epochs})")
             epoch_metrics = self._train_epoch(epoch, progress_bar, total_batches)
             self.record_data(epoch, epoch_metrics)
+            stop_training = self._after_epoch(epoch, epoch_metrics)
             if self._should_log_epoch(epoch):
                 logger.info("Epoch %d metrics: %s", epoch, epoch_metrics)
+            if stop_training:
+                logger.info("Early stopping triggered at epoch %d.", epoch)
+                break
 
         progress_bar.close()
         self._save_metric_plots()
@@ -122,13 +148,21 @@ class Trainer:
         self.model.train()
         running_loss = 0.0
         samples_seen = 0
+        grad_norms: list[float] = []
+        aggregated_metrics: dict[str, float] = {}
+        aggregated_counts: dict[str, int] = {}
 
         dataloader_iterable: Iterable[torch.Tensor] = self.dataloader
 
         for batch_index, batch in enumerate(dataloader_iterable, start=1):
-            loss_value, batch_size = self._train_batch(batch)
+            loss_value, batch_size, grad_norm, batch_metrics = self._train_batch(batch)
             running_loss += loss_value * batch_size
             samples_seen += batch_size
+            if grad_norm is not None:
+                grad_norms.append(grad_norm)
+            for key, value in batch_metrics.items():
+                aggregated_metrics[key] = aggregated_metrics.get(key, 0.0) + value
+                aggregated_counts[key] = aggregated_counts.get(key, 0) + 1
 
             progress_bar.update(1)
             progress_bar.set_postfix({"epoch": epoch, "loss": f"{loss_value:.4f}"}, refresh=False)
@@ -137,15 +171,47 @@ class Trainer:
             logger.warning("No batches available for training; did you provide an empty dataset?")
 
         average_loss = running_loss / max(samples_seen, 1)
-        return {"loss": float(average_loss)}
+        metrics: dict[str, float] = {"loss": float(average_loss)}
+        if grad_norms:
+            metrics["grad_norm"] = float(np.mean(grad_norms))
+        for key, total in aggregated_metrics.items():
+            metrics[key] = float(total / max(aggregated_counts.get(key, 1), 1))
+        return metrics
 
-    def _train_batch(self, batch: torch.Tensor) -> tuple[float, int]:
+    def _train_batch(self, batch: torch.Tensor) -> tuple[float, int, float | None, dict[str, float]]:
         batch = batch.to(self.device)
         self.optimizer.zero_grad(set_to_none=True)
         loss = self.compute_loss(batch)
         loss.backward()
+        grad_norm = self._apply_gradient_clipping()
         self.optimizer.step()
-        return loss.detach().item(), batch.size(0)
+        batch_metrics = self._collect_batch_metrics()
+        return loss.detach().item(), batch.size(0), grad_norm, batch_metrics
+
+    def _apply_gradient_clipping(self) -> float | None:
+        if self.gradient_clip_norm is None:
+            return self._compute_total_grad_norm()
+        result = torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip_norm)
+        if isinstance(result, torch.Tensor):
+            return float(result.item())
+        return float(result)
+
+    def _compute_total_grad_norm(self) -> float | None:
+        total_sq = 0.0
+        has_grad = False
+        for parameter in self.model.parameters():
+            if parameter.grad is None:
+                continue
+            has_grad = True
+            grad = parameter.grad.detach()
+            total_sq += float(grad.pow(2).sum().item())
+        if not has_grad:
+            return None
+        return float(total_sq ** 0.5)
+
+    def _collect_batch_metrics(self) -> dict[str, float]:
+        """Hook for subclasses to expose batch level metrics."""
+        return {}
 
     def record_data(self, epoch: int, metrics: dict[str, float]) -> None:
         """Persist epoch metrics and emit structured logs."""
@@ -239,6 +305,35 @@ class Trainer:
         if epoch == 1 or epoch == self.num_epochs:
             return True
         return epoch % self._log_every_n_epochs == 0
+
+    def _after_epoch(self, epoch: int, metrics: dict[str, float]) -> bool:
+        """Run scheduler updates and evaluate early stopping conditions."""
+        loss_value = metrics.get("loss")
+
+        if self.scheduler is not None:
+            previous_lrs = [group["lr"] for group in self.optimizer.param_groups]
+            if isinstance(self.scheduler, ReduceLROnPlateau):
+                if loss_value is not None:
+                    self.scheduler.step(loss_value)
+            else:
+                self.scheduler.step()
+            current_lrs = [group["lr"] for group in self.optimizer.param_groups]
+            if current_lrs != previous_lrs:
+                logger.info("Adjusted learning rates from %s to %s", previous_lrs, current_lrs)
+
+        if self.early_stopping_patience is None or loss_value is None:
+            return False
+
+        if loss_value < (self._best_monitored_loss - self.early_stopping_min_delta):
+            self._best_monitored_loss = loss_value
+            self._epochs_without_improvement = 0
+        else:
+            self._epochs_without_improvement += 1
+
+        if self._epochs_without_improvement >= self.early_stopping_patience:
+            self._stop_requested = True
+
+        return self._stop_requested
 
     @classmethod
     def replot_metric(cls, run_file: str | Path, metric: str = "loss", *, output_path: str | Path | None = None, show: bool = False) -> Path | None:

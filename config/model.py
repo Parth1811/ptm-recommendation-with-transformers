@@ -21,3 +21,4 @@ class ModelAutoEncoderConfig(SubSectionParser):
     decoder_hidden_layers: Sequence[int] = field(default_factory=list)
     use_activation: bool = True
     dropout: float = 0.0
+    activation: str = "relu"
