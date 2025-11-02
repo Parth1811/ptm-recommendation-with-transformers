@@ -1,9 +1,8 @@
-"""Model configuration helpers."""
+"""Model architecture configuration helpers."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import ClassVar, Sequence
 
 from .base import SubSectionParser
@@ -11,7 +10,7 @@ from .base import SubSectionParser
 
 @dataclass
 class ModelAutoEncoderConfig(SubSectionParser):
-    """Configuration for training the AutoEncoder model."""
+    """Configuration for the AutoEncoder model architecture."""
 
     SECTION: ClassVar[str] = "autoencoder"
 
@@ -21,11 +20,3 @@ class ModelAutoEncoderConfig(SubSectionParser):
     encoder_hidden_layers: Sequence[int] = field(default_factory=list)
     decoder_hidden_layers: Sequence[int] = field(default_factory=list)
     use_activation: bool = True
-
-    batch_size: int = 32
-    num_epochs: int = 10
-    learning_rate: float = 1e-3
-    shuffle: bool = True
-
-    extracted_models_dir: Path = Path("artifacts/extracted/models")
-    model_save_directory: Path = Path("artifacts/models/model_autoencoder")
