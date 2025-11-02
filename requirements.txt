@@ -6,3 +6,4 @@ transformers
 beautilog
 detectors
 tqdm
+seaborn

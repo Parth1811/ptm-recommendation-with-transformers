@@ -3,32 +3,30 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, is_dataclass
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable
 
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 import torch
 from beautilog import logger
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
+from config import BaseTrainerConfig
+
+
 class Trainer:
     """Base trainer with logging, history tracking, and plotting support."""
 
     progress_bar_colour: str = "yellow"
 
-    def __init__(
-        self,
-        model: nn.Module,
-        dataloader: DataLoader | Iterable[torch.Tensor],
-        optimizer: torch.optim.Optimizer,
-        config: Any,
-        *,
-        run_name: str | None = None,
-        run_directory: Path | None = None,
-    ) -> None:
+    def __init__(self, model: nn.Module, dataloader: DataLoader | Iterable[torch.Tensor], optimizer: torch.optim.Optimizer,
+                 config: BaseTrainerConfig, run_name: str | None = None, run_directory: Path | None = None) -> None:
         if getattr(config, "num_epochs", None) is None:
             raise ValueError("Training configuration must provide a num_epochs attribute.")
 
@@ -46,27 +44,38 @@ class Trainer:
         self.run_name = run_name or datetime.now().strftime("run_%Y%m%d_%H%M%S")
         self.run_directory = base_run_dir
         self.run_file_path = self.run_directory / f"{self.run_name}.json"
-        self.loss_plot_path = self.run_directory / f"{self.run_name}_loss.png"
-        self.started_at = datetime.now().isoformat(timespec="seconds")
+        self.metrics_plot_path = self.run_directory / f"{self.run_name}_metrics.png"
+        self.created_at = datetime.now().isoformat(timespec="seconds")
+        self.started_at: str | None = None
+        self.completed_at: str | None = None
+        self._elapsed_seconds: float | None = None
+        self._timer_start: float | None = None
 
-        self._serialized_config = self._serialize_config(config)
         self._log_every_n_epochs = max(1, getattr(config, "log_every_n_epochs", 1))
         logger.info("Initialized trainer %s at %s", self.run_name, self.run_file_path)
 
-    @staticmethod
-    def _serialize_config(config: Any) -> dict[str, Any]:
-        payload: dict[str, Any] = {}
-        if is_dataclass(config):
-            items = asdict(config).items()
-        else:
-            items = vars(config).items()
 
-        for key, value in items:
-            payload[key] = str(value) if isinstance(value, Path) else value
-        return payload
+    def _persist_run_file(self) -> None:
+        payload: dict[str, Any] = {
+            "run_name": self.run_name,
+            "created_at": self.created_at,
+            "started_at": self.started_at,
+            "completed_at": self.completed_at,
+            "model_class": self.model.__class__.__name__,
+            "history": self.history,
+            "metrics_plot_file": self.metrics_plot_path.name,
+        }
+
+        if self._elapsed_seconds is not None:
+            payload["total_training_seconds"] = self._elapsed_seconds
+
+        self.run_file_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     def train(self) -> list[dict[str, Any]]:
         """Execute the main training loop."""
+        self.started_at = datetime.now().isoformat(timespec="seconds")
+        self._timer_start = time.perf_counter()
+        self._persist_run_file()
         self.on_train_begin()
 
         total_batches = len(self.dataloader) if hasattr(self.dataloader, "__len__") else None
@@ -91,7 +100,11 @@ class Trainer:
                 logger.info("Epoch %d metrics: %s", epoch, epoch_metrics)
 
         progress_bar.close()
-        self._save_loss_plot()
+        self._save_metric_plots()
+        self.completed_at = datetime.now().isoformat(timespec="seconds")
+        if self._timer_start is not None:
+            self._elapsed_seconds = time.perf_counter() - self._timer_start
+        self._persist_run_file()
         self.on_train_end()
         return self.history
 
@@ -105,21 +118,12 @@ class Trainer:
         """Subclasses must implement to return a scalar loss tensor."""
         raise NotImplementedError
 
-    def _train_epoch(
-        self,
-        epoch: int,
-        progress_bar: tqdm,
-        total_batches: int | None,
-    ) -> dict[str, float]:
+    def _train_epoch(self, epoch: int, progress_bar: tqdm, total_batches: int | None) -> dict[str, float]:
         self.model.train()
         running_loss = 0.0
         samples_seen = 0
 
-        dataloader_iterable: Iterable[torch.Tensor]
-        if hasattr(self.dataloader, "__iter__"):
-            dataloader_iterable = self.dataloader
-        else:
-            raise TypeError("Dataloader must be iterable.")
+        dataloader_iterable: Iterable[torch.Tensor] = self.dataloader
 
         for batch_index, batch in enumerate(dataloader_iterable, start=1):
             loss_value, batch_size = self._train_batch(batch)
@@ -151,46 +155,85 @@ class Trainer:
             "timestamp": datetime.now().isoformat(timespec="seconds"),
         }
         self.history.append(record)
+        self._persist_run_file()
 
-        payload = {
-            "run_name": self.run_name,
-            "created_at": self.started_at,
-            "model_class": self.model.__class__.__name__,
-            "config": self._serialized_config,
-            "history": self.history,
-        }
-        self.run_file_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-
-    def _save_loss_plot(self) -> None:
+    def _save_metric_plots(self) -> None:
         if not self.history:
             return
 
-        try:
-            import matplotlib.pyplot as plt
-        except ImportError:
-            logger.warning("matplotlib not available; skipping loss plot creation.")
-            return
+        epochs = np.array([entry["epoch"] for entry in self.history], dtype=float)
+        losses = np.array([entry["metrics"]["loss"] for entry in self.history], dtype=float)
 
-        epochs = [entry["epoch"] for entry in self.history]
-        losses = [entry["metrics"]["loss"] for entry in self.history]
+        sns.set_theme(style="whitegrid")
+        fig, axes = plt.subplots(1, 3, figsize=(18, 4.8))
+        axes = np.atleast_1d(axes)
 
-        plt.figure(figsize=(8, 4.5))
-        plt.plot(epochs, losses, marker="o")
-        plt.title("Training Loss")
-        plt.xlabel("Epoch")
-        plt.ylabel("Loss")
+        min_loss_idx = int(np.argmin(losses))
+        min_loss_epoch = int(epochs[min_loss_idx])
+        min_loss_value = float(losses[min_loss_idx])
 
-        min_loss = min(losses)
-        if min_loss > 0:
-            plt.yscale("log")
+        sns.lineplot(ax=axes[0], x=epochs, y=losses, marker="o", color="tab:blue")
+        axes[0].set_title("Loss")
+        axes[0].set_xlabel("Epoch")
+        axes[0].set_ylabel("Loss")
+        axes[0].axvline(min_loss_epoch, color="tab:green", linestyle="--", alpha=0.6, linewidth=1.2)
+        axes[0].annotate(
+            f"min={min_loss_value:.4f}",
+            xy=(min_loss_epoch, min_loss_value),
+            xytext=(0, -18),
+            textcoords="offset points",
+            ha="center",
+            fontsize=9,
+            color="tab:green",
+        )
+
+        if np.all(losses > 0):
+            log_losses = np.log(losses)
+            sns.lineplot(ax=axes[1], x=epochs, y=log_losses, marker="o", color="tab:orange")
+            axes[1].set_ylabel("Log Loss")
         else:
-            logger.warning("Loss contains non-positive values; skipping logarithmic scaling.")
+            axes[1].text(
+                0.5,
+                0.5,
+                "Log loss unavailable\n(non-positive values)",
+                ha="center",
+                va="center",
+                transform=axes[1].transAxes,
+                fontsize=10,
+            )
+            axes[1].set_ylabel("Log Loss")
+        axes[1].set_title("Log Loss")
+        axes[1].set_xlabel("Epoch")
 
-        plt.grid(True, linestyle="--", alpha=0.6)
-        plt.tight_layout()
-        plt.savefig(self.loss_plot_path, dpi=200)
-        plt.close()
-        logger.info("Saved loss plot to %s", self.loss_plot_path)
+        window = min(5, len(losses))
+        if window >= 2:
+            kernel = np.ones(window) / window
+            smoothed = np.convolve(losses, kernel, mode="valid")
+            smoothed_epochs = epochs[window - 1 :]
+            sns.lineplot(ax=axes[2], x=smoothed_epochs, y=smoothed, marker="o", color="tab:purple")
+            axes[2].set_ylabel("Rolling Mean Loss")
+            axes[2].set_title(f"Rolling Mean Loss (window={window})")
+            axes[2].set_xlabel("Epoch")
+        else:
+            axes[2].text(
+                0.5,
+                0.5,
+                "Insufficient epochs\nfor rolling statistics",
+                ha="center",
+                va="center",
+                transform=axes[2].transAxes,
+                fontsize=10,
+            )
+            axes[2].set_title("Rolling Mean Loss")
+            axes[2].set_xlabel("Epoch")
+            axes[2].set_ylabel("Rolling Mean Loss")
+
+        fig.suptitle("Training Metrics", fontsize=14)
+        fig.tight_layout(rect=(0, 0, 1, 0.96))
+        fig.savefig(self.metrics_plot_path, dpi=200)
+        plt.close(fig)
+        logger.info("Saved training metrics plot to %s", self.metrics_plot_path)
+        self._persist_run_file()
 
     def _should_log_epoch(self, epoch: int) -> bool:
         if epoch == 1 or epoch == self.num_epochs:
@@ -198,14 +241,7 @@ class Trainer:
         return epoch % self._log_every_n_epochs == 0
 
     @classmethod
-    def replot_metric(
-        cls,
-        run_file: str | Path,
-        metric: str = "loss",
-        *,
-        output_path: str | Path | None = None,
-        show: bool = False,
-    ) -> Path | None:
+    def replot_metric(cls, run_file: str | Path, metric: str = "loss", *, output_path: str | Path | None = None, show: bool = False) -> Path | None:
         """Replot a stored metric from a run file."""
         run_path = Path(run_file)
         output = Path(output_path) if output_path else run_path.with_name(f"{run_path.stem}_{metric}.png")
