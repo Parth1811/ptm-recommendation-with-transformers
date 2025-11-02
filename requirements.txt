@@ -5,3 +5,4 @@ keras==3.12.0
 transformers==4.57.0
 beautilog==0.2.2
 detectors==0.1.11
+tqdm==4.67.1

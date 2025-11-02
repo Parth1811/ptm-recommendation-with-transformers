@@ -1,34 +1,30 @@
-"""Training script for the AutoEncoder over extracted model parameters."""
+"""Base training utilities."""
 
 from __future__ import annotations
 
 import json
-from dataclasses import asdict
+from dataclasses import asdict, is_dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 import torch
 from beautilog import logger
 from torch import nn
 from torch.utils.data import DataLoader
-
-from config import ConfigParser, TrainModelAutoEncoderConfig
-from dataloader import ModelParameterDataset
-from model import ModelAutoEncoder
-
+from tqdm.auto import tqdm
 
 class Trainer:
     """Base trainer with logging, history tracking, and plotting support."""
 
-    progress_bar_width = 30
+    progress_bar_colour: str = "yellow"
 
     def __init__(
         self,
         model: nn.Module,
-        dataloader: DataLoader,
+        dataloader: DataLoader | Iterable[torch.Tensor],
         optimizer: torch.optim.Optimizer,
-        config: TrainModelAutoEncoderConfig,
+        config: Any,
         *,
         run_name: str | None = None,
         run_directory: Path | None = None,
@@ -54,26 +50,47 @@ class Trainer:
         self.started_at = datetime.now().isoformat(timespec="seconds")
 
         self._serialized_config = self._serialize_config(config)
+        self._log_every_n_epochs = max(1, getattr(config, "log_every_n_epochs", 1))
         logger.info("Initialized trainer %s at %s", self.run_name, self.run_file_path)
 
     @staticmethod
-    def _serialize_config(config: TrainModelAutoEncoderConfig) -> dict[str, Any]:
+    def _serialize_config(config: Any) -> dict[str, Any]:
         payload: dict[str, Any] = {}
-        for key, value in asdict(config).items():
-            if isinstance(value, Path):
-                payload[key] = str(value)
-            else:
-                payload[key] = value
+        if is_dataclass(config):
+            items = asdict(config).items()
+        else:
+            items = vars(config).items()
+
+        for key, value in items:
+            payload[key] = str(value) if isinstance(value, Path) else value
         return payload
 
     def train(self) -> list[dict[str, Any]]:
         """Execute the main training loop."""
         self.on_train_begin()
 
-        for epoch in range(1, self.num_epochs + 1):
-            epoch_metrics = self._train_epoch(epoch)
-            self.record_data(epoch, epoch_metrics)
+        total_batches = len(self.dataloader) if hasattr(self.dataloader, "__len__") else None
+        total_steps = (
+            max(self.num_epochs * max(total_batches, 1), 1) if total_batches is not None else None
+        )
+        progress_desc = getattr(self.config, "progress_description", self.model.__class__.__name__)
 
+        progress_bar = tqdm(
+            total=total_steps,
+            desc=f"Training {progress_desc}",
+            ascii=False,
+            dynamic_ncols=True,
+            colour=self.progress_bar_colour,
+        )
+
+        for epoch in range(1, self.num_epochs + 1):
+            progress_bar.set_description(f"Training {progress_desc} (Epoch {epoch}/{self.num_epochs})")
+            epoch_metrics = self._train_epoch(epoch, progress_bar, total_batches)
+            self.record_data(epoch, epoch_metrics)
+            if self._should_log_epoch(epoch):
+                logger.info("Epoch %d metrics: %s", epoch, epoch_metrics)
+
+        progress_bar.close()
         self._save_loss_plot()
         self.on_train_end()
         return self.history
@@ -88,20 +105,32 @@ class Trainer:
         """Subclasses must implement to return a scalar loss tensor."""
         raise NotImplementedError
 
-    def _train_epoch(self, epoch: int) -> dict[str, float]:
+    def _train_epoch(
+        self,
+        epoch: int,
+        progress_bar: tqdm,
+        total_batches: int | None,
+    ) -> dict[str, float]:
         self.model.train()
         running_loss = 0.0
         samples_seen = 0
-        total_batches = len(self.dataloader)
 
-        for batch_index, batch in enumerate(self.dataloader, start=1):
+        dataloader_iterable: Iterable[torch.Tensor]
+        if hasattr(self.dataloader, "__iter__"):
+            dataloader_iterable = self.dataloader
+        else:
+            raise TypeError("Dataloader must be iterable.")
+
+        for batch_index, batch in enumerate(dataloader_iterable, start=1):
             loss_value, batch_size = self._train_batch(batch)
             running_loss += loss_value * batch_size
             samples_seen += batch_size
-            self._render_progress(epoch, batch_index, total_batches, loss_value)
 
-        if total_batches:
-            print()
+            progress_bar.update(1)
+            progress_bar.set_postfix({"epoch": epoch, "loss": f"{loss_value:.4f}"}, refresh=False)
+
+        if total_batches is not None and total_batches == 0:
+            logger.warning("No batches available for training; did you provide an empty dataset?")
 
         average_loss = running_loss / max(samples_seen, 1)
         return {"loss": float(average_loss)}
@@ -114,17 +143,6 @@ class Trainer:
         self.optimizer.step()
         return loss.detach().item(), batch.size(0)
 
-    def _render_progress(self, epoch: int, batch_idx: int, total_batches: int, loss_value: float) -> None:
-        progress = batch_idx / max(total_batches, 1)
-        filled_length = int(self.progress_bar_width * progress)
-        bar = "#" * filled_length + "-" * (self.progress_bar_width - filled_length)
-        message = (
-            f"\rEpoch {epoch}/{self.num_epochs} "
-            f"[{bar}] {progress * 100:5.1f}% "
-            f"loss: {loss_value:.4f}"
-        )
-        print(message, end="", flush=True)
-
     def record_data(self, epoch: int, metrics: dict[str, float]) -> None:
         """Persist epoch metrics and emit structured logs."""
         record = {
@@ -133,7 +151,7 @@ class Trainer:
             "timestamp": datetime.now().isoformat(timespec="seconds"),
         }
         self.history.append(record)
-        logger.info("Epoch %d metrics: %s", epoch, metrics)
+
         payload = {
             "run_name": self.run_name,
             "created_at": self.started_at,
@@ -161,11 +179,23 @@ class Trainer:
         plt.title("Training Loss")
         plt.xlabel("Epoch")
         plt.ylabel("Loss")
+
+        min_loss = min(losses)
+        if min_loss > 0:
+            plt.yscale("log")
+        else:
+            logger.warning("Loss contains non-positive values; skipping logarithmic scaling.")
+
         plt.grid(True, linestyle="--", alpha=0.6)
         plt.tight_layout()
         plt.savefig(self.loss_plot_path, dpi=200)
         plt.close()
         logger.info("Saved loss plot to %s", self.loss_plot_path)
+
+    def _should_log_epoch(self, epoch: int) -> bool:
+        if epoch == 1 or epoch == self.num_epochs:
+            return True
+        return epoch % self._log_every_n_epochs == 0
 
     @classmethod
     def replot_metric(
@@ -208,6 +238,14 @@ class Trainer:
         plt.title(f"{metric.title()} over Epochs")
         plt.xlabel("Epoch")
         plt.ylabel(metric.title())
+
+        if metric == "loss":
+            min_metric = min(y_values)
+            if min_metric > 0:
+                plt.yscale("log")
+            else:
+                logger.warning("Metric '%s' contains non-positive values; skipping logarithmic scaling.", metric)
+
         plt.grid(True, linestyle="--", alpha=0.6)
         plt.tight_layout()
         plt.savefig(output, dpi=200)
@@ -217,67 +255,3 @@ class Trainer:
             plt.close()
         logger.info("Saved %s metric plot to %s", metric, output)
         return output
-
-
-class ModelAutoEncoderTrainer(Trainer):
-    """Trainer specialization for the AutoEncoder model."""
-
-    def __init__(self) -> None:
-        ConfigParser.load()
-        training_config = ConfigParser.get(TrainModelAutoEncoderConfig)
-        model = ModelAutoEncoder()
-
-        dataset = ModelParameterDataset(root_dir=training_config.extracted_models_dir)
-        sample_dimension = dataset[0].numel()
-        if sample_dimension != model.encoder_input_size:
-            raise ValueError(
-                "Input dimension mismatch: dataset sample has "
-                f"{sample_dimension} features but encoder_input_size is "
-                f"{model.encoder_input_size}."
-            )
-
-        dataloader = DataLoader(
-            dataset,
-            batch_size=training_config.batch_size,
-            shuffle=training_config.shuffle,
-        )
-
-        optimizer = torch.optim.Adam(model.parameters(), lr=training_config.learning_rate)
-
-        super().__init__(
-            model=model,
-            dataloader=dataloader,
-            optimizer=optimizer,
-            config=training_config,
-        )
-        self.criterion = nn.MSELoss()
-        self.dataset_size = len(dataset)
-
-    def compute_loss(self, batch: torch.Tensor) -> torch.Tensor:
-        _, reconstructed = self.model(batch)
-        return self.criterion(reconstructed, batch)
-
-    def on_train_begin(self) -> None:
-        logger.info(
-            "Starting AutoEncoder training for %d epochs on %d samples.",
-            self.config.num_epochs,
-            self.dataset_size,
-        )
-
-    def on_train_end(self) -> None:
-        if not self.history:
-            return
-
-        final_loss = self.history[-1]["metrics"]["loss"]
-        save_path: Path = Path(self.config.model_save_directory) / (
-            f"autoencoder_weights.loss_{final_loss:.6f}.{datetime.now():%Y%m%d_%H%M%S}.pt"
-        )
-        save_path.parent.mkdir(parents=True, exist_ok=True)
-        torch.save(self.model.state_dict(), save_path)
-        logger.info("AutoEncoder weights saved to %s", save_path)
-
-
-def train_model_autoencoder() -> None:
-    """Entry point for training the AutoEncoder."""
-    trainer = ModelAutoEncoderTrainer()
-    trainer.train()

@@ -19,6 +19,8 @@ class TrainModelAutoEncoderConfig(SubSectionParser):
     num_epochs: int = 10
     learning_rate: float = 1e-3
     shuffle: bool = True
+    log_every_n_epochs: int = 1
+    progress_description: str = "ModelAutoEncoder"
 
     extracted_models_dir: Path = Path("artifacts/extracted/models")
     model_save_directory: Path = Path("artifacts/models/model_autoencoder")
