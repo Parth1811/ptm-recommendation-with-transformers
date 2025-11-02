@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+from abc import ABC
 from dataclasses import MISSING, fields, is_dataclass
 from pathlib import Path
 from typing import Any, Mapping, get_args, get_origin
 
 
-class SubSectionParser:
+class SubSectionParser(ABC):
     """Shared interface for configuration section loaders."""
 
     SECTION: str

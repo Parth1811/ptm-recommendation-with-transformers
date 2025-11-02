@@ -167,7 +167,8 @@ artifacts/
 checkpoints/
 logs/
 data/
-artifacts/
+artifacts
+joboutput
 
 # VS Code
 .vscode/
