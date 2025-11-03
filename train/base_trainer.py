@@ -16,6 +16,7 @@ from beautilog import logger
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
+import matplotlib.pyplot as plt
 
 from config import BaseTrainerConfig
 from torch.optim.lr_scheduler import LRScheduler, ReduceLROnPlateau
@@ -238,7 +239,7 @@ class Trainer:
         min_loss_epoch = int(epochs[min_loss_idx])
         min_loss_value = float(losses[min_loss_idx])
 
-        sns.lineplot(ax=axes[0], x=epochs, y=losses, marker="o", color="tab:blue")
+        sns.lineplot(ax=axes[0], x=epochs, y=losses, color="tab:blue")
         axes[0].set_title("Loss")
         axes[0].set_xlabel("Epoch")
         axes[0].set_ylabel("Loss")
@@ -255,7 +256,7 @@ class Trainer:
 
         if np.all(losses > 0):
             log_losses = np.log(losses)
-            sns.lineplot(ax=axes[1], x=epochs, y=log_losses, marker="o", color="tab:orange")
+            sns.lineplot(ax=axes[1], x=epochs, y=log_losses, color="tab:orange")
             axes[1].set_ylabel("Log Loss")
         else:
             axes[1].text(
@@ -276,7 +277,7 @@ class Trainer:
             kernel = np.ones(window) / window
             smoothed = np.convolve(losses, kernel, mode="valid")
             smoothed_epochs = epochs[window - 1 :]
-            sns.lineplot(ax=axes[2], x=smoothed_epochs, y=smoothed, marker="o", color="tab:purple")
+            sns.lineplot(ax=axes[2], x=smoothed_epochs, y=smoothed, color="tab:purple")
             axes[2].set_ylabel("Rolling Mean Loss")
             axes[2].set_title(f"Rolling Mean Loss (window={window})")
             axes[2].set_xlabel("Epoch")
@@ -358,14 +359,9 @@ class Trainer:
         if not x_values:
             raise KeyError(f"Metric '{metric}' not present in run history.")
 
-        try:
-            import matplotlib.pyplot as plt
-        except ImportError:
-            logger.warning("matplotlib not available; cannot replot metric %s.", metric)
-            return None
 
         plt.figure(figsize=(8, 4.5))
-        plt.plot(x_values, y_values, marker="o")
+        # plt.plot(x_values, y_values, marker="o")
         plt.title(f"{metric.title()} over Epochs")
         plt.xlabel("Epoch")
         plt.ylabel(metric.title())
