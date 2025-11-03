@@ -7,3 +7,6 @@ beautilog
 detectors
 tqdm
 seaborn
+torchvision
+datasets
+Pillow
