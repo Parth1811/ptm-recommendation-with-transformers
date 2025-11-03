@@ -224,14 +224,14 @@ class ImageNetBalancedDataLoader(DataLoader[tuple[torch.Tensor, int]]):
 
         super().__init__(**loader_kwargs)
 
-        self.dataset: ImageNetDataset = dataset
+        self._imagenet_dataset: ImageNetDataset = dataset
         self.balanced_sampler = sampler
         self.config = cfg
 
     @property
     def num_classes(self) -> int:
-        return self.dataset.num_classes
+        return self._imagenet_dataset.num_classes
 
     @property
     def class_names(self) -> Sequence[str]:
-        return self.dataset.label_names
+        return self._imagenet_dataset.label_names
