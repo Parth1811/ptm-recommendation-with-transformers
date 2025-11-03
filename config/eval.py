@@ -26,4 +26,5 @@ class ClipEvaluationConfig(SubSectionParser):
     split_sample_counts: dict[str, int] = field(
         default_factory=lambda: {"train": 100_000, "validation": 10_000, "test": 100_000}
     )
-    samples_per_shard: int = 8_192
+    batches_per_shard: int = 8_192
+    pad_to_full_shard: bool = True

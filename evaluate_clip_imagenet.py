@@ -56,82 +56,97 @@ def _labels_to_names(labels: Sequence[int], class_names: Sequence[str]) -> np.nd
     return np.asarray(names, dtype=object)
 
 
-def _take_from_buffer(buffer: list[dict[str, np.ndarray]], count: int) -> list[dict[str, np.ndarray]]:
-    """Remove up to `count` samples from the front of the buffer."""
-    collected: list[dict[str, np.ndarray]] = []
-    remaining = count
-
-    while remaining > 0 and buffer:
-        fragment = buffer[0]
-        fragment_size = len(fragment["labels"])
-        if fragment_size <= remaining:
-            collected.append(fragment)
-            buffer.pop(0)
-            remaining -= fragment_size
-        else:
-            collected.append(
-                {
-                    "features": fragment["features"][:remaining],
-                    "labels": fragment["labels"][:remaining],
-                    "class_names": fragment["class_names"][:remaining],
-                }
-            )
-            buffer[0] = {
-                "features": fragment["features"][remaining:],
-                "labels": fragment["labels"][remaining:],
-                "class_names": fragment["class_names"][remaining:],
-            }
-            remaining = 0
-
-    return collected
-
-
 def _save_shard(
     split_dir: Path,
     split_name: str,
     shard_index: int,
-    fragments: Sequence[dict[str, np.ndarray]],
+    features: np.ndarray,
+    class_ids: np.ndarray,
+    class_names: np.ndarray,
+    *,
+    actual_batches: int,
+    target_batches: int,
 ) -> None:
     """Persist a chunk of encoded samples to disk."""
-    features = np.concatenate([fragment["features"] for fragment in fragments], axis=0)
-    class_ids = np.concatenate([fragment["labels"] for fragment in fragments], axis=0)
-    class_names = np.concatenate([fragment["class_names"] for fragment in fragments], axis=0)
-
     shard_path = split_dir / f"{split_name}_clip_{shard_index:05d}.npz"
     np.savez(
         shard_path,
         features=features,
         class_ids=class_ids,
         class_names=class_names,
+        actual_batches=np.array([actual_batches], dtype=np.int32),
+        target_batches=np.array([target_batches], dtype=np.int32),
     )
-    logger.info("Saved %s samples=%d", shard_path, features.shape[0])
+    logger.info(
+        "Saved %s shape=%s actual_batches=%d target_batches=%d",
+        shard_path,
+        tuple(features.shape),
+        actual_batches,
+        target_batches,
+    )
 
 
-def _flush_shards(
+def _emit_shard(
     buffer: list[dict[str, np.ndarray]],
-    buffer_count: int,
     *,
     shard_size: int,
     split_dir: Path,
     split_name: str,
     shard_index: int,
-    save_partial: bool = False,
-) -> tuple[int, int]:
-    """Write full shards (and optionally the tail) to disk."""
-    while shard_size > 0 and buffer_count >= shard_size:
-        fragments = _take_from_buffer(buffer, shard_size)
-        shard_count = sum(len(fragment["labels"]) for fragment in fragments)
-        buffer_count -= shard_count
-        _save_shard(split_dir, split_name, shard_index, fragments)
-        shard_index += 1
+    pad_to_full: bool,
+) -> int:
+    """Write the next shard worth of balanced batches to disk."""
+    if not buffer:
+        return shard_index
 
-    if save_partial and buffer_count > 0:
-        fragments = _take_from_buffer(buffer, buffer_count)
-        _save_shard(split_dir, split_name, shard_index, fragments)
-        shard_index += 1
-        buffer_count = 0
+    emit_count = min(shard_size, len(buffer))
+    shard_entries = buffer[:emit_count]
+    del buffer[:emit_count]
 
-    return shard_index, buffer_count
+    features = np.stack([entry["features"] for entry in shard_entries], axis=0)
+    class_ids = np.stack([entry["class_ids"] for entry in shard_entries], axis=0)
+    class_names = np.stack([entry["class_names"] for entry in shard_entries], axis=0)
+
+    actual_batches = features.shape[0]
+    target_batches = shard_size
+
+    if pad_to_full and actual_batches < shard_size:
+        num_classes = features.shape[1]
+        embed_dim = features.shape[2]
+        pad_batches = shard_size - actual_batches
+        features = np.concatenate(
+            [
+                features,
+                np.zeros((pad_batches, num_classes, embed_dim), dtype=features.dtype),
+            ],
+            axis=0,
+        )
+        class_ids = np.concatenate(
+            [
+                class_ids,
+                np.full((pad_batches, num_classes), -1, dtype=class_ids.dtype),
+            ],
+            axis=0,
+        )
+        class_names = np.concatenate(
+            [
+                class_names,
+                np.full((pad_batches, num_classes), "", dtype=object),
+            ],
+            axis=0,
+        )
+
+    _save_shard(
+        split_dir,
+        split_name,
+        shard_index,
+        features,
+        class_ids,
+        class_names,
+        actual_batches=actual_batches,
+        target_batches=target_batches,
+    )
+    return shard_index + 1
 
 
 def _process_split(
@@ -170,75 +185,99 @@ def _process_split(
 
     split_dir = output_dir / split_name
     split_dir.mkdir(parents=True, exist_ok=True)
+
+    class_count = dataloader.num_classes
+    if class_count <= 0:
+        raise ValueError(f"Dataset split '{split_name}' reported zero classes.")
+
+    batches_target = (sample_target + class_count - 1) // class_count
+    if batches_target == 0:
+        logger.info("No batches requested for split '%s'; skipping.", split_name)
+        return
+
+    if sample_target % class_count != 0:
+        logger.warning(
+            "Requested %d samples for split '%s' which is not divisible by %d classes; "
+            "processing %d batches (%d samples) instead.",
+            sample_target,
+            split_name,
+            class_count,
+            batches_target,
+            batches_target * class_count,
+        )
+
+    configured_shard_size = eval_config.batches_per_shard
+    shard_size = configured_shard_size if configured_shard_size and configured_shard_size > 0 else batches_target
+    pad_to_full = bool(eval_config.pad_to_full_shard)
+
     logger.info(
-        "Processing split '%s' into %s (target=%d samples, shard_size=%d)",
+        "Processing split '%s' into %s (target_batches=%d, classes=%d, shard_batches=%d)",
         split_name,
         split_dir,
-        sample_target,
-        eval_config.samples_per_shard,
+        batches_target,
+        class_count,
+        shard_size,
     )
 
-    shard_size = eval_config.samples_per_shard if eval_config.samples_per_shard > 0 else sample_target
-    buffer: list[dict[str, np.ndarray]] = []
-    buffer_count = 0
+    batch_buffer: list[dict[str, np.ndarray]] = []
     shard_index = 0
-    samples_processed = 0
+    batches_processed = 0
 
     for images, labels in dataloader:
-        if samples_processed >= sample_target:
+        if batches_processed >= batches_target:
             break
-
-        remaining = sample_target - samples_processed
-        if remaining <= 0:
-            break
-
-        if labels.shape[0] > remaining:
-            images = images[:remaining]
-            labels = labels[:remaining]
 
         features = clip_encoder.encode(images)
         features_np = features.cpu().numpy()
         labels_np = labels.cpu().numpy()
         class_names_np = _labels_to_names(labels_np.tolist(), dataset.class_names)
 
-        buffer.append(
-            {"features": features_np, "labels": labels_np, "class_names": class_names_np}
+        batch_buffer.append(
+            {"features": features_np, "class_ids": labels_np, "class_names": class_names_np}
         )
-        batch_size = labels_np.shape[0]
-        buffer_count += batch_size
-        samples_processed += batch_size
+        batches_processed += 1
 
-        shard_index, buffer_count = _flush_shards(
-            buffer,
-            buffer_count,
-            shard_size=shard_size,
+        if shard_size > 0 and len(batch_buffer) >= shard_size:
+            shard_index = _emit_shard(
+                batch_buffer,
+                shard_size=shard_size,
+                split_dir=split_dir,
+                split_name=split_name,
+                shard_index=shard_index,
+                pad_to_full=False,
+            )
+
+    if batches_processed < batches_target:
+        logger.warning(
+            "Requested %d batches for split '%s' but only processed %d; requested samples=%d actual samples=%d.",
+            batches_target,
+            split_name,
+            batches_processed,
+            sample_target,
+            batches_processed * class_count,
+        )
+
+    if batch_buffer:
+        if shard_size > 0 and pad_to_full:
+            final_shard_size = shard_size
+            final_pad = True
+        else:
+            final_shard_size = len(batch_buffer)
+            final_pad = False
+
+        shard_index = _emit_shard(
+            batch_buffer,
+            shard_size=final_shard_size,
             split_dir=split_dir,
             split_name=split_name,
             shard_index=shard_index,
-        )
-
-    shard_index, buffer_count = _flush_shards(
-        buffer,
-        buffer_count,
-        shard_size=shard_size,
-        split_dir=split_dir,
-        split_name=split_name,
-        shard_index=shard_index,
-        save_partial=True,
-    )
-
-    if samples_processed < sample_target:
-        logger.warning(
-            "Requested %d samples for split '%s' but only processed %d.",
-            sample_target,
-            split_name,
-            samples_processed,
+            pad_to_full=final_pad,
         )
 
     logger.info(
         "Completed split '%s' with %d samples across %d shard(s).",
         split_name,
-        samples_processed,
+        batches_processed * class_count,
         shard_index,
     )
 
