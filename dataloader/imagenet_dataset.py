@@ -87,6 +87,11 @@ class ImageNetDataset(Dataset[tuple[torch.Tensor, int]]):
         )
         self.num_classes = len(self.label_names) if self.label_names else len(set(self.labels))
 
+    @property
+    def class_names(self) -> Sequence[str]:
+        """Expose human-readable class names when available."""
+        return self.label_names
+
     def __len__(self) -> int:
         return len(self.hf_dataset)
 
