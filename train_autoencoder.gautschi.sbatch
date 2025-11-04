@@ -50,7 +50,7 @@ echo ""
 # -----------------------------
 # Evaluate model
 # -----------------------------
-python -u evaluate_clip_imagenet.py
+python -u evaluate_model_autoencoder.py
 
 echo ""
 echo "Job end: $(date)"

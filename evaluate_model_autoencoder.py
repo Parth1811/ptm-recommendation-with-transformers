@@ -145,7 +145,7 @@ def main() -> None:
 
         embeddings = encoded.detach().cpu().numpy()
 
-        for embedding, (_, source_path) in zip(embeddings, batch_entries, strict=True):
+        for embedding, (_, source_path) in zip(embeddings, batch_entries):
             _save_embedding(
                 embedding,
                 source_path=source_path,
