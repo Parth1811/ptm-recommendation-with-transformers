@@ -7,4 +7,10 @@ from .eval import ClipEvaluationConfig
 from .extractor import ExtractorConfig
 from .model import ModelAutoEncoderConfig, ModelAutoEncoderEvalConfig
 from .parser import ConfigParser
+from .similarity import (
+    DatasetTokenLoaderConfig,
+    ModelEmbeddingLoaderConfig,
+    SimilarityModelConfig,
+    SimilarityTrainerConfig,
+)
 from .train import BaseTrainerConfig, TrainModelAutoEncoderConfig
