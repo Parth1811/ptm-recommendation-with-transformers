@@ -11,17 +11,20 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader, Dataset
 
-from config import ConfigParser, DatasetTokenLoaderConfig, ModelEmbeddingLoaderConfig
+from config import (ConfigParser, DatasetTokenLoaderConfig,
+                    ModelEmbeddingLoaderConfig)
 
 
 class ModelEmbeddingItem(TypedDict):
     model_token: torch.Tensor
     model_name: str
+    model_index: int
 
 
 class ModelEmbeddingBatch(TypedDict):
     model_tokens: torch.Tensor
     model_names: list[str]
+    model_indices: torch.Tensor
 
 
 class DatasetTokenItemRequired(TypedDict):
@@ -33,6 +36,7 @@ class DatasetTokenItemRequired(TypedDict):
 class DatasetTokenItem(DatasetTokenItemRequired, total=False):
     class_ids: torch.Tensor
     class_names: list[list[str]]
+    true_ranks: torch.Tensor
 
 
 class DatasetTokenBatchRequired(TypedDict):
@@ -44,6 +48,7 @@ class DatasetTokenBatchRequired(TypedDict):
 class DatasetTokenBatch(DatasetTokenBatchRequired, total=False):
     class_ids: torch.Tensor
     class_names: list[list[str]]
+    true_ranks: torch.Tensor
 
 
 def _load_npz_embedding(path: Path, key: str) -> np.ndarray:
@@ -80,7 +85,7 @@ class ModelEmbeddingDataset(Dataset[ModelEmbeddingItem]):
         tensor = torch.as_tensor(embedding, dtype=self.dtype)
         if tensor.ndim > 1:
             tensor = tensor.reshape(-1)
-        return {"model_token": tensor, "model_name": file_path.stem}
+        return {"model_token": tensor, "model_name": file_path.stem, "model_index": index}
 
 
 def build_model_embedding_loader() -> DataLoader:
@@ -90,7 +95,8 @@ def build_model_embedding_loader() -> DataLoader:
     def _collate(batch: Sequence[ModelEmbeddingItem]) -> ModelEmbeddingBatch:
         model_tokens = torch.stack([item["model_token"] for item in batch], dim=0)
         names = [str(item["model_name"]) for item in batch]
-        return {"model_tokens": model_tokens, "model_names": names}
+        indices = torch.tensor([int(item["model_index"]) for item in batch], dtype=torch.long)
+        return {"model_tokens": model_tokens, "model_names": names, "model_indices": indices}
 
     return DataLoader(
         dataset,
@@ -194,10 +200,3 @@ def build_dataset_token_loader() -> DataLoader:
         collate_fn=_collate,
         drop_last=False,
     )
-
-
-def cycle_model_batches(loader: DataLoader) -> Iterator[ModelEmbeddingBatch]:
-    """Convenience iterator that cycles through model batches indefinitely."""
-
-    for batch in cycle(loader):
-        yield batch

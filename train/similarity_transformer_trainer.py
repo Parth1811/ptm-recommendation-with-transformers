@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Callable
+from copy import deepcopy
+from dataclasses import dataclass
+from itertools import cycle
+from typing import Any, Dict, Iterator
 
 import torch
 from beautilog import logger
@@ -10,94 +13,154 @@ from beautilog import logger
 from config import (ConfigParser, DatasetTokenLoaderConfig,
                     ModelEmbeddingLoaderConfig, SimilarityModelConfig,
                     SimilarityTrainerConfig)
-from dataloader import (DatasetTokenDataset, ModelEmbeddingDataset,
-                        build_dataset_token_loader,
-                        build_model_embedding_loader)
+from dataloader import build_dataset_token_loader, build_model_embedding_loader
+from loss import ranking_loss
 from model import SimilarityTransformerModel
 
+from .base_trainer import Trainer
 
-class SimilarityTransformerTrainer:
-    """Skeleton trainer; plug in a custom loss function before training."""
+
+@dataclass
+class SimilarityBatch:
+    dataset_tokens: torch.Tensor
+    model_embeddings: torch.Tensor
+    model_indices: torch.Tensor
+    true_ranks: torch.Tensor
+    dataset_metadata: Dict[str, Any]
+    model_metadata: Dict[str, Any]
+
+
+class SimilarityBatchIterable:
+    """Wrap dataset/model loaders to yield combined training batches."""
 
     def __init__(self) -> None:
+        self.dataset_loader = build_dataset_token_loader()
+        self.model_loader = build_model_embedding_loader()
 
+    def __len__(self) -> int:
+        return len(self.dataset_loader)
+
+    def __iter__(self) -> Iterator[SimilarityBatch]:
+        model_cycle = cycle(self.model_loader)
+        for dataset_batch in self.dataset_loader:
+            model_batch = next(model_cycle)
+            yield self._merge_batches(dataset_batch, model_batch)
+
+    def _merge_batches(self, dataset_batch: Dict[str, Any], model_batch: Dict[str, Any]) -> SimilarityBatch:
+        tokens = dataset_batch.get("dataset_tokens")
+
+        if tokens.dim() != 3:
+            raise ValueError("dataset_tokens must have shape [batches, classes, dim]")
+
+        model_embeddings = model_batch.get("model_tokens")
+        model_indices = model_batch.get("model_indices")
+
+        true_ranks = dataset_batch.get("true_ranks")
+        if true_ranks is None:
+            true_ranks = torch.tensor(model_indices, dtype=torch.float32)
+
+        return SimilarityBatch(
+            dataset_tokens=tokens,
+            model_embeddings=model_embeddings,
+            model_indices=model_indices,
+            true_ranks=true_ranks,
+            dataset_metadata=deepcopy(dataset_batch),
+            model_metadata=deepcopy(model_batch),
+        )
+
+
+class SimilarityTransformerTrainer(Trainer):
+    """Trainer that optimizes the similarity transformer with listwise ranking loss."""
+
+    def __init__(self) -> None:
+        ConfigParser.load()
         self.trainer_cfg = ConfigParser.get(SimilarityTrainerConfig)
         self.model_cfg = ConfigParser.get(SimilarityModelConfig)
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.model = SimilarityTransformerModel(self.model_cfg)
-        self.model.to(self.device)
+        model = SimilarityTransformerModel(self.model_cfg)
+        model.to(self.device)
 
-        self.loss_fn = None  # Placeholder for the loss function
+        if getattr(self.trainer_cfg, "grad_clip", None) is not None:
+            setattr(self.trainer_cfg, "gradient_clip_norm", self.trainer_cfg.grad_clip)
 
-        self.model_loader = build_model_embedding_loader()
-        self.model_tokens = self._gather_model_tokens().to(self.device).detach()
+        self.batch_iterable = SimilarityBatchIterable()
 
-        self.dataset_loader = build_dataset_token_loader()
-
-        self.optimizer = torch.optim.AdamW(
-            self.model.parameters(),
+        optimizer = torch.optim.AdamW(
+            model.parameters(),
             lr=self.trainer_cfg.learning_rate,
             weight_decay=self.trainer_cfg.weight_decay,
         )
 
-    def compute_loss(self, batch: dict[str, object]) -> torch.Tensor:
-        if self.loss_fn is None:
-            raise NotImplementedError("Provide a loss_fn or override compute_loss for custom training logic.")
-        return self.loss_fn(self.model, batch)
+        super().__init__(
+            model=model,
+            dataloader=self.batch_iterable,
+            optimizer=optimizer,
+            config=self.trainer_cfg,
+        )
 
-    def train(self) -> None:
-        self.model.train()
+        self.ranking_loss_weight = float(self.trainer_cfg.ranking_loss_weight)
+        self.logit_l2_weight = float(self.trainer_cfg.logit_l2_weight)
+        self.extra_loss_weight = float(self.trainer_cfg.extra_loss_weight)
+        self._last_batch_metrics: Dict[str, float] = {}
 
-        for epoch in range(int(self.trainer_cfg.num_epochs)):
-            logger.info("Starting epoch %d", epoch + 1)
+    def _train_batch(
+        self, batch: SimilarityBatch
+    ) -> tuple[float, int, float | None, Dict[str, float]]:  # type: ignore[override]
+        self.optimizer.zero_grad(set_to_none=True)
+        loss, metrics, batch_size = self._forward_batch(batch)
+        loss.backward()
+        grad_norm = self._apply_gradient_clipping()
+        self.optimizer.step()
+        self._last_batch_metrics = metrics
+        return float(loss.detach().item()), batch_size, grad_norm, metrics
 
-            for step, dataset_batch in enumerate(self.dataset_loader, start=1):
-                prepared_batch = self._prepare_batch(dataset_batch)
-                loss = self.compute_loss(prepared_batch)
+    def _forward_batch(
+        self, batch: SimilarityBatch
+    ) -> tuple[torch.Tensor, Dict[str, float], int]:
+        model_embeddings = batch.model_embeddings.to(self.device)
+        dataset_tokens = batch.dataset_tokens.to(self.device)
+        model_indices = batch.model_indices.to(self.device)
+        true_ranks = batch.true_ranks.to(self.device).to(torch.long)
 
-                if not torch.is_tensor(loss):
-                    raise TypeError("Loss function must return a torch.Tensor.")
+        num_models = model_embeddings.size(0)
 
-                self.optimizer.zero_grad(set_to_none=True)
-                loss.backward()
+        if dataset_tokens.size(0) == 1:
+            dataset_tokens = dataset_tokens.expand(num_models, -1, -1)
+        elif dataset_tokens.size(0) != num_models:
+            dataset_tokens = dataset_tokens.repeat_interleave(num_models, dim=0)
 
-                if self.trainer_cfg.grad_clip:
-                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.trainer_cfg.grad_clip)
+        logits = self.model(model_embeddings, dataset_tokens)
+        if logits.dim() != 2:
+            raise ValueError("Model must return logits with shape [batch, num_models].")
 
-                self.optimizer.step()
+        model_indices = model_indices.clamp(max=logits.size(1) - 1)
+        pred_scores = logits.gather(1, model_indices.unsqueeze(1)).squeeze(1)
 
-                if step % max(1, self.trainer_cfg.log_every_n_epochs) == 0:
-                    logger.info("Epoch %d Step %d Loss %.6f", epoch + 1, step, float(loss.item()))
+        rank_loss = ranking_loss(pred_scores, true_ranks)
+        loss = self.ranking_loss_weight * rank_loss
 
-    def _prepare_batch(self, dataset_batch: dict[str, object]) -> dict[str, object]:
-        dataset_tokens = dataset_batch["dataset_tokens"]
-        if not isinstance(dataset_tokens, torch.Tensor):
-            raise TypeError("Dataset tokens must be a torch.Tensor")
+        logit_penalty = logits.pow(2).mean()
+        if self.logit_l2_weight > 0.0:
+            loss = loss + self.logit_l2_weight * logit_penalty
 
-        if dataset_tokens.dim() == 2:
-            dataset_tokens = dataset_tokens.unsqueeze(0)
-        elif dataset_tokens.dim() != 3:
-            raise ValueError("Dataset tokens must have shape [batch, num_classes, embedding_dim]")
-
-        batch_size = dataset_tokens.size(0)
-        model_tokens = self.model_tokens.unsqueeze(0).repeat(batch_size, 1, 1)
-
-        return {
-            "dataset_tokens": dataset_tokens.to(self.device),
-            "model_tokens": model_tokens.to(self.device),
+        metrics: Dict[str, float] = {
+            "ranking_loss": float(rank_loss.detach().item()),
+            "logit_l2": float(logit_penalty.detach().item()),
         }
 
-    def _gather_model_tokens(self) -> torch.Tensor:
-        all_tokens: list[torch.Tensor] = []
-        for batch in self.model_loader:
-            model_tokens = batch["model_tokens"]
-            if not isinstance(model_tokens, torch.Tensor):
-                raise TypeError("Model loader must yield torch.Tensor under 'model_tokens'")
-            all_tokens.append(model_tokens)
+        if self.extra_loss_weight != 0.0:
+            metrics["extra_loss"] = 0.0  # placeholder for future extension
 
-        if not all_tokens:
-            raise ValueError("Model embedding loader did not yield any tokens.")
+        batch_size = int(num_models)
+        return loss, metrics, batch_size
 
-        return torch.cat(all_tokens, dim=0)
+    def compute_loss(self, batch: torch.Tensor) -> torch.Tensor:
+        raise RuntimeError("compute_loss is unused; training logic is handled in _forward_batch.")
+
+    def _collect_batch_metrics(self) -> Dict[str, float]:  # type: ignore[override]
+        return dict(self._last_batch_metrics)
+
+    def on_train_begin(self) -> None:  # type: ignore[override]
+        logger.info("Starting similarity transformer training with %d dataset batches.", len(self.batch_iterable))
