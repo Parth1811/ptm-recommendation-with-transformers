@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import ClassVar, Sequence
 
 from .base import SubSectionParser
@@ -22,3 +23,21 @@ class ModelAutoEncoderConfig(SubSectionParser):
     use_activation: bool = True
     dropout: float = 0.0
     activation: str = "relu"
+
+
+@dataclass
+class ModelAutoEncoderEvalConfig(SubSectionParser):
+    """Configuration for evaluating the AutoEncoder on extracted model parameters."""
+
+    SECTION: ClassVar[str] = "autoencoder_evaluation"
+
+    weights_path: Path = Path("artifacts/models/model_autoencoder/latest.pt")
+    parameter_root: Path = Path("artifacts/extracted/models")
+    output_directory: Path = Path("models/embeddings")
+    batch_size: int = 256
+    device: str | None = None
+    normalize_inputs: bool = True
+    flatten: bool = True
+    input_dtype: str = "float32"
+    file_substring: str = "model_extracted"
+    save_dtype: str = "float32"
