@@ -72,18 +72,20 @@ class SimilarityTransformerModel(nn.Module):
 
     def forward(
         self,
-        model_embeddings: torch.Tensor,
+        model_tokens: torch.Tensor,
         dataset_tokens: torch.Tensor,
     ) -> torch.Tensor:
-        if model_embeddings.dim() != 2:
-            raise ValueError("model_embeddings must have shape [batch, embedding_dim]")
+        if model_tokens.dim() != 3:
+            raise ValueError("model_tokens must have shape [batch, num_models, embedding_dim]")
         if dataset_tokens.dim() != 3:
             raise ValueError("dataset_tokens must have shape [batch, num_tokens, embedding_dim]")
+        if model_tokens.size(0) != dataset_tokens.size(0):
+            raise ValueError("model_tokens and dataset_tokens must share the same batch dimension")
 
-        batch_size = model_embeddings.size(0)
-        device = model_embeddings.device
+        batch_size = dataset_tokens.size(0)
+        device = dataset_tokens.device
 
-        model_hidden = self.token_dropout(self.model_proj(model_embeddings)).unsqueeze(1)
+        model_hidden = self.token_dropout(self.model_proj(model_tokens))
         dataset_hidden = self.token_dropout(self.dataset_proj(dataset_tokens))
 
         cls_token = self.cls_token.expand(batch_size, -1, -1).to(device)

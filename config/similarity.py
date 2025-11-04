@@ -19,7 +19,6 @@ class ModelEmbeddingLoaderConfig(SubSectionParser):
     root_dir: Path = Path("models/embeddings")
     embedding_key: str = "embedding"
     batch_size: int = 32
-    max_models: int | None = None
     shuffle: bool = True
     num_workers: int = 0
     pin_memory: bool = True
@@ -36,7 +35,6 @@ class DatasetTokenLoaderConfig(SubSectionParser):
     splits: Sequence[str] = ("train", "validation", "test")
     shard_glob: str = "*.npz"
     batch_size: int = 1
-    average_over_batches: bool = True
     include_class_metadata: bool = True
     num_workers: int = 0
     pin_memory: bool = True
