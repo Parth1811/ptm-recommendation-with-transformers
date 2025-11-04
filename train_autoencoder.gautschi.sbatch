@@ -6,7 +6,7 @@
 #SBATCH --ntasks=64
 #SBATCH --gpus-per-node=1
 #SBATCH --partition=smallgpu
-#SBATCH --mem=60G
+#SBATCH --mem=80G
 #SBATCH --qos=normal
 #SBATCH --time=00:30:00
 #SBATCH --job-name=train_autoencoder
@@ -29,6 +29,8 @@ module load cuda
 cd "${SLURM_SUBMIT_DIR}"
 
 export PYTHONPATH="${SLURM_SUBMIT_DIR}:${PYTHONPATH:-}"
+export HF_HOME="/scratch/gautschi/patil185/"
+source .env
 
 JOB_OUTPUT_DIR=/home/patil185/joboutput
 mkdir -p "${JOB_OUTPUT_DIR}"
@@ -43,7 +45,12 @@ echo ""
 # -----------------------------
 # Train model
 # -----------------------------
-python -u train.py ModelAutoEncoderTrainer
+# python -u train.py ModelAutoEncoderTrainer
+
+# -----------------------------
+# Evaluate model
+# -----------------------------
+python -u evaluate_clip_imagenet.py
 
 echo ""
 echo "Job end: $(date)"

@@ -5,13 +5,14 @@ from __future__ import annotations
 import math
 from collections.abc import Mapping, Sequence
 from pathlib import Path
+import traceback
 from typing import Any
 
 import numpy as np
 import torch
 from beautilog import logger
 from datasets import Dataset as HFDataset
-from datasets import DatasetDict, concatenate_datasets, load_dataset
+from datasets import DatasetDict, concatenate_datasets, load_dataset, ClassLabel
 
 from config import (
     ClipEvaluationConfig,
@@ -39,8 +40,12 @@ def _make_slug(name: str) -> str:
     return "".join(ch.lower() if ch.isalnum() else "_" for ch in name).strip("_")
 
 
-def _stratify_kwargs(label_column: str | None) -> dict[str, str]:
-    if label_column:
+def _stratify_kwargs(label_column: str | None, *, dataset: HFDataset | None = None) -> dict[str, str]:
+    if not label_column or dataset is None:
+        return {}
+
+    feature = dataset.features.get(label_column)
+    if isinstance(feature, ClassLabel):
         return {"stratify_by_column": label_column}
     return {}
 
@@ -62,7 +67,7 @@ def _auto_split_dataset(
     val_ratio /= total
     test_ratio /= total
 
-    stratify = _stratify_kwargs(label_column)
+    stratify = _stratify_kwargs(label_column, dataset=dataset)
     first_split = dataset.train_test_split(test_size=test_ratio, seed=seed, **stratify)
     train_candidate = first_split["train"]
     test_dataset = first_split["test"]
@@ -72,7 +77,8 @@ def _auto_split_dataset(
         train_dataset = train_candidate
     else:
         val_fraction = val_ratio / (train_ratio + val_ratio)
-        second_split = train_candidate.train_test_split(test_size=val_fraction, seed=seed, **stratify)
+        stratify_second = _stratify_kwargs(label_column, dataset=train_candidate)
+        second_split = train_candidate.train_test_split(test_size=val_fraction, seed=seed, **stratify_second)
         train_dataset = second_split["train"]
         validation_dataset = second_split["test"]
 
@@ -151,6 +157,132 @@ def _load_dataset_splits(
             resolved.setdefault(split, hf_split)
 
     return resolved
+
+
+def _canonical_split_name(name: str) -> str:
+    lookup = {
+        "train": "train",
+        "training": "train",
+        "test": "test",
+        "testing": "test",
+        "val": "validation",
+        "valid": "validation",
+        "validation": "validation",
+    }
+    return lookup.get(name.lower(), name.lower())
+
+
+def _resolve_max_samples(
+    split_name: str,
+    dataset_spec: Mapping[str, Any],
+    defaults: DatasetLoaderDefaultsConfig,
+) -> int | None:
+    canonical = _canonical_split_name(split_name)
+
+    per_split = dataset_spec.get("max_samples")
+    if isinstance(per_split, Mapping):
+        candidate = per_split.get(canonical)
+        if candidate is None and canonical == "validation":
+            candidate = per_split.get("val")
+        if candidate is not None:
+            return int(candidate)
+
+    explicit_keys = [f"max_samples_{canonical}"]
+    if canonical == "validation":
+        explicit_keys.extend(["max_samples_val", "max_samples_valid"])
+    elif canonical == "test":
+        explicit_keys.append("max_samples_testing")
+    elif canonical == "train":
+        explicit_keys.append("max_samples_training")
+
+    for key in explicit_keys:
+        value = dataset_spec.get(key)
+        if value is not None:
+            return int(value)
+
+    default_attr = f"max_samples_{canonical}"
+    return getattr(defaults, default_attr, None)
+
+
+def _limit_dataset_rows(
+    dataset_split: HFDataset,
+    *,
+    max_samples: int | None,
+    seed: int | None,
+) -> HFDataset:
+    if max_samples is None or max_samples <= 0:
+        return dataset_split
+
+    available = len(dataset_split)
+    if available <= max_samples:
+        return dataset_split
+
+    shuffle_seed = seed if seed is not None else 0
+    shuffled = dataset_split.shuffle(seed=shuffle_seed)
+    return shuffled.select(range(max_samples))
+
+
+def _extract_label_from_filename(
+    value: str,
+    *,
+    separator: str,
+    index: int,
+    strip_extension: bool,
+    lowercase: bool,
+) -> str:
+    token = value
+    if separator:
+        parts = value.split(separator)
+        if not parts:
+            token = value
+        else:
+            try:
+                token = parts[index]
+            except IndexError:
+                token = parts[0]
+    if strip_extension:
+        token = token.rsplit(".", maxsplit=1)[0]
+    if lowercase:
+        token = token.lower()
+    return token
+
+
+def _derive_labels_from_filename(
+    dataset_split: HFDataset,
+    *,
+    source_column: str,
+    target_column: str,
+    separator: str,
+    index: int,
+    strip_extension: bool,
+    lowercase: bool,
+) -> HFDataset:
+    if source_column not in dataset_split.column_names:
+        raise KeyError(f"Column '{source_column}' not present in dataset; cannot derive labels from filename.")
+
+    def mapper(batch: Mapping[str, Any]) -> dict[str, Any]:
+        filenames = batch[source_column]
+        labels = [
+            _extract_label_from_filename(
+                str(filename),
+                separator=separator,
+                index=index,
+                strip_extension=strip_extension,
+                lowercase=lowercase,
+            )
+            for filename in filenames
+        ]
+        new_batch = dict(batch)
+        new_batch[target_column] = labels
+        return new_batch
+
+    return dataset_split.map(
+        mapper,
+        batched=True,
+        batch_size=1000,
+        desc=f"Deriving labels from '{source_column}'",
+        load_from_cache_file=False,
+    )
 
 
 def _save_shard(
@@ -360,9 +492,16 @@ def _process_dataset(
     seed = dataset_spec.get("seed", defaults.seed)
     label_column = dataset_spec.get("label_column") or defaults.label_column
     create_missing = bool(dataset_spec.get("create_missing_splits", True))
+    dataset_config_name = (
+        dataset_spec.get("dataset_config")
+        or dataset_spec.get("dataset_config_name")
+        or dataset_spec.get("config_name")
+    )
 
     load_kwargs = dict(eval_config.extra_load_kwargs)
     load_kwargs.update(dataset_spec.get("load_kwargs", {}))
+    if dataset_config_name and "name" not in load_kwargs:
+        load_kwargs["name"] = str(dataset_config_name)
 
     try:
         dataset_splits = _load_dataset_splits(
@@ -378,6 +517,57 @@ def _process_dataset(
         )
     except Exception as exc:
         raise RuntimeError(f"Failed to load dataset '{dataset_name}' ({dataset_id}): {exc}") from exc
+
+    label_from_filename = dataset_spec.get("label_from_filename")
+    if label_from_filename:
+        params: dict[str, Any] = {}
+        if isinstance(label_from_filename, Mapping):
+            params.update(label_from_filename)
+
+        source_column = str(params.get("source_column", params.get("filename_column", "filename")))
+        target_column = str(params.get("target_column", params.get("label_column", "label")))
+        separator = str(params.get("separator", params.get("delimiter", "/")))
+        index = int(params.get("index", params.get("label_index", 0)))
+        strip_extension = bool(params.get("strip_extension", True))
+        lowercase = bool(params.get("lowercase", True))
+
+        transformed_splits: dict[str, HFDataset] = {}
+        for split_name, hf_split in dataset_splits.items():
+            transformed_splits[split_name] = _derive_labels_from_filename(
+                hf_split,
+                source_column=source_column,
+                target_column=target_column,
+                separator=separator,
+                index=index,
+                strip_extension=strip_extension,
+                lowercase=lowercase,
+            )
+        dataset_splits = transformed_splits
+        dataset_spec.setdefault("label_column", target_column)
+
+    limit_seed: int | None = seed if isinstance(seed, int) else None
+    if limit_seed is None and isinstance(defaults.seed, int):
+        limit_seed = defaults.seed
+
+    limited_splits: dict[str, HFDataset] = {}
+    for split_name, hf_split in dataset_splits.items():
+        max_samples = _resolve_max_samples(split_name, dataset_spec, defaults)
+        limited_split = _limit_dataset_rows(
+            hf_split,
+            max_samples=max_samples,
+            seed=limit_seed,
+        )
+        if len(limited_split) != len(hf_split):
+            logger.info(
+                "Limiting %s/%s from %d to %d samples (max=%d)",
+                dataset_name,
+                split_name,
+                len(hf_split),
+                len(limited_split),
+                int(max_samples) if max_samples is not None else -1,
+            )
+        limited_splits[split_name] = limited_split
+    dataset_splits = limited_splits
 
     if not dataset_splits:
         logger.warning("Dataset '%s' produced no splits; skipping.", dataset_name)
@@ -427,17 +617,23 @@ def main() -> None:
     logger.info("Prepping to encode datasets: %s", ", ".join(dataset_selection))
 
     for dataset_name in dataset_selection:
-        dataset_spec = configured_datasets.get(dataset_name)
-        if dataset_spec is None:
-            logger.warning("Dataset '%s' not found in registry; skipping.", dataset_name)
+        try:
+            dataset_spec = configured_datasets.get(dataset_name)
+            if dataset_spec is None:
+                logger.warning("Dataset '%s' not found in registry; skipping.", dataset_name)
+                continue
+            _process_dataset(
+                dataset_name,
+                dataset_spec,
+                clip_encoder=clip_encoder,
+                defaults=defaults,
+                eval_config=eval_config,
+            )
+
+        except Exception as exc:
+            logger.error("Error processing dataset '%s': %s", dataset_name, exc)
+            logger.error(traceback.format_exc())
             continue
-        _process_dataset(
-            dataset_name,
-            dataset_spec,
-            clip_encoder=clip_encoder,
-            defaults=defaults,
-            eval_config=eval_config,
-        )
 
     logger.info("Completed CLIP embedding extraction for all configured datasets.")
 

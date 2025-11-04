@@ -27,6 +27,9 @@ class DatasetLoaderDefaultsConfig(SubSectionParser):
     image_column: str | None = "image"
     label_column: str | None = "label"
     balance_classes: bool = True
+    max_samples_train: int | None = None
+    max_samples_validation: int | None = None
+    max_samples_test: int | None = None
 
 
 @dataclass
