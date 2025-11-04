@@ -1,0 +1,14 @@
+name,link
+MNIST,https://huggingface.co/datasets/ylecun/mnist
+SVHN,https://huggingface.co/datasets/ufldl-stanford/svhn
+USPS Digits,https://huggingface.co/datasets/Voxel51/USPS
+Fashion-MNIST,https://huggingface.co/datasets/zalando-datasets/fashion_mnist
+Deepfashion Inshop,https://huggingface.co/datasets/Marqo/deepfashion-inshop
+Fashion Product,https://huggingface.co/datasets/ashraq/fashion-product-images-small
+ImageNet 1k,https://huggingface.co/datasets/ILSVRC/imagenet-1k
+CIFAR-10,https://huggingface.co/datasets/uoft-cs/cifar10
+CIFAR-100,https://huggingface.co/datasets/uoft-cs/cifar100
+Caltech-101,https://huggingface.co/datasets/bitmind/caltech-101
+HAM10000,https://huggingface.co/datasets/Nagabu/HAM10000
+LIDC-IDRI,https://huggingface.co/datasets/jmanuelc87/lidc-idri-segmentation
+BCW,https://huggingface.co/datasets/scikit-learn/breast-cancer-wisconsin

@@ -1,91 +1,101 @@
-"""PyTorch dataset helpers for the ImageNet-1k benchmark."""
+"""Generic dataset helpers for Hugging Face vision datasets."""
 
 from __future__ import annotations
 
 from collections.abc import Iterator, Sequence
-from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
 import numpy as np
 import torch
-from datasets import load_dataset
+from datasets import Dataset as HFDataset
+from datasets.features import ClassLabel, Image as HfImage
 from PIL import Image
-from torch.utils.data import DataLoader, Dataset, Sampler
+from torch.utils.data import DataLoader, Dataset as TorchDataset, Sampler
 from torchvision import transforms
 
-from config import ConfigParser, ImageNetDatasetConfig
 
-IMAGENET_MEAN = (0.485, 0.456, 0.406)
-IMAGENET_STD = (0.229, 0.224, 0.225)
-
-
-def _default_transform(split: str, image_size: int, resize_shorter_side: int) -> transforms.Compose:
-    """Return the canonical torchvision transform pipeline for ImageNet."""
-    if split.lower() == "train":
-        return transforms.Compose(
-            [
-                transforms.RandomResizedCrop(image_size),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
-            ]
-        )
-
-    # Validation / test style preprocessing
-    return transforms.Compose(
-        [
-            transforms.Resize(resize_shorter_side),
-            transforms.CenterCrop(image_size),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
-        ]
-    )
+def _detect_image_column(dataset: HFDataset) -> str:
+    for column, feature in dataset.features.items():
+        if isinstance(feature, HfImage):
+            return column
+    raise KeyError("Unable to detect an image column; please specify 'image_column' explicitly.")
 
 
-class ImageNetDataset(Dataset[tuple[torch.Tensor, int]]):
-    """Dataset wrapper around the HuggingFace ImageNet-1k release."""
+def _detect_label_column(dataset: HFDataset) -> str:
+    candidate: str | None = None
+    for column, feature in dataset.features.items():
+        if isinstance(feature, ClassLabel):
+            return column
+        feature_dtype = getattr(feature, "dtype", None)
+        if feature_dtype in {"int64", "int32", "int16", "int8"} and candidate is None:
+            candidate = column
+    if candidate is not None:
+        return candidate
+    if "label" in dataset.column_names:
+        return "label"
+    raise KeyError("Unable to detect a label column; please specify 'label_column' explicitly.")
+
+
+def _prepare_label_encoder(
+    dataset: HFDataset,
+    label_column: str,
+) -> tuple[list[int], Sequence[str], Mapping[str, int] | None]:
+    raw_labels = dataset[label_column]
+    feature = dataset.features.get(label_column)
+
+    if isinstance(feature, ClassLabel):
+        labels = [int(label) for label in raw_labels]
+        names: Sequence[str] = tuple(feature.names)
+        return labels, names, None
+
+    labels: list[int] = []
+    label_names: list[str] = []
+    encoder: dict[str, int] | None = None
+
+    try:
+        labels = [int(label) for label in raw_labels]
+        unique_labels = sorted(set(labels))
+        label_names = [str(value) for value in unique_labels]
+        return labels, tuple(label_names), None
+    except (TypeError, ValueError):
+        str_labels = [str(label) for label in raw_labels]
+        unique_str = sorted(set(str_labels))
+        encoder = {value: idx for idx, value in enumerate(unique_str)}
+        labels = [encoder[value] for value in str_labels]
+        return labels, tuple(unique_str), encoder
+
+
+class GenericImageDataset(TorchDataset[tuple[torch.Tensor, int]]):
+    """Torch dataset wrapper around a Hugging Face vision dataset split."""
 
     def __init__(
         self,
-        config: ImageNetDatasetConfig | None = None,
+        hf_dataset: HFDataset,
         *,
-        split: str | None = None,
         transform: Callable[[Image.Image], torch.Tensor] | None = None,
-        cache_dir: str | None = None,
+        image_column: str | None = None,
+        label_column: str | None = None,
     ) -> None:
-        ConfigParser.load()
-        cfg = config or ConfigParser.get(ImageNetDatasetConfig)
-        split_name = split or cfg.split
-        if cache_dir is not None:
-            cache_root = Path(cache_dir).expanduser()
-        else:
-            cache_root = cfg.cache_dir.expanduser()
-        cache_root.mkdir(parents=True, exist_ok=True)
+        if not isinstance(hf_dataset, HFDataset):
+            raise TypeError("Expected a Hugging Face Dataset instance.")
 
-        self.hf_dataset = load_dataset(
-            cfg.dataset_name,
-            split=split_name,
-            cache_dir=str(cache_root),
-        )
+        self.hf_dataset = hf_dataset
+        self.image_column = image_column or _detect_image_column(hf_dataset)
+        self.label_column = label_column or _detect_label_column(hf_dataset)
 
-        if "image" not in self.hf_dataset.column_names:
-            raise KeyError("Expected 'image' column in ImageNet dataset.")
-        if "label" not in self.hf_dataset.column_names:
-            raise KeyError("Expected 'label' column in ImageNet dataset.")
+        if self.image_column not in hf_dataset.column_names:
+            raise KeyError(f"Column '{self.image_column}' not present in dataset.")
+        if self.label_column not in hf_dataset.column_names:
+            raise KeyError(f"Column '{self.label_column}' not present in dataset.")
 
-        self.transform = transform or _default_transform(split_name, cfg.image_size, cfg.resize_shorter_side)
-        self.split = split_name
-        self.cache_dir = cache_root
-
-        self.labels: list[int] = [int(label) for label in self.hf_dataset["label"]]
+        self.transform = transform or transforms.ToTensor()
+        self.labels, label_names, encoder = _prepare_label_encoder(hf_dataset, self.label_column)
         if not self.labels:
-            raise ValueError("Loaded ImageNet dataset is empty.")
+            raise ValueError("Loaded dataset split is empty.")
 
-        feature_labels = self.hf_dataset.features.get("label")
-        self.label_names: Sequence[str] = (
-            feature_labels.names if feature_labels is not None and hasattr(feature_labels, "names") else tuple()
-        )
+        self.label_names: Sequence[str] = label_names
         self.num_classes = len(self.label_names) if self.label_names else len(set(self.labels))
+        self._label_encoder = encoder
 
     @property
     def class_names(self) -> Sequence[str]:
@@ -95,17 +105,23 @@ class ImageNetDataset(Dataset[tuple[torch.Tensor, int]]):
     def __len__(self) -> int:
         return len(self.hf_dataset)
 
-    def __getitem__(self, index: int) -> tuple[torch.Tensor, int]:
-        record: dict[str, Any] = self.hf_dataset[int(index)]
-        image = record["image"]
+    def _encode_label(self, value: Any) -> int:
+        if self._label_encoder is None:
+            return int(value)
+        return self._label_encoder[str(value)]
 
-        if isinstance(image, Image.Image):
-            pil_image = image.convert("RGB")
+    def __getitem__(self, index: int) -> tuple[torch.Tensor, int]:
+        record: Mapping[str, Any] = self.hf_dataset[int(index)]
+        image_value = record[self.image_column]
+
+        if isinstance(image_value, Image.Image):
+            pil_image = image_value.convert("RGB")
         else:
-            pil_image = Image.fromarray(np.array(image)).convert("RGB")
+            pil_image = Image.fromarray(np.array(image_value)).convert("RGB")
 
         tensor = self.transform(pil_image) if self.transform else transforms.ToTensor()(pil_image)
-        label = int(record["label"])
+        label_value = record[self.label_column]
+        label = self._encode_label(label_value)
         return tensor, label
 
 
@@ -176,67 +192,62 @@ class ClassBalancedBatchSampler(Sampler[list[int]]):
         self._epoch = epoch
 
 
-class ImageNetBalancedDataLoader(DataLoader[tuple[torch.Tensor, int]]):
-    """DataLoader that returns ImageNet batches with one sample per class."""
+class GenericBalancedDataLoader(DataLoader[tuple[torch.Tensor, int]]):
+    """DataLoader that returns balanced batches with one sample per class."""
 
     def __init__(
         self,
-        dataset: ImageNetDataset | None = None,
+        dataset: GenericImageDataset,
         *,
-        config: ImageNetDatasetConfig | None = None,
-        split: str | None = None,
-        transform: Callable[[Image.Image], torch.Tensor] | None = None,
-        cache_dir: str | None = None,
+        drop_last: bool = True,
+        shuffle: bool = True,
+        seed: int | None = None,
+        num_workers: int = 0,
+        pin_memory: bool = False,
+        persistent_workers: bool = False,
+        prefetch_factor: int | None = None,
         **kwargs: Any,
     ) -> None:
-        ConfigParser.load()
-        cfg = config or ConfigParser.get(ImageNetDatasetConfig)
-
-        if dataset is None:
-            dataset = ImageNetDataset(
-                config=cfg,
-                split=split,
-                transform=transform,
-                cache_dir=cache_dir,
-            )
-
         sampler = ClassBalancedBatchSampler(
             dataset.labels,
-            drop_last=cfg.drop_last,
-            shuffle=cfg.shuffle,
-            seed=cfg.seed,
+            drop_last=drop_last,
+            shuffle=shuffle,
+            seed=seed,
         )
 
         loader_kwargs: dict[str, Any] = {
             "dataset": dataset,
             "batch_sampler": sampler,
-            "num_workers": cfg.num_workers,
-            "pin_memory": cfg.pin_memory,
+            "num_workers": num_workers,
+            "pin_memory": pin_memory,
         }
 
-        if cfg.num_workers > 0:
-            loader_kwargs["persistent_workers"] = cfg.persistent_workers
-            if cfg.prefetch_factor is not None:
-                loader_kwargs["prefetch_factor"] = cfg.prefetch_factor
+        if num_workers > 0:
+            loader_kwargs["persistent_workers"] = persistent_workers
+            if prefetch_factor is not None:
+                loader_kwargs["prefetch_factor"] = prefetch_factor
 
-        # Remove conflicting arguments if provided
         kwargs.pop("batch_size", None)
         kwargs.pop("shuffle", None)
         kwargs.pop("sampler", None)
         kwargs.pop("batch_sampler", None)
-
         loader_kwargs.update(kwargs)
 
         super().__init__(**loader_kwargs)
 
-        self._imagenet_dataset: ImageNetDataset = dataset
         self.balanced_sampler = sampler
-        self.config = cfg
 
     @property
     def num_classes(self) -> int:
-        return self._imagenet_dataset.num_classes
+        dataset: GenericImageDataset = self.dataset  # type: ignore[attr-defined]
+        return dataset.num_classes
 
     @property
     def class_names(self) -> Sequence[str]:
-        return self._imagenet_dataset.label_names
+        dataset: GenericImageDataset = self.dataset  # type: ignore[attr-defined]
+        return dataset.class_names
+
+
+# Backwards compatibility aliases
+ImageNetDataset = GenericImageDataset
+ImageNetBalancedDataLoader = GenericBalancedDataLoader
