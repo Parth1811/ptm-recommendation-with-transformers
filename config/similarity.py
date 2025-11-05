@@ -66,10 +66,10 @@ class SimilarityTrainerConfig(BaseTrainerConfig):
 
     SECTION: ClassVar[str] = "train_similarity_transformer"
 
+    shuffle: bool = True
     learning_rate: float = 3e-4
     weight_decay: float = 1e-4
     num_epochs: int = 1
-    grad_clip: float | None = None
     ranking_loss_weight: float = 1.0
     logit_l2_weight: float = 0.0
     extra_loss_weight: float = 0.0

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Optional
 
 import torch
@@ -14,20 +15,14 @@ from config import ConfigParser, SimilarityModelConfig
 class SimilarityTransformerModel(nn.Module):
     """Predicts best-performing models given model and dataset embeddings."""
 
-    def __init__(
-        self,
-        config: SimilarityModelConfig | None = None,
-        *,
-        embedding_dim: Optional[int] = None,
-        num_models: Optional[int] = None,
-    ) -> None:
+    def __init__(self) -> None:
         super().__init__()
-        ConfigParser.load()
-        self.config = config or ConfigParser.get(SimilarityModelConfig)
 
-        self.embedding_dim = embedding_dim or self.config.embedding_dim
+        self.config = ConfigParser.get(SimilarityModelConfig)
+
+        self.embedding_dim = self.config.embedding_dim
         self.hidden_dim = self.config.hidden_dim
-        self.num_models = num_models or self.config.num_models
+        self.num_models = self.config.num_models
 
         self.model_proj = nn.Linear(self.embedding_dim, self.hidden_dim)
         self.dataset_proj = nn.Linear(self.embedding_dim, self.hidden_dim)
@@ -75,20 +70,24 @@ class SimilarityTransformerModel(nn.Module):
         model_tokens: torch.Tensor,
         dataset_tokens: torch.Tensor,
     ) -> torch.Tensor:
-        if model_tokens.dim() != 3:
-            raise ValueError("model_tokens must have shape [batch, num_models, embedding_dim]")
+        if model_tokens.dim() != 2:
+            raise ValueError("model_tokens must have shape [num_models, embedding_dim]")
         if dataset_tokens.dim() != 3:
             raise ValueError("dataset_tokens must have shape [batch, num_tokens, embedding_dim]")
-        if model_tokens.size(0) != dataset_tokens.size(0):
-            raise ValueError("model_tokens and dataset_tokens must share the same batch dimension")
+
+        device = self.cls_token.device
+        if model_tokens.device != device:
+            model_tokens = model_tokens.to(device)
+        if dataset_tokens.device != device:
+            dataset_tokens = dataset_tokens.to(device)
 
         batch_size = dataset_tokens.size(0)
-        device = dataset_tokens.device
+        model_tokens = torch.repeat_interleave(model_tokens.unsqueeze(0), batch_size, dim=0)
 
         model_hidden = self.token_dropout(self.model_proj(model_tokens))
         dataset_hidden = self.token_dropout(self.dataset_proj(dataset_tokens))
 
-        cls_token = self.cls_token.expand(batch_size, -1, -1).to(device)
+        cls_token = self.cls_token.expand(batch_size, -1, -1)
         transformer_inputs = torch.cat([cls_token, model_hidden, dataset_hidden], dim=1)
         attention_mask = torch.ones(transformer_inputs.size()[:2], dtype=torch.long, device=device)
 
@@ -96,3 +95,8 @@ class SimilarityTransformerModel(nn.Module):
         pooled = outputs.pooler_output if hasattr(outputs, "pooler_output") and outputs.pooler_output is not None else outputs.last_hidden_state[:, 0]
         logits = self.classifier(pooled)
         return logits
+
+    def to(self, *args, **kwargs):
+        super().to(*args, **kwargs)
+        self.cls_token = nn.Parameter(self.cls_token.to(*args, **kwargs))
+        return self

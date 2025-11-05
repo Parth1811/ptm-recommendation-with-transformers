@@ -46,7 +46,7 @@ class Trainer:
         self.optimizer = optimizer
         self.scheduler = scheduler
         self.config = config
-        self.device = getattr(model, "device", torch.device("cpu"))
+        self.device = getattr(model, "device", torch.device("cuda" if torch.cuda.is_available() else "cpu"))
         self.num_epochs = config.num_epochs
         self.history: list[dict[str, Any]] = []
         self.gradient_clip_norm = getattr(config, "gradient_clip_norm", None)

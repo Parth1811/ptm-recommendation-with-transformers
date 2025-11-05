@@ -29,6 +29,17 @@ class SimilarityBatch:
     dataset_metadata: Dict[str, Any]
     model_metadata: Dict[str, Any]
 
+    def to(self, device: torch.device) -> "SimilarityBatch":
+        """Return a copy of the batch with tensor payloads moved to the target device."""
+        return SimilarityBatch(
+            dataset_tokens=self.dataset_tokens.to(device),
+            model_embeddings=self.model_embeddings.to(device),
+            model_indices=self.model_indices.to(device=device, dtype=torch.long),
+            true_ranks=self.true_ranks.to(device=device, dtype=torch.float32),
+            dataset_metadata=self.dataset_metadata,
+            model_metadata=self.model_metadata,
+        )
+
 
 class SimilarityBatchIterable:
     """Wrap dataset/model loaders to yield combined training batches."""
@@ -57,7 +68,9 @@ class SimilarityBatchIterable:
 
         true_ranks = dataset_batch.get("true_ranks")
         if true_ranks is None:
-            true_ranks = torch.tensor(model_indices, dtype=torch.float32)
+            true_ranks = model_indices.to(dtype=torch.float32)
+        else:
+            true_ranks = true_ranks.to(dtype=torch.float32)
 
         return SimilarityBatch(
             dataset_tokens=tokens,
@@ -73,36 +86,29 @@ class SimilarityTransformerTrainer(Trainer):
     """Trainer that optimizes the similarity transformer with listwise ranking loss."""
 
     def __init__(self) -> None:
-        ConfigParser.load()
-        self.trainer_cfg = ConfigParser.get(SimilarityTrainerConfig)
-        self.model_cfg = ConfigParser.get(SimilarityModelConfig)
+        self.cfg = ConfigParser.get(SimilarityTrainerConfig)
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-        model = SimilarityTransformerModel(self.model_cfg)
-        model.to(self.device)
-
-        if getattr(self.trainer_cfg, "grad_clip", None) is not None:
-            setattr(self.trainer_cfg, "gradient_clip_norm", self.trainer_cfg.grad_clip)
-
+        model = SimilarityTransformerModel()
         self.batch_iterable = SimilarityBatchIterable()
 
         optimizer = torch.optim.AdamW(
             model.parameters(),
-            lr=self.trainer_cfg.learning_rate,
-            weight_decay=self.trainer_cfg.weight_decay,
+            lr=self.cfg.learning_rate,
+            weight_decay=self.cfg.weight_decay,
         )
 
         super().__init__(
             model=model,
             dataloader=self.batch_iterable,
             optimizer=optimizer,
-            config=self.trainer_cfg,
+            config=self.cfg,
         )
 
-        self.ranking_loss_weight = float(self.trainer_cfg.ranking_loss_weight)
-        self.logit_l2_weight = float(self.trainer_cfg.logit_l2_weight)
-        self.extra_loss_weight = float(self.trainer_cfg.extra_loss_weight)
+        model.to(self.device)
+
+        self.ranking_loss_weight = float(self.cfg.ranking_loss_weight)
+        self.logit_l2_weight = float(self.cfg.logit_l2_weight)
+        self.extra_loss_weight = float(self.cfg.extra_loss_weight)
         self._last_batch_metrics: Dict[str, float] = {}
 
     def _train_batch(
@@ -119,17 +125,14 @@ class SimilarityTransformerTrainer(Trainer):
     def _forward_batch(
         self, batch: SimilarityBatch
     ) -> tuple[torch.Tensor, Dict[str, float], int]:
-        model_embeddings = batch.model_embeddings.to(self.device)
-        dataset_tokens = batch.dataset_tokens.to(self.device)
-        model_indices = batch.model_indices.to(self.device)
-        true_ranks = batch.true_ranks.to(self.device).to(torch.long)
+        batch = batch.to(self.device)
+
+        model_embeddings = batch.model_embeddings
+        dataset_tokens = batch.dataset_tokens
+        model_indices = batch.model_indices
+        true_ranks = batch.true_ranks
 
         num_models = model_embeddings.size(0)
-
-        if dataset_tokens.size(0) == 1:
-            dataset_tokens = dataset_tokens.expand(num_models, -1, -1)
-        elif dataset_tokens.size(0) != num_models:
-            dataset_tokens = dataset_tokens.repeat_interleave(num_models, dim=0)
 
         logits = self.model(model_embeddings, dataset_tokens)
         if logits.dim() != 2:
