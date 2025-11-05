@@ -13,8 +13,8 @@ from beautilog import logger
 from config import ConfigParser, SimilarityModelConfig, SimilarityTrainerConfig
 from dataloader import build_dataset_token_loader, build_model_embedding_loader
 from dataloader.ranking import compute_true_ranks
+from loss import ranking_loss
 from model import SimilarityTransformerModel
-from train.losses import ranking_loss
 
 from .base_trainer import Trainer
 
