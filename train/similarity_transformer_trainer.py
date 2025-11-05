@@ -10,12 +10,11 @@ from typing import Any, Dict, Iterator
 import torch
 from beautilog import logger
 
-from config import (ConfigParser, DatasetTokenLoaderConfig,
-                    ModelEmbeddingLoaderConfig, SimilarityModelConfig,
-                    SimilarityTrainerConfig)
+from config import ConfigParser, SimilarityModelConfig, SimilarityTrainerConfig
 from dataloader import build_dataset_token_loader, build_model_embedding_loader
-from loss import ranking_loss
+from dataloader.ranking import compute_true_ranks
 from model import SimilarityTransformerModel
+from train.losses import ranking_loss
 
 from .base_trainer import Trainer
 
@@ -35,7 +34,7 @@ class SimilarityBatch:
             dataset_tokens=self.dataset_tokens.to(device),
             model_embeddings=self.model_embeddings.to(device),
             model_indices=self.model_indices.to(device=device, dtype=torch.long),
-            true_ranks=self.true_ranks.to(device=device, dtype=torch.float32),
+            true_ranks=self.true_ranks.to(device=device, dtype=torch.long),
             dataset_metadata=self.dataset_metadata,
             model_metadata=self.model_metadata,
         )
@@ -47,6 +46,7 @@ class SimilarityBatchIterable:
     def __init__(self) -> None:
         self.dataset_loader = build_dataset_token_loader()
         self.model_loader = build_model_embedding_loader()
+        self._warned_missing_ranks = False
 
     def __len__(self) -> int:
         return len(self.dataset_loader)
@@ -59,18 +59,44 @@ class SimilarityBatchIterable:
 
     def _merge_batches(self, dataset_batch: Dict[str, Any], model_batch: Dict[str, Any]) -> SimilarityBatch:
         tokens = dataset_batch.get("dataset_tokens")
-
-        if tokens.dim() != 3:
+        if not isinstance(tokens, torch.Tensor):
+            raise TypeError("dataset_tokens must be a torch.Tensor")
+        if tokens.dim() == 2:
+            tokens = tokens.unsqueeze(0)
+        elif tokens.dim() != 3:
             raise ValueError("dataset_tokens must have shape [batches, classes, dim]")
 
         model_embeddings = model_batch.get("model_tokens")
-        model_indices = model_batch.get("model_indices")
+        if not isinstance(model_embeddings, torch.Tensor):
+            raise TypeError("model_tokens must be a torch.Tensor")
 
-        true_ranks = dataset_batch.get("true_ranks")
-        if true_ranks is None:
-            true_ranks = model_indices.to(dtype=torch.float32)
-        else:
-            true_ranks = true_ranks.to(dtype=torch.float32)
+        model_indices = model_batch.get("model_indices")
+        if not isinstance(model_indices, torch.Tensor):
+            raise TypeError("model_indices must be a torch.Tensor")
+
+        dataset_name = dataset_batch.get("dataset_name")
+        if isinstance(dataset_name, (list, tuple)):
+            dataset_name = dataset_name[0] if dataset_name else ""
+        dataset_name = str(dataset_name or "")
+
+        model_names = model_batch.get("model_names")
+        if isinstance(model_names, tuple):
+            model_names = list(model_names)
+        if not isinstance(model_names, list):
+            model_names = list(model_names) if model_names is not None else []
+
+        true_ranks = compute_true_ranks(dataset_name, model_names)
+        if true_ranks.numel() == 0:
+            if not self._warned_missing_ranks:
+                logger.warning(
+                    "Unable to derive rankings for dataset '%s'; using uniform ranks.",
+                    dataset_name,
+                )
+                self._warned_missing_ranks = True
+            true_ranks = torch.arange(1, model_embeddings.shape[0] + 1, dtype=torch.long)
+
+        dataset_batch = dict(dataset_batch)
+        dataset_batch["true_ranks"] = true_ranks
 
         return SimilarityBatch(
             dataset_tokens=tokens,
@@ -87,8 +113,12 @@ class SimilarityTransformerTrainer(Trainer):
 
     def __init__(self) -> None:
         self.cfg = ConfigParser.get(SimilarityTrainerConfig)
+        self.model_cfg = ConfigParser.get(SimilarityModelConfig)
 
-        model = SimilarityTransformerModel()
+        if getattr(self.cfg, "grad_clip", None) is not None:
+            setattr(self.cfg, "gradient_clip_norm", self.cfg.grad_clip)
+
+        model = SimilarityTransformerModel(self.model_cfg)
         self.batch_iterable = SimilarityBatchIterable()
 
         optimizer = torch.optim.AdamW(
