@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from copy import deepcopy
 from dataclasses import dataclass
 from itertools import cycle
+from pathlib import Path
 from typing import Any, Dict, Iterator
 
 import torch
@@ -112,33 +114,29 @@ class SimilarityTransformerTrainer(Trainer):
     """Trainer that optimizes the similarity transformer with listwise ranking loss."""
 
     def __init__(self) -> None:
-        self.cfg = ConfigParser.get(SimilarityTrainerConfig)
-        self.model_cfg = ConfigParser.get(SimilarityModelConfig)
+        training_config = ConfigParser.get(SimilarityTrainerConfig)
 
-        if getattr(self.cfg, "grad_clip", None) is not None:
-            setattr(self.cfg, "gradient_clip_norm", self.cfg.grad_clip)
-
-        model = SimilarityTransformerModel(self.model_cfg)
+        model = SimilarityTransformerModel()
         self.batch_iterable = SimilarityBatchIterable()
 
         optimizer = torch.optim.AdamW(
             model.parameters(),
-            lr=self.cfg.learning_rate,
-            weight_decay=self.cfg.weight_decay,
+            lr=training_config.learning_rate,
+            weight_decay=training_config.weight_decay,
         )
 
         super().__init__(
             model=model,
             dataloader=self.batch_iterable,
             optimizer=optimizer,
-            config=self.cfg,
+            config=training_config,
         )
 
-        model.to(self.device)
+        self.model.to(self.device)
 
-        self.ranking_loss_weight = float(self.cfg.ranking_loss_weight)
-        self.logit_l2_weight = float(self.cfg.logit_l2_weight)
-        self.extra_loss_weight = float(self.cfg.extra_loss_weight)
+        self.ranking_loss_weight = float(self.config.ranking_loss_weight)
+        self.logit_l2_weight = float(self.config.logit_l2_weight)
+        self.extra_loss_weight = float(self.config.extra_loss_weight)
         self._last_batch_metrics: Dict[str, float] = {}
 
     def _train_batch(
@@ -197,3 +195,21 @@ class SimilarityTransformerTrainer(Trainer):
 
     def on_train_begin(self) -> None:  # type: ignore[override]
         logger.info("Starting similarity transformer training with %d dataset batches.", len(self.batch_iterable))
+
+    def on_train_end(self) -> None:  # type: ignore[override]
+        if not self.history:
+            return
+
+        final_metrics = self.history[-1]["metrics"]
+        final_loss = final_metrics.get("loss")
+        if final_loss is None:
+            logger.warning("Final loss missing; skipping similarity transformer checkpoint save.")
+            return
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        save_dir = Path(self.config.model_save_directory)
+        save_dir.mkdir(parents=True, exist_ok=True)
+        save_path = save_dir / f"similarity_transformer_weights.loss_{final_loss:.6f}.{timestamp}.pt"
+        torch.save(self.model.state_dict(), save_path)
+        logger.info("Similarity transformer weights saved to %s", save_path)
+        logger.info("Final training metrics: %s", final_metrics)

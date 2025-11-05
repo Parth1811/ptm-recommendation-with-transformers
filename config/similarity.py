@@ -73,3 +73,4 @@ class SimilarityTrainerConfig(BaseTrainerConfig):
     ranking_loss_weight: float = 1.0
     logit_l2_weight: float = 0.0
     extra_loss_weight: float = 0.0
+    model_save_directory: Path = Path("artifacts/models/similarity_transformer")

@@ -3,13 +3,13 @@
 
 #SBATCH --account=davisjam
 #SBATCH --nodes=1
-#SBATCH --ntasks=64
+#SBATCH --ntasks=14
 #SBATCH --gpus-per-node=1
-#SBATCH --partition=smallgpu
+#SBATCH --partition=ai
 #SBATCH --mem=80G
 #SBATCH --qos=normal
-#SBATCH --time=00:30:00
-#SBATCH --job-name=train_autoencoder
+#SBATCH --time=10:00:00
+#SBATCH --job-name=train_similarity_transformer
 #SBATCH --output=/home/patil185/joboutput/train_autoencoder.%j.out
 #SBATCH --error=/home/patil185/joboutput/train_autoencoder.%j.err
 
@@ -46,11 +46,12 @@ echo ""
 # Train model
 # -----------------------------
 # python -u train.py ModelAutoEncoderTrainer
+python -u train.py SimilarityTransformerTrainer
 
 # -----------------------------
 # Evaluate model
 # -----------------------------
-python -u evaluate_model_autoencoder.py
+# python -u evaluate_model_autoencoder.py
 
 echo ""
 echo "Job end: $(date)"
