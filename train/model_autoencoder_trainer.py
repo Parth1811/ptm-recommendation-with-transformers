@@ -22,7 +22,6 @@ class ModelAutoEncoderTrainer(Trainer):
     """Trainer specialization for the AutoEncoder model."""
 
     def __init__(self) -> None:
-        ConfigParser.load()
         training_config = ConfigParser.get(TrainModelAutoEncoderConfig)
         model = ModelAutoEncoder()
 

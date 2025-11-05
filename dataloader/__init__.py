@@ -1,13 +1,12 @@
 """Dataloader utilities for training tasks."""
 
-from .imagenet_dataset import (
-    ClassBalancedBatchSampler,
-    GenericBalancedDataLoader,
-    GenericImageDataset,
-    ImageNetBalancedDataLoader,
-    ImageNetDataset,
-)
+from .imagenet_dataset import (ClassBalancedBatchSampler,
+                               GenericBalancedDataLoader, GenericImageDataset,
+                               ImageNetBalancedDataLoader, ImageNetDataset)
 from .model_npz_dataset import ModelParameterDataset
+from .similarity_datasets import (DatasetTokenDataset, ModelEmbeddingDataset,
+                                  build_dataset_token_loader,
+                                  build_model_embedding_loader)
 
 __all__ = [
     "ModelParameterDataset",
@@ -16,4 +15,8 @@ __all__ = [
     "ImageNetDataset",
     "ImageNetBalancedDataLoader",
     "ClassBalancedBatchSampler",
+    "ModelEmbeddingDataset",
+    "DatasetTokenDataset",
+    "build_model_embedding_loader",
+    "build_dataset_token_loader",
 ]
