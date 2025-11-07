@@ -173,8 +173,96 @@ class Trainer:
     def on_train_end(self) -> None:
         """Hook for subclasses to run logic after training ends."""
 
+    def _forward_batch(self, batch: Any) -> torch.Tensor:
+        """Forward pass for a batch, returning the computed loss.
+
+        This is the abstract method that child trainers can override to handle
+        complex batch structures and multiple tensor inputs. The default implementation
+        calls compute_loss(), which works for simple tensor batches and dict/dataclass
+        batches where compute_loss() handles all unpacking and device movement.
+
+        For trainers with very complex batch handling (e.g., SimilarityTransformerTrainer),
+        override this method to:
+        1. Move batch to device (handle dataclass .to(), dict values, etc.)
+        2. Call model with unpacked tensors
+        3. Compute loss from model outputs
+        4. Return scalar loss tensor
+
+        Args:
+            batch: A batch object in any format (Tensor, dict, dataclass, etc.)
+
+        Returns:
+            A scalar torch.Tensor representing the loss.
+
+        Default behavior:
+            Calls self.compute_loss(batch) which must be implemented by child classes.
+
+        Example for complex batch (override _forward_batch instead of compute_loss):
+            def _forward_batch(self, batch: SimilarityBatch) -> torch.Tensor:
+                batch = batch.to(self.device)
+                output = self.model(batch.embeddings, batch.tokens)
+                loss = self.compute_loss_from_output(output, batch.targets)
+                return loss
+        """
+        return self.compute_loss(batch)
+
     def compute_loss(self, batch: torch.Tensor) -> torch.Tensor:
-        """Subclasses must implement to return a scalar loss tensor."""
+        """Compute loss for a batch.
+
+        Subclasses must implement this method to return a scalar loss tensor.
+
+        IMPORTANT: This method is called by _forward_batch(). If your trainer needs
+        complex batch handling (multiple tensor inputs, dataclass unpacking, etc.),
+        you have two options:
+
+        Option 1: Keep using compute_loss() if your batch structure allows
+        --------
+        For trainers where batch unpacking is straightforward (dicts with known keys,
+        dataclasses with .to() method), implement compute_loss() to:
+        1. Unpack the batch components from the container (dict keys, dataclass fields)
+        2. Move individual tensors to self.device as needed
+        3. Call self.model() with the unpacked tensors
+        4. Compute and return scalar loss
+
+        For simple tensor batches, the batch will already be on the correct device.
+
+        Option 2: Override _forward_batch() for advanced use cases
+        ---------
+        For trainers with highly complex batch handling (multiple iterables cycling,
+        structured outputs that need metric collection, etc.), override _forward_batch()
+        instead. This gives you full control over batch processing while keeping the
+        training loop infrastructure intact.
+
+        Args:
+            batch: A batch object. Can be:
+                - torch.Tensor: Already on self.device
+                - dict: Contains tensor values that may need device movement
+                - Custom dataclass: May need custom unpacking and device handling
+
+        Returns:
+            A scalar torch.Tensor representing the loss.
+
+        Example 1 - dict batch (implement compute_loss):
+            def compute_loss(self, batch: dict[str, torch.Tensor]) -> torch.Tensor:
+                tokens = batch["tokens"].to(self.device)
+                targets = batch["targets"].to(self.device)
+                logits = self.model(tokens)
+                return F.cross_entropy(logits, targets)
+
+        Example 2 - dataclass batch with .to() method (implement compute_loss):
+            def compute_loss(self, batch: MyBatch) -> torch.Tensor:
+                batch = batch.to(self.device)
+                logits = self.model(batch.data, batch.metadata)
+                return F.mse_loss(logits, batch.targets)
+
+        Example 3 - very complex batch (override _forward_batch):
+            def _forward_batch(self, batch: ComplexBatch) -> torch.Tensor:
+                # Custom logic here
+                batch = batch.to(self.device)
+                output = self.model(batch.data1, batch.data2, batch.data3)
+                loss = F.some_loss(output, batch.targets)
+                return loss
+        """
         raise NotImplementedError
 
     def _train_epoch(self, epoch: int, progress_bar: tqdm, total_batches: int | None) -> dict[str, float]:
@@ -254,20 +342,44 @@ class Trainer:
         return metrics
 
     def _train_batch(self, batch: torch.Tensor) -> tuple[float, int, float | None, dict[str, float]]:
-        batch = batch.to(self.device)
+        """Execute a single training batch with loss computation and gradient updates.
+
+        This method coordinates the training loop:
+        1. Extracts batch size from batch via _get_batch_size()
+        2. Performs forward pass via _forward_batch() (which can be overridden by subclasses)
+        3. Applies backward pass and optimizer step
+        4. Collects metrics
+        5. Returns loss, batch_size, gradient norm, and batch metrics
+
+        The forward pass is delegated to _forward_batch() which:
+        - By default calls compute_loss() for simple cases
+        - Can be overridden for complex batch handling (e.g., SimilarityTransformerTrainer)
+        """
+        batch_size = self._get_batch_size(batch)
         self.optimizer.zero_grad(set_to_none=True)
-        loss = self.compute_loss(batch)
+        loss = self._forward_batch(batch)
         loss.backward()
         grad_norm = self._apply_gradient_clipping()
         self.optimizer.step()
         batch_metrics = self._collect_batch_metrics()
-        return loss.detach().item(), batch.size(0), grad_norm, batch_metrics
+        return loss.detach().item(), batch_size, grad_norm, batch_metrics
 
     def _evaluate_batch(self, batch: torch.Tensor) -> tuple[float, int, dict[str, float]]:
-        batch = batch.to(self.device)
-        loss = self.compute_loss(batch)
+        """Execute a single evaluation batch without gradient updates.
+
+        This method performs validation/evaluation:
+        1. Extracts batch size via _get_batch_size()
+        2. Performs forward pass via _forward_batch() (which can be overridden by subclasses)
+        3. Collects metrics
+        4. Returns loss, batch_size, and batch metrics
+
+        Note: No backward pass or optimizer step occurs during evaluation.
+        The forward pass is delegated to _forward_batch() (same as training).
+        """
+        batch_size = self._get_batch_size(batch)
+        loss = self._forward_batch(batch)
         batch_metrics = self._collect_batch_metrics()
-        return loss.detach().item(), batch.size(0), batch_metrics
+        return loss.detach().item(), batch_size, batch_metrics
 
     def _get_current_lrs(self) -> list[float]:
         return [float(group.get("lr", 0.0)) for group in self.optimizer.param_groups]
@@ -331,6 +443,50 @@ class Trainer:
     def _collect_batch_metrics(self) -> dict[str, float]:
         """Hook for subclasses to expose batch level metrics."""
         return {}
+
+    def _get_batch_size(self, batch: Any) -> int:
+        """Extract the batch size from a batch of any format.
+
+        This method handles extracting batch size from:
+        - torch.Tensor: Returns batch.size(0)
+        - dict: Returns size of first tensor value's first dimension
+        - dataclass with .to() method: Assumes first tensor field has batch size in dim 0
+        - custom objects: Subclasses can override for their specific batch type
+
+        Args:
+            batch: A batch object of any format. Can be Tensor, dict, dataclass, or custom object.
+
+        Returns:
+            The batch size (number of samples in the batch).
+
+        Raises:
+            ValueError: If batch size cannot be determined from the batch format.
+        """
+        # Handle torch.Tensor batches (simple case)
+        if isinstance(batch, torch.Tensor):
+            return batch.size(0)
+
+        # Handle dictionary batches
+        if isinstance(batch, dict):
+            for key, value in batch.items():
+                if isinstance(value, torch.Tensor):
+                    return value.size(0)
+            raise ValueError(f"No tensor values found in batch dictionary with keys: {list(batch.keys())}")
+
+        # Handle dataclass batches with .to() method (like SimilarityBatch)
+        if hasattr(batch, "to") and callable(getattr(batch, "to")):
+            # Try to find a tensor attribute to extract batch size from
+            for attr_name in dir(batch):
+                if not attr_name.startswith("_"):
+                    attr_value = getattr(batch, attr_name)
+                    if isinstance(attr_value, torch.Tensor):
+                        return attr_value.size(0)
+            raise ValueError(f"No tensor attributes found in batch object {batch.__class__.__name__}")
+
+        raise ValueError(
+            f"Unable to extract batch size from batch of type {type(batch).__name__}. "
+            f"Batch must be torch.Tensor, dict, or object with tensor attributes."
+        )
 
     def record_data(
         self,

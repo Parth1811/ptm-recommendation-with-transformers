@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**IMPORTANT**: See `.claude/memory/project.md` for critical November 2025 updates on the `_forward_batch()` hook and combined similarity dataloader. Do NOT create artifact .md files - add information to memory instead.
+
 ## Project Overview
 
 This is a research thesis project on pre-trained model recommendation for specific hardware using transformers. The system learns to recommend which pre-trained models will perform best on given datasets by:
@@ -73,8 +75,17 @@ The training system is built around a registry pattern with `TRAINER_REGISTRY` i
 - Configurable early stopping and learning rate scheduling
 - Gradient clipping support
 - Automatic plot generation for loss curves (linear, log, rolling mean)
+- **New**: Multi-tensor input support via `_forward_batch()` hook for complex batch handling
 
-Subclass trainers must implement `compute_loss(batch)` and can override hooks like `on_train_begin()` and `_collect_batch_metrics()`.
+**Trainer Implementation Patterns:**
+
+1. **Simple tensor input** - Implement `compute_loss(batch: torch.Tensor)` (no override needed)
+2. **Dict/dataclass input** - Implement `compute_loss(batch: dict)` or `compute_loss(batch: dataclass)` (no override needed)
+3. **Complex batch handling** - Override `_forward_batch(batch)` for full control over multi-tensor inputs
+
+The `_forward_batch()` method is called by the training loop and must return a scalar loss tensor. Default implementation calls `compute_loss()` for backward compatibility. Child trainers can override it to handle complex batch structures, multiple tensor inputs, or custom preprocessing logic.
+
+**Backward Compatibility**: All existing trainers work without changes. The `_forward_batch()` hook is purely optional for new code requiring advanced batch handling.
 
 ### Configuration System
 
@@ -119,6 +130,14 @@ Each subsystem (extractors, autoencoder, training, datasets) has its own section
 - `DatasetTokenDataset` loads CLIP-extracted dataset features in sharded NPZ format
 - Both support batching and multiple splits (train/validation/test)
 
+**Combined Similarity Dataloader** (`dataloader/combined_similarity_dataloader.py`) - **NEW**:
+- `CombinedSimilarityDataset` - Unified loader for similarity transformer training
+- `build_combined_similarity_loader()` - Factory function for DataLoader creation
+- Returns batches with complete structure: `(dataset_tokens, model_tokens, true_ranks, model_names, dataset_names, model_indices, dataset_splits, batch_size)`
+- Automatically loads ground truth rankings from `constants/dataset_model_performance.json`
+- Handles variable-length dataset tokens with automatic padding
+- Replaces need for manual coordination of multiple separate loaders
+
 ### Feature Extraction Pipeline
 
 **Extractors** (`extractors/`):
@@ -140,6 +159,58 @@ Each subsystem (extractors, autoencoder, training, datasets) has its own section
 **Artifacts**: `artifacts/` - Trained model weights, extracted features, training run logs
 **Run Logs**: `artifacts/models/*/runs/*.json` - Training history with metrics
 
+## Recent Improvements (November 2025)
+
+### 1. Enhanced BaseTrainer for Multi-Tensor Inputs
+
+**File Modified**: `train/base_trainer.py`
+
+Added `_forward_batch()` hook method to support models with multiple tensor inputs without requiring changes to existing trainers:
+
+```python
+def _forward_batch(self, batch: Any) -> torch.Tensor:
+    """Override this method for complex batch handling.
+
+    Default implementation calls compute_loss() for backward compatibility.
+    """
+    return self.compute_loss(batch)
+```
+
+**Benefits**:
+- Existing trainers work without modification
+- New trainers can override `_forward_batch()` for complex batch structures
+- No code duplication in training loop (`_train_batch()`, `_evaluate_batch()`)
+- Supports dict batches, dataclass batches, and custom batch objects
+- Full separation between loop infrastructure and batch-specific logic
+
+**Documentation**: See `BASETRAINER_CHANGES_SUMMARY.md` for technical details and examples
+
+### 2. New Combined Similarity Dataloader
+
+**File Created**: `dataloader/combined_similarity_dataloader.py`
+
+Unified dataloader that replaces separate model and dataset loaders:
+
+**Key Features**:
+- Single coordinated loader instead of two separate ones
+- Batch structure: `{"dataset_tokens": Tensor, "model_tokens": Tensor, "true_ranks": Tensor, ...}`
+- Automatically loads ground truth rankings from `constants/dataset_model_performance.json`
+- Handles variable-length dataset tokens with automatic padding
+- Rich metadata (model names, dataset names, split tracking)
+- Type-safe with TypedDict definitions
+
+**Usage**:
+```python
+from dataloader import build_combined_similarity_loader
+
+loader = build_combined_similarity_loader(splits=("train",), shuffle=True)
+for batch in loader:
+    probs = model(batch["model_tokens"], batch["dataset_tokens"])
+    loss = ranking_loss(probs, batch["true_ranks"])
+```
+
+**Documentation**: See `DATALOADER_SUMMARY.md`, `DATALOADER_INTEGRATION_GUIDE.md`, and `COMBINED_DATALOADER_REFERENCE.md` for comprehensive guides
+
 ## Important Implementation Details
 
 - All paths in `config.ini` are absolute (e.g., `/scratch/gautschi/patil185/`) and must be adjusted for local development
@@ -148,3 +219,5 @@ Each subsystem (extractors, autoencoder, training, datasets) has its own section
 - Dataset loaders use `beautilog` for logging; avoid print statements
 - The autoencoder's code layer can have L1 regularization via `code_l1_penalty` config
 - Reconstruction loss supports both MSE and Smooth L1 (configurable via `reconstruction_loss`)
+- The `_forward_batch()` hook should return a scalar loss tensor; use `_collect_batch_metrics()` for auxiliary metrics
+- The combined similarity dataloader reads rankings from `constants/dataset_model_performance.json`; ensure this file is populated before training

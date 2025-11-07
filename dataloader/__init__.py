@@ -1,5 +1,11 @@
 """Dataloader utilities for training tasks."""
 
+from .combined_similarity_dataloader import (
+    CombinedSimilarityBatch,
+    CombinedSimilarityDataset,
+    CombinedSimilarityItem,
+    build_combined_similarity_loader,
+)
 from .imagenet_dataset import (ClassBalancedBatchSampler,
                                GenericBalancedDataLoader, GenericImageDataset,
                                ImageNetBalancedDataLoader, ImageNetDataset)
@@ -19,4 +25,8 @@ __all__ = [
     "DatasetTokenDataset",
     "build_model_embedding_loader",
     "build_dataset_token_loader",
+    "CombinedSimilarityDataset",
+    "CombinedSimilarityItem",
+    "CombinedSimilarityBatch",
+    "build_combined_similarity_loader",
 ]
