@@ -46,7 +46,8 @@ echo ""
 # Train model
 # -----------------------------
 # python -u train.py ModelAutoEncoderTrainer
-python -u train.py SimilarityTransformerTrainer
+# python -u train.py SimilarityTransformerTrainer
+python -u train.py CustomSimilarityTransformerTrainer
 
 # -----------------------------
 # Evaluate model

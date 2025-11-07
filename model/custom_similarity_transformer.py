@@ -76,8 +76,7 @@ class CustomSimilarityTransformer(nn.Module):
                 embed_dim=self.embed_dim,
                 num_heads=self.num_heads,
                 dropout=self.dropout,
-                batch_first=self.batch_first,
-                add_bias_batch_first=True,
+                batch_first=self.batch_first
             )
             for _ in range(self.num_layers)
         ])
