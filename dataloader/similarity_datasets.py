@@ -61,7 +61,7 @@ def _load_npz_embedding(path: Path, key: str) -> np.ndarray:
 class ModelEmbeddingDataset(Dataset[ModelEmbeddingItem]):
     """Dataset that yields pre-computed model embeddings and metadata."""
 
-    def __init__(self) -> None:
+    def __init__(self, *, max_models: int | None = None) -> None:
         self.cfg = ConfigParser.get(ModelEmbeddingLoaderConfig)
         self.root_dir = Path(self.cfg.root_dir).expanduser()
         self.embedding_key = self.cfg.embedding_key
@@ -73,6 +73,10 @@ class ModelEmbeddingDataset(Dataset[ModelEmbeddingItem]):
         files = sorted(f for f in self.root_dir.rglob("*.npz") if f.is_file())
         if not files:
             raise ValueError(f"No embedding archives found under {self.root_dir}")
+
+        max_allowed = max_models if max_models is not None else getattr(self.cfg, "max_models", None)
+        if max_allowed is not None and max_allowed > 0:
+            files = files[: int(max_allowed)]
 
         self.files: list[Path] = files
 
@@ -88,9 +92,9 @@ class ModelEmbeddingDataset(Dataset[ModelEmbeddingItem]):
         return {"model_token": tensor, "model_name": file_path.stem, "model_index": index}
 
 
-def build_model_embedding_loader() -> DataLoader:
-
-    dataset = ModelEmbeddingDataset()
+def build_model_embedding_loader(*, max_models: int | None = None, shuffle: bool | None = None) -> DataLoader:
+    dataset = ModelEmbeddingDataset(max_models=max_models)
+    effective_shuffle = dataset.cfg.shuffle if shuffle is None else shuffle
 
     def _collate(batch: Sequence[ModelEmbeddingItem]) -> ModelEmbeddingBatch:
         model_tokens = torch.stack([item["model_token"] for item in batch], dim=0)
@@ -101,7 +105,7 @@ def build_model_embedding_loader() -> DataLoader:
     return DataLoader(
         dataset,
         batch_size=dataset.cfg.batch_size,
-        shuffle=dataset.cfg.shuffle,
+        shuffle=effective_shuffle,
         num_workers=dataset.cfg.num_workers,
         pin_memory=dataset.cfg.pin_memory,
         collate_fn=_collate,
@@ -119,16 +123,27 @@ class DatasetShardEntry:
 class DatasetTokenDataset(Dataset[DatasetTokenItem]):
     """Dataset that yields class-level token representations from shard files."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        *,
+        splits: Sequence[str] | None = None,
+        dataset_names: Sequence[str] | None = None,
+        max_shards: int | None = None,
+    ) -> None:
         self.cfg = ConfigParser.get(DatasetTokenLoaderConfig)
         self.root_dir = Path(self.cfg.root_dir).expanduser()
         self.dtype = torch.float32
 
-        self.dataset_names = list(self.cfg.dataset_names) if self.cfg.dataset_names is not None else None
-        self.splits = list(self.cfg.splits)
+        configured_names = list(self.cfg.dataset_names) if self.cfg.dataset_names is not None else None
+        self.dataset_names = (
+            list(dataset_names) if dataset_names is not None else configured_names
+        )
+        configured_splits = list(self.cfg.splits)
+        self.splits = list(splits) if splits is not None else configured_splits
         self.shard_glob = self.cfg.shard_glob
         self.include_class_metadata = self.cfg.include_class_metadata
         self.max_batches = self.cfg.batch_size
+        self.max_shards = max_shards if max_shards is not None else getattr(self.cfg, "max_shards", None)
 
         if not self.root_dir.exists():
             raise FileNotFoundError(f"Dataset embeddings directory not found: {self.root_dir}")
@@ -149,6 +164,8 @@ class DatasetTokenDataset(Dataset[DatasetTokenItem]):
 
         if not entries:
             raise ValueError(f"No dataset shards found under {self.root_dir}")
+        if self.max_shards is not None and self.max_shards > 0:
+            entries = entries[: int(self.max_shards)]
 
         self.entries = entries
 
@@ -183,8 +200,15 @@ class DatasetTokenDataset(Dataset[DatasetTokenItem]):
         return payload
 
 
-def build_dataset_token_loader() -> DataLoader:
-    dataset = DatasetTokenDataset()
+def build_dataset_token_loader(
+    *,
+    splits: Sequence[str] | None = None,
+    shuffle: bool | None = None,
+    max_shards: int | None = None,
+    dataset_names: Sequence[str] | None = None,
+) -> DataLoader:
+    dataset = DatasetTokenDataset(splits=splits, dataset_names=dataset_names, max_shards=max_shards)
+    effective_shuffle = dataset.cfg.shuffle if shuffle is None else shuffle
 
     def _collate(batch: Sequence[DatasetTokenItem]) -> DatasetTokenBatch:
         # will always recieve only one DatasetTokenItem from each shard, which already has batches
@@ -194,7 +218,7 @@ def build_dataset_token_loader() -> DataLoader:
     return DataLoader(
         dataset,
         batch_size=1,
-        shuffle=False,
+        shuffle=effective_shuffle,
         num_workers=dataset.cfg.num_workers,
         pin_memory=dataset.cfg.pin_memory,
         collate_fn=_collate,

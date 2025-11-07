@@ -20,6 +20,7 @@ class ModelEmbeddingLoaderConfig(SubSectionParser):
     embedding_key: str = "embedding"
     batch_size: int = 32
     shuffle: bool = True
+    max_models: int | None = None
     num_workers: int = 0
     pin_memory: bool = True
 
@@ -35,7 +36,9 @@ class DatasetTokenLoaderConfig(SubSectionParser):
     splits: Sequence[str] = ("train", "validation", "test")
     shard_glob: str = "*.npz"
     batch_size: int = 1
+    shuffle: bool = True
     include_class_metadata: bool = True
+    max_shards: int | None = None
     num_workers: int = 0
     pin_memory: bool = True
 
@@ -58,6 +61,9 @@ class SimilarityModelConfig(SubSectionParser):
     max_position_embeddings: int = 2048
     use_pretrained: bool = False
     pretrained_model_name: str | None = None
+    temperature_init: float = 0.07
+    temperature_min: float = 0.01
+    temperature_max: float = 5.0
 
 
 @dataclass
@@ -67,10 +73,30 @@ class SimilarityTrainerConfig(BaseTrainerConfig):
     SECTION: ClassVar[str] = "train_similarity_transformer"
 
     shuffle: bool = True
-    learning_rate: float = 3e-4
+    learning_rate: float = 1e-3
     weight_decay: float = 1e-4
+    scheduler_min_lr: float = 1e-5
+    scheduler_factor: float = 0.5
+    scheduler_patience: int = 10
+    gradient_clip_norm: float = 1.0
     num_epochs: int = 1
-    ranking_loss_weight: float = 1.0
+    train_splits: Sequence[str] = ("train",)
+    validation_splits: Sequence[str] = ("validation",)
+    validation_interval_epochs: int = 1
+    ranking_loss_weight: float = 0.1
     logit_l2_weight: float = 0.0
     extra_loss_weight: float = 0.0
+    label_smoothing: float = 0.1
+    temperature_init: float = 0.07
+    temperature_min: float = 0.01
+    temperature_max: float = 5.0
+    hard_negative_top_k: int = 4
+    hard_negative_margin: float = 0.1
+    hard_negative_weight: float = 1.0
+    overfit_subset_size: int | None = 64
+    overfit_max_epochs: int = 50
+    overfit_shuffle: bool = True
+    enable_overfit_check: bool = True
+    log_grad_stats: bool = True
+    log_activation_stats: bool = True
     model_save_directory: Path = Path("artifacts/models/similarity_transformer")

@@ -3,12 +3,12 @@
 
 #SBATCH --account=davisjam
 #SBATCH --nodes=1
-#SBATCH --ntasks=14
+#SBATCH --ntasks=64
 #SBATCH --gpus-per-node=1
-#SBATCH --partition=ai
-#SBATCH --mem=80G
+#SBATCH --partition=smallgpu
+#SBATCH --mem=10G
 #SBATCH --qos=normal
-#SBATCH --time=10:00:00
+#SBATCH --time=08:00:00
 #SBATCH --job-name=train_similarity_transformer
 #SBATCH --output=/home/patil185/joboutput/train_autoencoder.%j.out
 #SBATCH --error=/home/patil185/joboutput/train_autoencoder.%j.err

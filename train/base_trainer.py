@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import json
+import random
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,12 +15,11 @@ import seaborn as sns
 import torch
 from beautilog import logger
 from torch import nn
+from torch.optim.lr_scheduler import LRScheduler, ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
-import matplotlib.pyplot as plt
 
 from config import BaseTrainerConfig
-from torch.optim.lr_scheduler import LRScheduler, ReduceLROnPlateau
 
 
 class Trainer:
@@ -37,6 +37,7 @@ class Trainer:
         run_name: str | None = None,
         run_directory: Path | None = None,
         scheduler: LRScheduler | ReduceLROnPlateau | None = None,
+        val_dataloader: DataLoader | Iterable[torch.Tensor] | None = None,
     ) -> None:
         if getattr(config, "num_epochs", None) is None:
             raise ValueError("Training configuration must provide a num_epochs attribute.")
@@ -45,6 +46,7 @@ class Trainer:
         self.dataloader = dataloader
         self.optimizer = optimizer
         self.scheduler = scheduler
+        self.val_dataloader = val_dataloader
         self.config = config
         self.device = getattr(model, "device", torch.device("cuda" if torch.cuda.is_available() else "cpu"))
         self.num_epochs = config.num_epochs
@@ -53,11 +55,17 @@ class Trainer:
         if self.gradient_clip_norm is not None:
             self.gradient_clip_norm = float(self.gradient_clip_norm)
 
+        self._monitor_metric_name = getattr(config, "scheduler_monitor", "validation.loss")
+        self.validation_interval_epochs = max(1, int(getattr(config, "validation_interval_epochs", 1)))
+        self.log_every_n_steps = max(1, int(getattr(config, "log_every_n_steps", 1)))
+        self._log_grad_stats = bool(getattr(config, "log_grad_stats", False))
+        self._global_step = 0
+
         self.early_stopping_patience = getattr(config, "early_stopping_patience", None)
         if self.early_stopping_patience is not None and self.early_stopping_patience <= 0:
             self.early_stopping_patience = None
         self.early_stopping_min_delta = float(getattr(config, "early_stopping_min_delta", 0.0))
-        self._best_monitored_loss = float("inf")
+        self._best_monitored_metric = float("inf")
         self._epochs_without_improvement = 0
         self._stop_requested = False
 
@@ -75,7 +83,20 @@ class Trainer:
         self._timer_start: float | None = None
 
         self._log_every_n_epochs = max(1, getattr(config, "log_every_n_epochs", 1))
+        self.seed = getattr(config, "seed", None)
+        if self.seed is not None:
+            self._set_seed(int(self.seed))
         logger.info("Initialized trainer %s at %s", self.run_name, self.run_file_path)
+
+    def _set_seed(self, seed: int) -> None:
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+        logger.info("Set random seed to %d for reproducibility.", seed)
 
 
     def _persist_run_file(self) -> None:
@@ -117,11 +138,22 @@ class Trainer:
 
         for epoch in range(1, self.num_epochs + 1):
             progress_bar.set_description(f"Training {progress_desc} (Epoch {epoch}/{self.num_epochs})")
-            epoch_metrics = self._train_epoch(epoch, progress_bar, total_batches)
-            self.record_data(epoch, epoch_metrics)
-            stop_training = self._after_epoch(epoch, epoch_metrics)
+            train_metrics = self._train_epoch(epoch, progress_bar, total_batches)
+            val_metrics = None
+            if self._should_validate(epoch):
+                val_metrics = self._validate_epoch(epoch)
+            self.record_data(epoch, train_metrics, val_metrics)
+            stop_training = self._after_epoch(epoch, train_metrics, val_metrics)
             if self._should_log_epoch(epoch):
-                logger.info("Epoch %d metrics: %s", epoch, epoch_metrics)
+                if val_metrics is not None:
+                    logger.info(
+                        "Epoch %d metrics: train=%s | validation=%s",
+                        epoch,
+                        train_metrics,
+                        val_metrics,
+                    )
+                else:
+                    logger.info("Epoch %d metrics: %s", epoch, train_metrics)
             if stop_training:
                 logger.info("Early stopping triggered at epoch %d.", epoch)
                 break
@@ -165,6 +197,23 @@ class Trainer:
                 aggregated_metrics[key] = aggregated_metrics.get(key, 0.0) + value
                 aggregated_counts[key] = aggregated_counts.get(key, 0) + 1
 
+            self._global_step += 1
+            current_lrs = self._get_current_lrs()
+            lr_display = ", ".join(f"{lr:.6g}" for lr in current_lrs)
+            grad_display = f"{grad_norm:.4f}" if grad_norm is not None else "nan"
+            metric_display = ""
+            if batch_metrics:
+                preview_items = list(batch_metrics.items())[:3]
+                metric_display = " | ".join(f"{key}={value:.4f}" for key, value in preview_items)
+            log_message = (
+                f"Step {self._global_step} | epoch={epoch} | batch={batch_index} | "
+                f"lr={lr_display} | grad_norm={grad_display} | batch_loss={loss_value:.4f}"
+            )
+            if metric_display:
+                log_message = f"{log_message} | {metric_display}"
+            if self._log_grad_stats or (self._global_step % self.log_every_n_steps == 0):
+                logger.info(log_message)
+
             progress_bar.update(1)
             progress_bar.set_postfix({"epoch": epoch, "loss": f"{loss_value:.4f}"}, refresh=False)
 
@@ -179,6 +228,31 @@ class Trainer:
             metrics[key] = float(total / max(aggregated_counts.get(key, 1), 1))
         return metrics
 
+    def _validate_epoch(self, epoch: int) -> dict[str, float]:
+        if self.val_dataloader is None:
+            return {}
+
+        self.model.eval()
+        running_loss = 0.0
+        samples_seen = 0
+        aggregated_metrics: dict[str, float] = {}
+        aggregated_counts: dict[str, int] = {}
+
+        with torch.no_grad():
+            for batch in self.val_dataloader:
+                loss_value, batch_size, batch_metrics = self._evaluate_batch(batch)
+                running_loss += loss_value * batch_size
+                samples_seen += batch_size
+                for key, value in batch_metrics.items():
+                    aggregated_metrics[key] = aggregated_metrics.get(key, 0.0) + value
+                    aggregated_counts[key] = aggregated_counts.get(key, 0) + 1
+
+        average_loss = running_loss / max(samples_seen, 1)
+        metrics: dict[str, float] = {"loss": float(average_loss)}
+        for key, total in aggregated_metrics.items():
+            metrics[key] = float(total / max(aggregated_counts.get(key, 1), 1))
+        return metrics
+
     def _train_batch(self, batch: torch.Tensor) -> tuple[float, int, float | None, dict[str, float]]:
         batch = batch.to(self.device)
         self.optimizer.zero_grad(set_to_none=True)
@@ -188,6 +262,50 @@ class Trainer:
         self.optimizer.step()
         batch_metrics = self._collect_batch_metrics()
         return loss.detach().item(), batch.size(0), grad_norm, batch_metrics
+
+    def _evaluate_batch(self, batch: torch.Tensor) -> tuple[float, int, dict[str, float]]:
+        batch = batch.to(self.device)
+        loss = self.compute_loss(batch)
+        batch_metrics = self._collect_batch_metrics()
+        return loss.detach().item(), batch.size(0), batch_metrics
+
+    def _get_current_lrs(self) -> list[float]:
+        return [float(group.get("lr", 0.0)) for group in self.optimizer.param_groups]
+
+    def _resolve_monitor_value(
+        self,
+        train_metrics: Mapping[str, float],
+        val_metrics: Mapping[str, float] | None,
+    ) -> float | None:
+        spec = (self._monitor_metric_name or "validation.loss").strip().lower()
+
+        def _get(mapping: Mapping[str, float] | None, key: str) -> float | None:
+            if mapping is None:
+                return None
+            return mapping.get(key)
+
+        if spec in {"loss", "train_loss", "train.loss"}:
+            return _get(train_metrics, "loss")
+        if spec in {"val_loss", "validation_loss", "validation.loss"}:
+            value = _get(val_metrics, "loss")
+            if value is not None:
+                return value
+            return _get(train_metrics, "loss")
+
+        if "." in spec:
+            prefix, metric_name = spec.split(".", 1)
+            if prefix in {"train", "training"}:
+                return _get(train_metrics, metric_name)
+            if prefix in {"val", "validation"}:
+                value = _get(val_metrics, metric_name)
+                if value is not None:
+                    return value
+                return _get(train_metrics, metric_name)
+
+        value = _get(train_metrics, spec)
+        if value is not None:
+            return value
+        return _get(val_metrics, spec)
 
     def _apply_gradient_clipping(self) -> float | None:
         if self.gradient_clip_norm is None:
@@ -214,11 +332,24 @@ class Trainer:
         """Hook for subclasses to expose batch level metrics."""
         return {}
 
-    def record_data(self, epoch: int, metrics: dict[str, float]) -> None:
+    def record_data(
+        self,
+        epoch: int,
+        train_metrics: dict[str, float],
+        val_metrics: dict[str, float] | None = None,
+    ) -> None:
         """Persist epoch metrics and emit structured logs."""
+        metrics_payload: dict[str, Any] = {"train": train_metrics}
+        if "loss" in train_metrics:
+            metrics_payload["loss"] = float(train_metrics["loss"])
+        if val_metrics:
+            metrics_payload["validation"] = val_metrics
+            if "loss" in val_metrics:
+                metrics_payload["val_loss"] = float(val_metrics["loss"])
+
         record = {
             "epoch": epoch,
-            "metrics": metrics,
+            "metrics": metrics_payload,
             "timestamp": datetime.now().isoformat(timespec="seconds"),
         }
         self.history.append(record)
@@ -229,7 +360,12 @@ class Trainer:
             return
 
         epochs = np.array([entry["epoch"] for entry in self.history], dtype=float)
-        losses = np.array([entry["metrics"]["loss"] for entry in self.history], dtype=float)
+        losses = np.array([entry["metrics"].get("loss") for entry in self.history], dtype=float)
+        val_loss_values = [entry["metrics"].get("val_loss") for entry in self.history]
+        val_losses = np.array(
+            [value if value is not None else np.nan for value in val_loss_values],
+            dtype=float,
+        )
 
         sns.set_theme(style="whitegrid")
         fig, axes = plt.subplots(1, 3, figsize=(18, 4.8))
@@ -239,7 +375,16 @@ class Trainer:
         min_loss_epoch = int(epochs[min_loss_idx])
         min_loss_value = float(losses[min_loss_idx])
 
-        sns.lineplot(ax=axes[0], x=epochs, y=losses, color="tab:blue")
+        sns.lineplot(ax=axes[0], x=epochs, y=losses, color="tab:blue", label="Train")
+        val_mask = np.isfinite(val_losses)
+        if val_mask.any():
+            sns.lineplot(
+                ax=axes[0],
+                x=epochs[val_mask],
+                y=val_losses[val_mask],
+                color="tab:orange",
+                label="Validation",
+            )
         axes[0].set_title("Loss")
         axes[0].set_xlabel("Epoch")
         axes[0].set_ylabel("Loss")
@@ -253,11 +398,23 @@ class Trainer:
             fontsize=9,
             color="tab:green",
         )
+        if val_mask.any():
+            axes[0].legend()
 
         if np.all(losses > 0):
             log_losses = np.log(losses)
-            sns.lineplot(ax=axes[1], x=epochs, y=log_losses, color="tab:orange")
+            sns.lineplot(ax=axes[1], x=epochs, y=log_losses, color="tab:orange", label="Train")
+            if val_mask.any() and np.all(val_losses[val_mask] > 0):
+                sns.lineplot(
+                    ax=axes[1],
+                    x=epochs[val_mask],
+                    y=np.log(val_losses[val_mask]),
+                    color="tab:red",
+                    label="Validation",
+                )
             axes[1].set_ylabel("Log Loss")
+            if val_mask.any():
+                axes[1].legend()
         else:
             axes[1].text(
                 0.5,
@@ -278,9 +435,18 @@ class Trainer:
             smoothed = np.convolve(losses, kernel, mode="valid")
             smoothed_epochs = epochs[window - 1 :]
             sns.lineplot(ax=axes[2], x=smoothed_epochs, y=smoothed, color="tab:purple")
+            if val_mask.sum() >= window:
+                val_epochs = epochs[val_mask]
+                val_series = val_losses[val_mask]
+                val_kernel = np.ones(window) / window
+                val_smoothed = np.convolve(val_series, val_kernel, mode="valid")
+                val_smoothed_epochs = val_epochs[window - 1 :]
+                sns.lineplot(ax=axes[2], x=val_smoothed_epochs, y=val_smoothed, color="tab:brown")
             axes[2].set_ylabel("Rolling Mean Loss")
             axes[2].set_title(f"Rolling Mean Loss (window={window})")
             axes[2].set_xlabel("Epoch")
+            if val_mask.sum() >= window:
+                axes[2].legend(["Train", "Validation"])
         else:
             axes[2].text(
                 0.5,
@@ -307,26 +473,46 @@ class Trainer:
             return True
         return epoch % self._log_every_n_epochs == 0
 
-    def _after_epoch(self, epoch: int, metrics: dict[str, float]) -> bool:
+    def _should_validate(self, epoch: int) -> bool:
+        if self.val_dataloader is None:
+            return False
+        if epoch % self.validation_interval_epochs == 0:
+            return True
+        if epoch == self.num_epochs:
+            return True
+        return False
+
+    def _after_epoch(
+        self,
+        epoch: int,
+        train_metrics: dict[str, float],
+        val_metrics: dict[str, float] | None,
+    ) -> bool:
         """Run scheduler updates and evaluate early stopping conditions."""
-        loss_value = metrics.get("loss")
+        monitor_value = self._resolve_monitor_value(train_metrics, val_metrics)
 
         if self.scheduler is not None:
             previous_lrs = [group["lr"] for group in self.optimizer.param_groups]
             if isinstance(self.scheduler, ReduceLROnPlateau):
-                if loss_value is not None:
-                    self.scheduler.step(loss_value)
+                if monitor_value is not None:
+                    self.scheduler.step(monitor_value)
+                else:
+                    logger.warning(
+                        "Scheduler monitor '%s' unavailable at epoch %d; skipping scheduler step.",
+                        self._monitor_metric_name,
+                        epoch,
+                    )
             else:
                 self.scheduler.step()
             current_lrs = [group["lr"] for group in self.optimizer.param_groups]
             if current_lrs != previous_lrs:
                 logger.info("Adjusted learning rates from %s to %s", previous_lrs, current_lrs)
 
-        if self.early_stopping_patience is None or loss_value is None:
+        if self.early_stopping_patience is None or monitor_value is None:
             return False
 
-        if loss_value < (self._best_monitored_loss - self.early_stopping_min_delta):
-            self._best_monitored_loss = loss_value
+        if monitor_value < (self._best_monitored_metric - self.early_stopping_min_delta):
+            self._best_monitored_metric = monitor_value
             self._epochs_without_improvement = 0
         else:
             self._epochs_without_improvement += 1
@@ -351,10 +537,16 @@ class Trainer:
         y_values = []
         for entry in history:
             metrics = entry.get("metrics", {})
-            if metric not in metrics:
+            value = metrics.get(metric)
+            if value is None and "." in metric:
+                prefix, child_key = metric.split(".", 1)
+                nested = metrics.get(prefix)
+                if isinstance(nested, Mapping):
+                    value = nested.get(child_key)
+            if value is None:
                 continue
             x_values.append(entry["epoch"])
-            y_values.append(metrics[metric])
+            y_values.append(value)
 
         if not x_values:
             raise KeyError(f"Metric '{metric}' not present in run history.")
