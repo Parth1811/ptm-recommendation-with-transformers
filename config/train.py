@@ -48,3 +48,15 @@ class TrainModelAutoEncoderConfig(BaseTrainerConfig):
     smooth_l1_beta: float = 0.5
     extracted_models_dir: Path = Path("artifacts/extracted/models")
     model_save_directory: Path = Path("artifacts/models/model_autoencoder")
+
+
+@dataclass
+class CustomSimilarityTransformerTrainerConfig(BaseTrainerConfig):
+    """Training configuration for the CustomSimilarityTransformer model."""
+
+    SECTION: ClassVar[str] = "custom_similarity_transformer_trainer"
+
+    shuffle: bool = True
+    regularization_weight: float = 0.1
+    validation_interval_epochs: int = 1
+    model_save_directory: Path = Path("artifacts/models/custom_similarity_transformer")

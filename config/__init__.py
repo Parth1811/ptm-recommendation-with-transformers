@@ -8,9 +8,10 @@ from .extractor import ExtractorConfig
 from .model import ModelAutoEncoderConfig, ModelAutoEncoderEvalConfig
 from .parser import ConfigParser
 from .similarity import (
+    CustomSimilarityTransformerConfig,
     DatasetTokenLoaderConfig,
     ModelEmbeddingLoaderConfig,
     SimilarityModelConfig,
     SimilarityTrainerConfig,
 )
-from .train import BaseTrainerConfig, TrainModelAutoEncoderConfig
+from .train import BaseTrainerConfig, CustomSimilarityTransformerTrainerConfig, TrainModelAutoEncoderConfig
