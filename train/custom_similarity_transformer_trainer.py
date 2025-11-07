@@ -10,8 +10,9 @@ import torch
 from beautilog import logger
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
-from config import ConfigParser, CustomSimilarityTransformerConfig, CustomSimilarityTransformerTrainerConfig
-from dataloader import build_dataset_token_loader
+from config import (ConfigParser, CustomSimilarityTransformerConfig,
+                    CustomSimilarityTransformerTrainerConfig)
+from dataloader import build_combined_similarity_loader
 from loss.ranking_loss import ranking_loss
 from model import CustomSimilarityTransformer
 
@@ -21,10 +22,14 @@ from .base_trainer import Trainer
 class CustomSimilarityTransformerTrainer(Trainer):
     """Trainer for CustomSimilarityTransformer model using ranking and regularization losses.
 
-    This trainer:
-    - Extracts model_tokens and dataset_tokens from dataloader batches
+    This trainer uses the combined similarity dataloader which provides both model embeddings
+    and dataset tokens in a single batch, along with ground truth rankings.
+
+    The trainer:
+    - Receives batches with model_tokens, dataset_tokens, and true_ranks from the combined loader
     - Passes them through CustomSimilarityTransformer to get probability distributions
     - Computes combined loss: ranking_loss + regularization_weight * l2_loss
+    - Tracks individual loss components (ranking_loss, l2_loss) as auxiliary metrics
     - Automatically saves model weights at training end
     """
 
@@ -36,12 +41,12 @@ class CustomSimilarityTransformerTrainer(Trainer):
         # Initialize model
         model = CustomSimilarityTransformer(config=model_config)
 
-        # Build dataloaders
-        train_dataloader = build_dataset_token_loader(
+        # Build combined dataloaders (includes model embeddings, dataset tokens, and rankings)
+        train_dataloader = build_combined_similarity_loader(
             splits=("train",),
             shuffle=training_config.shuffle,
         )
-        val_dataloader = build_dataset_token_loader(
+        val_dataloader = build_combined_similarity_loader(
             splits=("validation",),
             shuffle=False,
         )
@@ -85,12 +90,14 @@ class CustomSimilarityTransformerTrainer(Trainer):
     def compute_loss(self, batch: dict[str, Any]) -> torch.Tensor:
         """Compute combined ranking and regularization loss.
 
+        The batch comes from the combined similarity dataloader and contains:
+        - dataset_tokens: (B, M, D) - batch of dataset token sequences
+        - model_tokens: (B, N, D) - batch of model embeddings
+        - true_ranks: (B, N) - batch of ground truth performance rankings
+        - Additional metadata (model_names, dataset_names, etc.)
+
         Args:
-            batch: Dictionary containing:
-                - dataset_tokens: Tensor of shape (B, M, D) - dataset feature tokens
-                - model_tokens: Tensor of shape (B, N, D) - model embeddings
-                - true_ranks: Tensor of shape (B, N) - true ranking scores/indices
-                Additional keys may be present (metadata).
+            batch: Dictionary from CombinedSimilarityBatch containing all required tensors.
 
         Returns:
             Scalar loss tensor combining ranking and regularization losses.
@@ -99,7 +106,7 @@ class CustomSimilarityTransformerTrainer(Trainer):
             KeyError: If required batch keys are missing.
             ValueError: If tensor shapes are invalid.
         """
-        # Extract required tensors from batch
+        # Extract required tensors from batch and move to device
         if "dataset_tokens" not in batch:
             raise KeyError("Batch must contain 'dataset_tokens'")
         if "model_tokens" not in batch:
@@ -107,9 +114,9 @@ class CustomSimilarityTransformerTrainer(Trainer):
         if "true_ranks" not in batch:
             raise KeyError("Batch must contain 'true_ranks'")
 
-        dataset_tokens = batch["dataset_tokens"]
-        model_tokens = batch["model_tokens"]
-        true_ranks = batch["true_ranks"]
+        dataset_tokens = batch["dataset_tokens"].to(self.device)
+        model_tokens = batch["model_tokens"].to(self.device)
+        true_ranks = batch["true_ranks"].to(self.device)
 
         # Validate shapes
         if dataset_tokens.dim() != 3:
