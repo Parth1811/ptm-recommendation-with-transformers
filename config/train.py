@@ -53,6 +53,7 @@ class TrainModelAutoEncoderConfig(BaseTrainerConfig):
     code_l1_penalty: float = 0.0
     reconstruction_loss: str = "smooth_l1"
     smooth_l1_beta: float = 0.5
+    validate_every_n_epochs: int = 1
     extracted_models_dir: Path = Path("artifacts/extracted/models")
     model_save_directory: Path = Path("artifacts/models/model_autoencoder")
 

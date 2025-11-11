@@ -95,7 +95,7 @@ class ModelAutoEncoderTrainer(BaseTrainer):
             train_loss /= len(self.dataloader)
 
             val_loss = -1
-            if epoch % self.config.log_every_n_epochs == 0:
+            if epoch % self.config.validate_every_n_epochs == 0:
                 val_loss = self.validate()
 
             if epoch % self.config.save_checkpoint_every_n_epochs == 0:
@@ -105,7 +105,9 @@ class ModelAutoEncoderTrainer(BaseTrainer):
                 self.save_checkpoint(epoch, is_best=True)
                 logger.checkpoint(f'New best validation loss: {val_loss:.6f} at epoch {epoch}')
 
-            self.scheduler.step(val_loss)
+            if val_loss != -1:
+                self.scheduler.step(val_loss)
+
             self.save_metrics(epoch=epoch, loss=train_loss, val_loss=val_loss,
                                 other_metrics={'learning_rate': self.optimizer.param_groups[0]['lr']})
 
@@ -131,7 +133,7 @@ class ModelAutoEncoderTrainer(BaseTrainer):
 
     def check_early_stopping(self, val_loss: float) -> bool:
         """Check if early stopping criteria is met."""
-        if val_loss < self.best_val_loss - self.config.early_stopping_min_delta:
+        if val_loss != -1 and val_loss < self.best_val_loss - self.config.early_stopping_min_delta:
             self.best_val_loss = val_loss
             self.epochs_without_improvement = 0
             return False
