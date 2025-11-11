@@ -9,12 +9,16 @@ from typing import ClassVar
 
 from .base import SubSectionParser
 
+
 @dataclass
 class BaseTrainerConfig(SubSectionParser, ABC):
     """Configuration for training a model."""
 
     batch_size: int = 32
     num_epochs: int = 10
+    num_workers: int = 32
+    device: str = "cuda"
+
     learning_rate: float = 1e-3
     scheduler_mode: str = "min"
     scheduler_factor: float = 0.5
@@ -24,14 +28,16 @@ class BaseTrainerConfig(SubSectionParser, ABC):
     scheduler_cooldown: int = 0
     scheduler_min_lr: float = 1e-5
     scheduler_monitor: str = "validation.loss"
-    log_every_n_epochs: int = 1
-    log_every_n_steps: int = 1
-    progress_description: str = "Training"
     weight_decay: float = 0.0
+
     gradient_clip_norm: float | None = None
     early_stopping_patience: int | None = None
     early_stopping_min_delta: float = 0.0
-    seed: int | None = 42
+
+    log_every_n_epochs: int = 1
+    log_every_n_steps: int = 1
+    progress_description: str = "Training"
+    model_save_directory: Path = Path("artifacts/models")
 
 
 @dataclass

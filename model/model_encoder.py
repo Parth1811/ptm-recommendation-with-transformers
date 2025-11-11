@@ -101,7 +101,6 @@ class ModelAutoEncoder(AutoEncoder):
     """AutoEncoder initialized directly from configuration values."""
 
     def __init__(self, config: ModelAutoEncoderConfig | None = None, *, device: torch.device | str | None = None, auto_configure_device: bool = True) -> None:
-        ConfigParser.load()
         self.config = config or ConfigParser.get(ModelAutoEncoderConfig)
         resolved_device = self._resolve_device(device) if auto_configure_device else device
 

@@ -1,13 +1,14 @@
 """Trainer registry."""
 
-from .custom_similarity_transformer_trainer import CustomSimilarityTransformerTrainer
+# from .custom_similarity_transformer_trainer import CustomSimilarityTransformerTrainer
 from .model_autoencoder_trainer import ModelAutoEncoderTrainer
-from .similarity_transformer_trainer import SimilarityTransformerTrainer
+
+# from .similarity_transformer_trainer import SimilarityTransformerTrainer
 
 TRAINER_REGISTRY = {
-    "CustomSimilarityTransformerTrainer": CustomSimilarityTransformerTrainer,
+#     "CustomSimilarityTransformerTrainer": CustomSimilarityTransformerTrainer,
     "ModelAutoEncoderTrainer": ModelAutoEncoderTrainer,
-    "SimilarityTransformerTrainer": SimilarityTransformerTrainer,
+#     "SimilarityTransformerTrainer": SimilarityTransformerTrainer,
 }
 
-__all__ = ["TRAINER_REGISTRY", "CustomSimilarityTransformerTrainer", "ModelAutoEncoderTrainer", "SimilarityTransformerTrainer"]
+__all__ = ["TRAINER_REGISTRY", "ModelAutoEncoderTrainer"]

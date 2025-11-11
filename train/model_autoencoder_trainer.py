@@ -1,131 +1,192 @@
-"""Model AutoEncoder trainer definition."""
+"""AutoEncoder training implementation."""
 
 from __future__ import annotations
 
-from datetime import datetime
+import json
 from pathlib import Path
+from typing import Any
 
 import torch
 from beautilog import logger
 from torch import nn
-from torch.utils.data import DataLoader
+from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+from torch.utils.data import DataLoader
+from tqdm.auto import tqdm
 
 from config import ConfigParser, TrainModelAutoEncoderConfig
 from dataloader import ModelParameterDataset
 from model import ModelAutoEncoder
 
-from .base_trainer import Trainer
+from .base_trainer import BaseTrainer, TrainingMetrics
 
 
-class ModelAutoEncoderTrainer(Trainer):
-    """Trainer specialization for the AutoEncoder model."""
+class ModelAutoEncoderTrainer(BaseTrainer):
+    """Trainer for AutoEncoder models."""
 
     def __init__(self) -> None:
-        training_config = ConfigParser.get(TrainModelAutoEncoderConfig)
-        model = ModelAutoEncoder()
+        """Initialize AutoEncoder trainer."""
+        self.config = ConfigParser.get(TrainModelAutoEncoderConfig)
+        self.model = ModelAutoEncoder()
 
-        dataset = ModelParameterDataset(
-            root_dir=training_config.extracted_models_dir,
-            normalize=training_config.normalize_inputs,
-        )
-        sample_dimension = dataset[0].numel()
-        if sample_dimension != model.encoder_input_size:
-            raise ValueError(f"Input dimension mismatch: dataset sample has {sample_dimension} features but encoder_input_size is {model.encoder_input_size}.")
 
-        dataloader = DataLoader(
-            dataset,
-            batch_size=training_config.batch_size,
-            shuffle=training_config.shuffle,
-            pin_memory=torch.cuda.is_available(),
-        )
-        optimizer = torch.optim.Adam(
-            model.parameters(),
-            lr=training_config.learning_rate,
-            betas=(training_config.beta1, training_config.beta2),
-            weight_decay=training_config.weight_decay,
-        )
-        scheduler = ReduceLROnPlateau(
-            optimizer,
-            mode=training_config.scheduler_mode,
-            factor=training_config.scheduler_factor,
-            patience=training_config.scheduler_patience,
-            min_lr=training_config.scheduler_min_lr,
-            cooldown=training_config.scheduler_cooldown,
-            threshold=training_config.scheduler_threshold,
-            threshold_mode=training_config.scheduler_threshold_mode,
-        )
+        dataset = ModelParameterDataset(root_dir=self.config.extracted_models_dir, normalize=self.config.normalize_inputs,)
+        if dataset[0].numel() != self.model.encoder_input_size:
+            raise ValueError(f"Input dimension mismatch: dataset sample has {dataset[0].numel()} features but encoder_input_size is {self.model.encoder_input_size}.")
 
-        super().__init__(model=model, dataloader=dataloader, optimizer=optimizer, config=training_config, scheduler=scheduler)
-        self.criterion = self._build_loss(training_config)
-        self.dataset_size = len(dataset)
-        self.code_l1_penalty = float(training_config.code_l1_penalty)
-        self._last_encoded_stats: dict[str, float] = {}
+        self.dataloader = DataLoader(dataset, batch_size=self.config.batch_size, shuffle=self.config.shuffle, pin_memory=torch.cuda.is_available(), num_workers=self.config.num_workers)
+        self.val_dataloader = DataLoader(dataset, batch_size=self.config.batch_size, shuffle=False, pin_memory=torch.cuda.is_available(), num_workers=self.config.num_workers)
+        self.optimizer = Adam(self.model.parameters(), lr=self.config.learning_rate, weight_decay=self.config.weight_decay,betas=(self.config.beta1, self.config.beta2))
+        self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=self.config.scheduler_factor, patience=self.config.scheduler_patience, min_lr=self.config.scheduler_min_lr)
 
-    def compute_loss(self, batch: torch.Tensor) -> torch.Tensor:
-        encoded, reconstructed = self.model(batch)
-        loss = self.criterion(reconstructed, batch)
-        if self.code_l1_penalty > 0.0:
-            loss = loss + self.code_l1_penalty * encoded.abs().mean()
+        self.init_progress_bar(len(dataset) * self.config.num_epochs)
+        super().__init__()
 
-        encoded_detached = encoded.detach()
-        code_mean = float(encoded_detached.mean().item())
-        code_abs_mean = float(encoded_detached.abs().mean().item())
-        if encoded_detached.numel() > 1:
-            code_std = float(encoded_detached.std(unbiased=False).item())
+        self.best_val_loss = float('inf')
+        self.epochs_without_improvement = 0
+
+    def loss_fn(self, batch: dict[str, Any]) -> torch.Tensor:
+        """Compute reconstruction loss with optional L1 penalty on latent codes."""
+
+        if self.config.normalize_inputs:
+            batch = (batch - batch.mean()) / (batch.std() + 1e-8)
+
+        code, reconstructed = self.model(batch)
+
+        if self.config.reconstruction_loss == 'smooth_l1':
+            reconstruction_loss = nn.SmoothL1Loss(beta=self.config.smooth_l1_beta)(
+                reconstructed, batch
+            )
+        elif self.config.reconstruction_loss == 'mse':
+            reconstruction_loss = nn.MSELoss()(reconstructed, batch)
         else:
-            code_std = 0.0
+            reconstruction_loss = nn.L1Loss()(reconstructed, batch)
 
-        self._last_encoded_stats = {
-            "code_mean": code_mean,
-            "code_abs_mean": code_abs_mean,
-            "code_std": code_std,
+        l1_penalty = self.config.code_l1_penalty * torch.abs(code).mean()
+
+        return reconstruction_loss + l1_penalty
+
+    def train(self):
+        """Run the training loop."""
+        self.model.to(self.config.device)
+
+        for epoch in range(self.config.num_epochs):
+            self.model.train()
+            train_loss = 0.0
+
+            for batch in self.dataloader:
+                batch.to(self.config.device)
+
+                self.optimizer.zero_grad()
+                loss = self.loss_fn(batch)
+                loss.backward()
+
+                if self.config.gradient_clip_norm > 0:
+                    torch.nn.utils.clip_grad_norm_(
+                        self.model.parameters(),
+                        self.config.gradient_clip_norm,
+                    )
+
+                self.optimizer.step()
+                train_loss += loss.item()
+                self.update_progress_bar(len(batch), postfix={'loss': loss.item()})
+
+            train_loss /= len(self.dataloader)
+            val_loss = self.validate()
+
+            self.scheduler.step(val_loss)
+            self.save_metrics(epoch=epoch + 1, loss=train_loss, val_loss=val_loss,
+                                other_metrics={'learning_rate': self.optimizer.param_groups[0]['lr']})
+
+            if self.check_early_stopping(val_loss):
+                logger.info(f'Early stopping at epoch {epoch+1}')
+                break
+
+            if val_loss < self.best_val_loss:
+                self.best_val_loss = val_loss
+                self.save_checkpoint(epoch + 1, is_best=True)
+
+        self.save_metrics_to_file()
+        self.plot_metrics()
+
+    def validate(self) -> float:
+        """Run validation and return average loss."""
+        self.model.eval()
+        val_loss = 0.0
+
+        with torch.no_grad():
+            for batch in self.val_dataloader:
+                batch = batch.to(self.config.device)
+                loss = self.loss_fn(batch)
+                val_loss += loss.item()
+
+        return val_loss / len(self.val_dataloader)
+
+    def check_early_stopping(self, val_loss: float) -> bool:
+        """Check if early stopping criteria is met."""
+        if val_loss < self.best_val_loss - self.config.early_stopping_min_delta:
+            self.best_val_loss = val_loss
+            self.epochs_without_improvement = 0
+            return False
+
+        self.epochs_without_improvement += 1
+        return self.epochs_without_improvement >= self.config.early_stopping_patience
+
+    def save_checkpoint(self, epoch: int, is_best: bool = False):
+        """Save model checkpoint."""
+        save_dir = Path(self.config.model_save_directory)
+        save_dir.mkdir(parents=True, exist_ok=True)
+
+        checkpoint = {
+            'epoch': epoch,
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'scheduler_state_dict': self.scheduler.state_dict(),
+            'best_val_loss': self.best_val_loss,
         }
 
-        return loss
+        if is_best:
+            torch.save(checkpoint, self.get_model_save_path(suffix="best"))
 
-    def _collect_batch_metrics(self) -> dict[str, float]:
-        return self._last_encoded_stats
+        torch.save(checkpoint, self.get_model_save_path(prefix="checkpoint", suffix=f"epoch_{epoch}"))
 
-    def on_train_begin(self) -> None:
-        logger.info(
-            "Starting AutoEncoder training for %d epochs on %d samples (batch_size=%d, lr=%.3g, weight_decay=%.1e).",
-            self.config.num_epochs,
-            self.dataset_size,
-            self.config.batch_size,
-            self.config.learning_rate,
-            self.config.weight_decay,
-        )
-        clip_display = (
-            f"{self.config.gradient_clip_norm:.2f}" if self.config.gradient_clip_norm is not None else "disabled"
-        )
+    def save_model(self, save_path):
+        """Save the final model to disk."""
+        save_dir = Path(save_path).parent
+        save_dir.mkdir(parents=True, exist_ok=True)
 
-        logger.info(
-            "Normalization=%s | Reconstruction loss=%s | SmoothL1 beta=%.2f | Code L1 penalty=%.1e | Grad clip=%s",
-            "enabled" if self.config.normalize_inputs else "disabled",
-            self.config.reconstruction_loss,
-            self.config.smooth_l1_beta,
-            self.code_l1_penalty,
-            clip_display,
-        )
-
-    def on_train_end(self) -> None:
-        if not self.history:
-            return
-
-        final_loss = self.history[-1]["metrics"]["loss"]
-        save_path: Path = Path(self.config.model_save_directory) / (f"autoencoder_weights.loss_{final_loss:.6f}.{datetime.now():%Y%m%d_%H%M%S}.pt")
-        save_path.parent.mkdir(parents=True, exist_ok=True)
         torch.save(self.model.state_dict(), save_path)
-        logger.info("AutoEncoder weights saved to %s", save_path)
 
-    @staticmethod
-    def _build_loss(config: TrainModelAutoEncoderConfig) -> nn.Module:
-        loss_type = getattr(config, "reconstruction_loss", "smooth_l1").lower()
-        if loss_type == "smooth_l1":
-            return nn.SmoothL1Loss(beta=config.smooth_l1_beta, reduction="mean")
-        if loss_type == "mae":
-            return nn.L1Loss(reduction="mean")
-        if loss_type == "mse":
-            return nn.MSELoss(reduction="mean")
-        raise ValueError(f"Unsupported reconstruction loss: {config.reconstruction_loss}")
+    def load_checkpoint(self, load_path):
+        """Load model weights from disk."""
+        checkpoint = torch.load(load_path, map_location=self.config.device)
+        self.model.load_state_dict(checkpoint['model_state_dict'])
+        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        self.scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+        self.best_val_loss = checkpoint.get('best_val_loss', float('inf'))
+
+    def save_metrics(self, force_save: bool = False, **kwargs):
+        """Save training metrics to disk."""
+
+        self.history.append(TrainingMetrics(
+            epoch=kwargs.get('epoch'),
+            loss=kwargs.get('loss'),
+            val_loss=kwargs.get('val_loss'),
+            other_metrics=kwargs.get('other_metrics', {}),
+        ))
+
+        if force_save or (kwargs.get('epoch') is not None and kwargs.get('epoch') % self.config.log_every_n_epochs == 0):
+            logger.info(
+                f"Epoch {kwargs['epoch']}: loss={kwargs['loss']:.6f}, "
+                f"val_loss={kwargs['val_loss']:.6f}, "
+                f"other_metrics={kwargs.get('other_metrics', {})}"
+            )
+            self.save_metrics_to_file()
+
+    def save_metrics_to_file(self):
+        """Save the entire training history to a JSON file."""
+        metrics_path = self.get_run_file_path(extension='json')
+        metrics_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(metrics_path, 'w') as f:
+            json.dump([m.__dict__ for m in self.history], f, indent=2)
