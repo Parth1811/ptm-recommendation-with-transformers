@@ -2,23 +2,16 @@
 
 from __future__ import annotations
 
-import json
-import random
-import time
 from abc import ABC, abstractmethod
 from datetime import datetime
+import json
 from pathlib import Path
-from typing import Any, Iterable, Mapping
+from typing import Any, Mapping
 
-import matplotlib.pyplot as plt
-import numpy as np
-import seaborn as sns
 import torch
 from attr import dataclass
 from beautilog import logger
-from flask import config
 from torch import nn
-from torch.optim.lr_scheduler import LRScheduler, ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
@@ -74,6 +67,7 @@ class BaseTrainer(ABC):
         self.started_at = datetime.now()
         self.run_directory = Path(self.config.model_save_directory) / "runs"
         self.run_directory.mkdir(parents=True, exist_ok=True)
+        self.device = torch.device(self.config.device) if self.config.device else torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     @abstractmethod
     def train(self):
@@ -99,6 +93,21 @@ class BaseTrainer(ABC):
     def save_model(self, save_path: str):
         """Save the final model to disk."""
         pass
+
+
+    def save_metrics_to_file(self):
+        """Save the entire training history to a JSON file."""
+        metrics_path = self.get_run_file_path(extension='json')
+        metrics_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(metrics_path, 'w') as f:
+            json.dump([m.__dict__ for m in self.history], f, indent=2)
+
+    def load_metrics_from_file(self, file_path: str):
+        """Load training history from a JSON file."""
+        with open(file_path, 'r') as f:
+            metrics_list = json.load(f)
+            self.history = [TrainingMetrics(**m) for m in metrics_list]
 
     def init_progress_bar(self, total: int) -> tqdm:
         """Initialize a tqdm progress bar for training."""
@@ -130,8 +139,8 @@ class BaseTrainer(ABC):
     def get_model_save_path(self, prefix: str = "", suffix: str = "") -> Path:
         """Get a unique file path for saving the final model."""
         timestamp = self.started_at.strftime("%Y%m%d_%H%M%S")
-        filename = f"{prefix}_{self.model.__class__.__name__}_{suffix}_{timestamp}.pt"
-        return self.run_directory / filename
+        filename = f"{prefix}{'_' if prefix else ''}{self.model.__class__.__name__}{'_' if suffix else ''}{suffix}_{timestamp}.pt"
+        return Path(self.config.model_save_directory) / filename
 
     def plot_metrics(self):
         """Plot training and validation metrics over epochs."""

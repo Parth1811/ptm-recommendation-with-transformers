@@ -36,6 +36,7 @@ class BaseTrainerConfig(SubSectionParser, ABC):
 
     log_every_n_epochs: int = 1
     log_every_n_steps: int = 1
+    save_checkpoint_every_n_epochs: int = 1
     progress_description: str = "Training"
     model_save_directory: Path = Path("artifacts/models")
 

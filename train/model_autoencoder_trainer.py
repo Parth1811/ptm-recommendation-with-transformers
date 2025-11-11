@@ -29,7 +29,6 @@ class ModelAutoEncoderTrainer(BaseTrainer):
         self.config = ConfigParser.get(TrainModelAutoEncoderConfig)
         self.model = ModelAutoEncoder()
 
-
         dataset = ModelParameterDataset(root_dir=self.config.extracted_models_dir, normalize=self.config.normalize_inputs,)
         if dataset[0].numel() != self.model.encoder_input_size:
             raise ValueError(f"Input dimension mismatch: dataset sample has {dataset[0].numel()} features but encoder_input_size is {self.model.encoder_input_size}.")
@@ -68,14 +67,14 @@ class ModelAutoEncoderTrainer(BaseTrainer):
 
     def train(self):
         """Run the training loop."""
-        self.model.to(self.config.device)
+        self.model.to(self.device)
 
         for epoch in range(self.config.num_epochs):
             self.model.train()
             train_loss = 0.0
 
             for batch in self.dataloader:
-                batch.to(self.config.device)
+                batch = batch.to(self.device)
 
                 self.optimizer.zero_grad()
                 loss = self.loss_fn(batch)
@@ -92,7 +91,13 @@ class ModelAutoEncoderTrainer(BaseTrainer):
                 self.update_progress_bar(len(batch), postfix={'loss': loss.item()})
 
             train_loss /= len(self.dataloader)
-            val_loss = self.validate()
+
+            val_loss = -1
+            if epoch % self.config.log_every_n_epochs == 0:
+                val_loss = self.validate()
+
+            if epoch % self.config.save_checkpoint_every_n_epochs == 0:
+                self.save_checkpoint(epoch=epoch + 1, is_best=False)
 
             self.scheduler.step(val_loss)
             self.save_metrics(epoch=epoch + 1, loss=train_loss, val_loss=val_loss,
@@ -102,7 +107,7 @@ class ModelAutoEncoderTrainer(BaseTrainer):
                 logger.info(f'Early stopping at epoch {epoch+1}')
                 break
 
-            if val_loss < self.best_val_loss:
+            if val_loss != -1 and val_loss < self.best_val_loss:
                 self.best_val_loss = val_loss
                 self.save_checkpoint(epoch + 1, is_best=True)
 
@@ -182,11 +187,3 @@ class ModelAutoEncoderTrainer(BaseTrainer):
                 f"other_metrics={kwargs.get('other_metrics', {})}"
             )
             self.save_metrics_to_file()
-
-    def save_metrics_to_file(self):
-        """Save the entire training history to a JSON file."""
-        metrics_path = self.get_run_file_path(extension='json')
-        metrics_path.parent.mkdir(parents=True, exist_ok=True)
-
-        with open(metrics_path, 'w') as f:
-            json.dump([m.__dict__ for m in self.history], f, indent=2)

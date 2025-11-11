@@ -36,8 +36,21 @@ def plot_multiple(plots, title, save_path=None, figsize=None):
 
     for i, plot_spec in enumerate(plots):
         ax = axes[i]
-        x = plot_spec.get('x')
-        y = plot_spec.get('y')
+        x: np.ndarray = np.array(plot_spec.get('x'))
+        y: np.ndarray = np.array(plot_spec.get('y'))
+
+        compare = np.array([-1])
+        if x is not None and y is not None:
+            assert len(x) == len(y), "x and y must have the same length"
+            mask = (x != compare) & (y != compare)
+            x = x[mask]
+            y = y[mask]
+        elif x is not None:
+            mask = (x != compare)
+            x = x[mask]
+        elif y is not None:
+            mask = (y != compare)
+            y = y[mask]
 
         # Infer missing dimension
         if x is None and y is None:
