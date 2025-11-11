@@ -183,7 +183,7 @@ def _forward_batch(self, batch: Any) -> torch.Tensor:
 - Supports dict batches, dataclass batches, and custom batch objects
 - Full separation between loop infrastructure and batch-specific logic
 
-**Documentation**: See `BASETRAINER_CHANGES_SUMMARY.md` for technical details and examples
+**Documentation**: See `.claude/memory/project.md` for implementation patterns and examples
 
 ### 2. New Combined Similarity Dataloader
 
@@ -209,7 +209,7 @@ for batch in loader:
     loss = ranking_loss(probs, batch["true_ranks"])
 ```
 
-**Documentation**: See `DATALOADER_SUMMARY.md`, `DATALOADER_INTEGRATION_GUIDE.md`, and `COMBINED_DATALOADER_REFERENCE.md` for comprehensive guides
+**Documentation**: See `.claude/memory/project.md` for usage patterns and batch structure reference
 
 ## Important Implementation Details
 
@@ -221,3 +221,37 @@ for batch in loader:
 - Reconstruction loss supports both MSE and Smooth L1 (configurable via `reconstruction_loss`)
 - The `_forward_batch()` hook should return a scalar loss tensor; use `_collect_batch_metrics()` for auxiliary metrics
 - The combined similarity dataloader reads rankings from `constants/dataset_model_performance.json`; ensure this file is populated before training
+
+## Specialized Agents
+
+This project includes specialized Claude Code agents for common tasks:
+
+### trainer-expert
+Generate production-ready PyTorch trainers that integrate with the BaseTrainer infrastructure. Use when creating new trainers, updating existing trainers to new patterns, or debugging trainer implementations.
+
+**Trigger examples**:
+- "Create a trainer for [ModelName]"
+- "I need to train the similarity transformer"
+- "Update my trainer to use the combined dataloader"
+
+**Key capabilities**: Generates complete trainer classes with config dataclasses, ensures BaseTrainer patterns, validates model I/O contracts, recommends optimizers/schedulers.
+
+### model-expert
+Analyze and optimize PyTorch model architectures. Use when designing models, debugging training issues, or validating forward pass logic and gradient flow.
+
+**Trigger examples**:
+- "Review this transformer architecture"
+- "My autoencoder loss is exploding"
+- "Recommend hyperparameters for training"
+
+**Key capabilities**: Reviews forward pass logic, analyzes gradient flow, estimates memory requirements, recommends loss functions.
+
+### dataloader-expert
+Analyze and optimize PyTorch dataloaders and data pipelines. Use when designing dataloaders, diagnosing I/O bottlenecks, or validating data quality.
+
+**Trigger examples**:
+- "Optimize my dataloader performance"
+- "What batch structure does this dataset provide?"
+- "Training is I/O bound, how can I improve throughput?"
+
+**Key capabilities**: Analyzes dataset composition, recommends batch specifications, optimizes num_workers/pin_memory, validates data quality.

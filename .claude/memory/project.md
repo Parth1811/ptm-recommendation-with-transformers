@@ -153,13 +153,37 @@ def compute_loss(self, batch: dict) -> torch.Tensor:
 - Training history persisted to JSON after each epoch
 - Metrics automatically logged and plotted
 
+## Specialized Agents
+
+### trainer-expert
+- **Purpose**: Generates production-ready PyTorch trainers for this project
+- **When to use**: Creating new trainers, debugging existing ones, updating trainers to new patterns
+- **Key capabilities**:
+  - Generates complete trainer classes with config dataclasses
+  - Ensures BaseTrainer integration patterns are followed
+  - Recommends appropriate optimizers/schedulers/loss functions
+  - Validates model I/O contracts before generation
+- **Trigger examples**: "Create a trainer for X", "Update my trainer to use combined dataloader"
+
+### model-expert
+- **Purpose**: Analyzes PyTorch neural network architectures
+- **When to use**: Designing/optimizing models, debugging training issues, validating architectures
+- **Key capabilities**: Reviews forward pass logic, analyzes gradient flow, recommends hyperparameters
+- **Trigger examples**: "Review this transformer", "My loss is exploding"
+
+### dataloader-expert
+- **Purpose**: Analyzes and optimizes PyTorch dataloaders and data pipelines
+- **When to use**: Designing dataloaders, diagnosing I/O bottlenecks, validating data quality
+- **Key capabilities**: Analyzes dataset composition, recommends batch specs, optimizes throughput
+- **Trigger examples**: "Optimize dataloader performance", "Training is I/O bound"
+
 ## Important Files
 
 - **CLAUDE.md**: Main project documentation (updated with new sections)
 - **train/base_trainer.py**: Has _forward_batch() hook
 - **dataloader/combined_similarity_dataloader.py**: Combined loader implementation
 - **config.ini**: All configuration
-- **.claude/agents/trainer-expert.md**: Agent knows about all patterns
+- **.claude/agents/trainer-expert.md**: Generates production-ready trainers
 - **.claude/agents/model-expert.md**: Analyzes architectures
 - **.claude/agents/dataloader-expert.md**: Optimizes data pipelines
 
@@ -170,3 +194,5 @@ def compute_loss(self, batch: dict) -> torch.Tensor:
 - Use string paths - use pathlib.Path
 - Duplicate _train_batch()/_evaluate_batch() - override _forward_batch() if needed
 - Manually coordinate multiple loaders - use combined dataloader for similarity tasks
+- Re-implement training loop infrastructure - use BaseTrainer hooks
+- Reference external documentation files - point to .claude/memory/project.md instead
