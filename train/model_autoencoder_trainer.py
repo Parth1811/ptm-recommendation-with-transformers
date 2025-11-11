@@ -69,7 +69,7 @@ class ModelAutoEncoderTrainer(BaseTrainer):
         """Run the training loop."""
         self.model.to(self.device)
 
-        for epoch in range(self.config.num_epochs):
+        for epoch in range(1, self.config.num_epochs + 1):
             self.model.train()
             train_loss = 0.0
 
@@ -97,19 +97,20 @@ class ModelAutoEncoderTrainer(BaseTrainer):
                 val_loss = self.validate()
 
             if epoch % self.config.save_checkpoint_every_n_epochs == 0:
-                self.save_checkpoint(epoch=epoch + 1, is_best=False)
+                self.save_checkpoint(epoch=epoch, is_best=False)
 
             self.scheduler.step(val_loss)
-            self.save_metrics(epoch=epoch + 1, loss=train_loss, val_loss=val_loss,
+            self.save_metrics(epoch=epoch, loss=train_loss, val_loss=val_loss,
                                 other_metrics={'learning_rate': self.optimizer.param_groups[0]['lr']})
 
             if self.check_early_stopping(val_loss):
-                logger.info(f'Early stopping at epoch {epoch+1}')
+                logger.info(f'Early stopping at epoch {epoch}')
                 break
 
             if val_loss != -1 and val_loss < self.best_val_loss:
+                logger.info(f'New best validation loss: {val_loss:.6f} at epoch {epoch}')
                 self.best_val_loss = val_loss
-                self.save_checkpoint(epoch + 1, is_best=True)
+                self.save_checkpoint(epoch, is_best=True)
 
         self.save_metrics_to_file()
         self.plot_metrics()
