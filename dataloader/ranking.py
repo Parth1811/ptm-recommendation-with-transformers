@@ -102,7 +102,6 @@ def compute_true_ranks(dataset_name: str, model_names: Sequence[str]) -> torch.T
     if not scores:
         return torch.tensor([], dtype=torch.long)
 
-    print(f"Computed scores for dataset '{dataset_name}': {scores}")
     score_tensor = torch.tensor(scores, dtype=torch.float32)
     tie_breaker = torch.arange(len(scores), dtype=torch.float32) * 1e-6
     augmented = score_tensor + tie_breaker

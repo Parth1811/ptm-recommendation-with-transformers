@@ -13,6 +13,7 @@ from torch.utils.data import DataLoader, Dataset
 
 from config import ConfigParser, DatasetTokenLoaderConfig, ModelEmbeddingLoaderConfig
 
+from .ranking import compute_true_ranks
 
 class CombinedSimilarityBatch(TypedDict, total=False):
     """Batch from combined similarity dataloader.
@@ -181,7 +182,7 @@ class CombinedSimilarityDataset(Dataset):
         dataset_tokens = self._load_dataset_tokens(shard_path)
 
         # Get true ranks for this dataset
-        true_ranks = self._load_true_ranks(dataset_name)
+        true_ranks = compute_true_ranks(dataset_name, self.model_names)
 
         return {
             "dataset_name": dataset_name,
@@ -208,30 +209,6 @@ class CombinedSimilarityDataset(Dataset):
         # Stack batches: (batches, num_classes, dim) -> (num_classes, dim)
         tokens = np.concatenate([features[i] for i in range(features.shape[0])], axis=0)
         return torch.as_tensor(tokens, dtype=self.dtype)
-
-    def _load_true_ranks(self, dataset_name: str) -> torch.Tensor:
-        """Load ground truth performance ranks for dataset-model combinations."""
-        if not self.perf_json_path or not self.perf_json_path.exists():
-            # No ranking data: use uniform scores
-            return torch.ones(len(self.model_names), dtype=self.dtype) / len(self.model_names)
-
-        try:
-            with open(self.perf_json_path) as f:
-                perf_data = json.load(f)
-        except Exception as e:
-            logger.debug("Failed to load performance rankings: %s", e)
-            return torch.ones(len(self.model_names), dtype=self.dtype) / len(self.model_names)
-
-        if dataset_name not in perf_data:
-            return torch.ones(len(self.model_names), dtype=self.dtype) / len(self.model_names)
-
-        # Extract accuracy for each model
-        perf_dict = {item["model_name"]: item["accuracy"] for item in perf_data[dataset_name]}
-        accuracies = np.array(
-            [perf_dict.get(name, 0.5) for name in self.model_names], dtype=np.float32
-        )
-        ranks = np.clip(accuracies, 0.0, 1.0)
-        return torch.as_tensor(ranks, dtype=self.dtype)
 
 
 def _collate_batch(batch: Sequence[dict]) -> CombinedSimilarityBatch:
