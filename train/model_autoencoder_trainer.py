@@ -20,6 +20,8 @@ from model import ModelAutoEncoder
 
 from .base_trainer import BaseTrainer, TrainingMetrics
 
+logger.name = "ModelAutoEncoderTrainer"
+
 
 class ModelAutoEncoderTrainer(BaseTrainer):
     """Trainer for AutoEncoder models."""
@@ -99,18 +101,17 @@ class ModelAutoEncoderTrainer(BaseTrainer):
             if epoch % self.config.save_checkpoint_every_n_epochs == 0:
                 self.save_checkpoint(epoch=epoch, is_best=False)
 
+            if val_loss != -1 and val_loss < self.best_val_loss:
+                self.save_checkpoint(epoch, is_best=True)
+                logger.checkpoint(f'New best validation loss: {val_loss:.6f} at epoch {epoch}')
+
             self.scheduler.step(val_loss)
             self.save_metrics(epoch=epoch, loss=train_loss, val_loss=val_loss,
                                 other_metrics={'learning_rate': self.optimizer.param_groups[0]['lr']})
 
             if self.check_early_stopping(val_loss):
-                logger.info(f'Early stopping at epoch {epoch}')
+                logger.epoch(f'Early stopping at epoch {epoch}')
                 break
-
-            if val_loss != -1 and val_loss < self.best_val_loss:
-                logger.info(f'New best validation loss: {val_loss:.6f} at epoch {epoch}')
-                self.best_val_loss = val_loss
-                self.save_checkpoint(epoch, is_best=True)
 
         self.save_metrics_to_file()
         self.plot_metrics()
@@ -182,7 +183,7 @@ class ModelAutoEncoderTrainer(BaseTrainer):
         ))
 
         if force_save or (kwargs.get('epoch') is not None and kwargs.get('epoch') % self.config.log_every_n_epochs == 0):
-            logger.info(
+            logger.epoch(
                 f"Epoch {kwargs['epoch']}: loss={kwargs['loss']:.6f}, "
                 f"val_loss={kwargs['val_loss']:.6f}, "
                 f"other_metrics={kwargs.get('other_metrics', {})}"
