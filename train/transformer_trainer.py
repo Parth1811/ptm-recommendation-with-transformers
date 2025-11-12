@@ -13,6 +13,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from config import ConfigParser, TransformerTrainerConfig
 from dataloader import build_combined_similarity_loader
 from loss.ranking_loss import ranking_loss
+from loss.temperature_scheduler import TemperatureScheduler
 
 from .base_trainer import BaseTrainer, TrainingMetrics
 
@@ -76,7 +77,7 @@ class CrossAttentionTransformer(nn.Module):
 
         # Squeeze last dimension: (batch_size, num_models, 1) -> (batch_size, num_models)
         logits = logits.squeeze(-1)
-        logits = torch.softmax(logits, dim=-1)  # Optional: convert to probabilities
+        # Return raw logits - ranking loss will handle score transformation via logsumexp
 
         return logits
 
@@ -121,14 +122,30 @@ class TransformerTrainer(BaseTrainer):
             verbose=True,
         )
 
-        # 6. Initialize progress bar
+        # 6. Initialize temperature scheduler
         total_steps = len(self.dataloader) * self.config.num_epochs
+        if self.config.use_temperature_scheduler:
+            self.temp_scheduler = TemperatureScheduler(
+                initial_temp=self.config.initial_temperature,
+                final_temp=self.config.final_temperature,
+                total_steps=total_steps,
+                schedule=self.config.temperature_schedule,
+                warmup_steps=self.config.temperature_warmup_steps,
+            )
+            logger.info(
+                f"Temperature scheduler initialized: {self.config.initial_temperature} -> "
+                f"{self.config.final_temperature} over {total_steps} steps ({self.config.temperature_schedule})"
+            )
+        else:
+            self.temp_scheduler = None
+
+        # 7. Initialize progress bar
         self.init_progress_bar(total=total_steps)
 
-        # 7. Call super().__init__() LAST
+        # 8. Call super().__init__() LAST
         super().__init__()
 
-        # 8. Additional state variables
+        # 9. Additional state variables
         self.best_val_loss = float('inf')
         self.epochs_without_improvement = 0
 
@@ -155,9 +172,15 @@ class TransformerTrainer(BaseTrainer):
         # logits shape: (batch_size, num_models)
         logits = self.model(dataset_tokens, model_tokens)
 
+        # Get current temperature from scheduler
+        if self.temp_scheduler is not None:
+            temperature = self.temp_scheduler.step()
+        else:
+            temperature = 1.0
+
         # Compute combined loss
-        # 1. Ranking loss (listwise)
-        rank_loss = ranking_loss(logits, true_ranks, reverse_order=True)
+        # 1. Ranking loss (listwise) with temperature scaling
+        rank_loss = ranking_loss(logits, true_ranks, reverse_order=True, temperature=temperature)
 
         # 2. Smooth L1 loss for stability (optional regularization)
         # Convert ranks to target scores (inverse of rank for regression)
@@ -170,14 +193,11 @@ class TransformerTrainer(BaseTrainer):
         #     self.config.smooth_l1_weight * smooth_l1_loss
         # )
 
-        # 3. Add regularization loss if needed (e.g., L2 on model parameters)
-        reg_loss = 0.0
-        if self.config.weight_decay > 0:
-            reg_loss = sum(param.norm(2) ** 2 for param in self.model.parameters())
-            reg_loss = self.config.weight_decay * reg_loss
+        # Note: L2 regularization is handled by optimizer weight_decay parameter
+        # No need for manual regularization loss
 
-        logger.batch(f"Rank Loss: {rank_loss.item():.6f}, Reg Loss: {reg_loss.item():.6f}")
-        return (rank_loss + reg_loss)
+        logger.batch(f"Rank Loss: {rank_loss.item():.6f}, Temp: {temperature:.3f}")
+        return rank_loss
 
     def loss_fn(self, batch: dict[str, torch.Tensor]) -> torch.Tensor:
         """Compute loss (legacy method for compatibility)."""
@@ -234,11 +254,16 @@ class TransformerTrainer(BaseTrainer):
                 self.save_checkpoint(epoch=epoch, is_best=False)
 
             # Save metrics
+            other_metrics = {'learning_rate': self.optimizer.param_groups[0]['lr']}
+            if self.temp_scheduler is not None:
+                other_metrics['temperature'] = self.temp_scheduler.get_temperature(
+                    self.temp_scheduler.current_step - 1  # Get last used temperature
+                )
             self.save_metrics(
                 epoch=epoch,
                 loss=avg_train_loss,
                 val_loss=val_loss,
-                other_metrics={'learning_rate': self.optimizer.param_groups[0]['lr']}
+                other_metrics=other_metrics
             )
 
             # Check early stopping
@@ -290,6 +315,10 @@ class TransformerTrainer(BaseTrainer):
             'config': self.config,
         }
 
+        # Save temperature scheduler state if enabled
+        if self.temp_scheduler is not None:
+            checkpoint['temp_scheduler_state_dict'] = self.temp_scheduler.state_dict()
+
         if is_best:
             torch.save(checkpoint, self.get_model_save_path(suffix="best"))
 
@@ -309,6 +338,10 @@ class TransformerTrainer(BaseTrainer):
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
         self.best_val_loss = checkpoint.get('best_val_loss', float('inf'))
+
+        # Load temperature scheduler state if available
+        if self.temp_scheduler is not None and 'temp_scheduler_state_dict' in checkpoint:
+            self.temp_scheduler.load_state_dict(checkpoint['temp_scheduler_state_dict'])
 
     def save_metrics(self, force_save: bool = False, **kwargs):
         """Save training metrics to disk."""

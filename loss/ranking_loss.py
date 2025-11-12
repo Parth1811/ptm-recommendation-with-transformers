@@ -7,13 +7,20 @@ from typing import Iterable, Sequence
 import torch
 
 
-def ranking_loss(pred_scores: torch.Tensor, true_ranks: torch.Tensor, reverse_order: bool = True) -> torch.Tensor:
+def ranking_loss(
+    pred_scores: torch.Tensor,
+    true_ranks: torch.Tensor,
+    reverse_order: bool = True,
+    temperature: float = 1.0
+) -> torch.Tensor:
     """Compute a listwise ranking loss inspired by Model Spider.
 
     Args:
         pred_scores: Predicted relevance scores for each candidate (shape: [M]).
         true_ranks: Ground-truth ranks where 1 denotes the best item by default.
         reverse_order: When True, larger rank values are treated as better items.
+        temperature: Temperature for scaling logits. Values > 1.0 make distribution more uniform,
+                     helping with initial gradient flow. Default 1.0 (no scaling).
 
     Returns:
         A scalar tensor representing the listwise ranking loss.
@@ -32,20 +39,33 @@ def ranking_loss(pred_scores: torch.Tensor, true_ranks: torch.Tensor, reverse_or
     if true_ranks.ndim == 1:
         true_ranks = true_ranks.unsqueeze(0)
 
-    # ordering = torch.argsort(pred_scores, descending=True)
-    ordered_pred_as_per_true_ranks = torch.gather(pred_scores, dim=1, index=true_ranks.flip(dims=[-1]))
-    loss_terms = []
-    total_candidates = ordered_pred_as_per_true_ranks.shape[-1]
+    # true_ranks contains sorted indices: [best_idx, second_best_idx, ...]
+    # Gather predictions in ground truth ranking order
+    ordered_scores = torch.gather(pred_scores, dim=1, index=true_ranks.long())
 
+    # Apply temperature scaling (divide scores by temperature)
+    # Higher temperature (>1) makes distribution more uniform, improving initial gradients
+    if temperature != 1.0:
+        ordered_scores = ordered_scores / temperature
+
+    loss_terms = []
+    total_candidates = ordered_scores.shape[-1]
+
+    # Plackett-Luce loss: at each position m, compute log P(item_m | remaining items)
     for m in range(total_candidates):
-        numerator = ordered_pred_as_per_true_ranks[:, m]
-        denominator = torch.logsumexp(ordered_pred_as_per_true_ranks[:, m:], dim=1)
+        numerator = ordered_scores[:, m]
+        denominator = torch.logsumexp(ordered_scores[:, m:], dim=1)
         loss_terms.append(denominator - numerator)
 
     return torch.stack(loss_terms).sum()
 
 
-def pairwise_ranking_loss(pred_scores: torch.Tensor, true_ranks: torch.Tensor, reverse_order: bool = True) -> torch.Tensor:
+def pairwise_ranking_loss(
+    pred_scores: torch.Tensor,
+    true_ranks: torch.Tensor,
+    reverse_order: bool = True,
+    temperature: float = 1.0
+) -> torch.Tensor:
     """Compute a pairwise ranking loss using sequential classification.
 
     This loss formulation treats ranking as a sequence of classification problems:
@@ -55,16 +75,19 @@ def pairwise_ranking_loss(pred_scores: torch.Tensor, true_ranks: torch.Tensor, r
 
     Args:
         pred_scores: Predicted relevance scores (shape: [B, N] or [N]).
-        true_ranks: Ground-truth ranks where 1 denotes the best item by default (shape: [B, N] or [N]).
-        reverse_order: When True, larger rank values are treated as better items.
+        true_ranks: Sorted indices [best_idx, second_best_idx, ...] (shape: [B, N] or [N]).
+                    Position 0 contains the index of the best model, position 1 the second-best, etc.
+        reverse_order: Deprecated parameter, kept for API compatibility. true_ranks should already be sorted.
+        temperature: Temperature for scaling logits. Values > 1.0 make distribution more uniform,
+                     helping with initial gradient flow. Default 1.0 (no scaling).
 
     Returns:
         A scalar tensor representing the pairwise ranking loss.
 
     Example:
         >>> pred_scores = torch.tensor([[2.5, 1.0, 3.0], [1.5, 2.0, 0.5]])  # [B=2, N=3]
-        >>> true_ranks = torch.tensor([[2, 0, 1], [1, 2, 0]])  # higher = better
-        >>> loss = pairwise_ranking_loss(pred_scores, true_ranks, reverse_order=True)
+        >>> true_ranks = torch.tensor([[2, 0, 1], [1, 2, 0]])  # sorted indices (pos 0 = best model)
+        >>> loss = pairwise_ranking_loss(pred_scores, true_ranks)
     """
     if type(pred_scores) is not torch.Tensor or type(true_ranks) is not torch.Tensor:
         raise TypeError("pred_scores and true_ranks must be torch.Tensor types.")
@@ -82,9 +105,9 @@ def pairwise_ranking_loss(pred_scores: torch.Tensor, true_ranks: torch.Tensor, r
 
     B, N = pred_scores.shape
 
-    # Get the ordering of items by ground truth ranking
-    # ordering[b, k] gives the index of the item that should be at position k
-    ordering = torch.argsort(true_ranks, descending=reverse_order, dim=1)  # [B, N]
+    # true_ranks already contains sorted indices: [best_idx, second_best_idx, ...]
+    # No need to argsort - use them directly
+    ordering = true_ranks.long()  # [B, N]
 
     # Create batch indices for advanced indexing
     batch_idx = torch.arange(B, device=pred_scores.device).unsqueeze(1)  # [B, 1]
@@ -100,6 +123,10 @@ def pairwise_ranking_loss(pred_scores: torch.Tensor, true_ranks: torch.Tensor, r
         # Get scores for remaining items
         # remaining_scores[b, i] = score of the i-th remaining item in batch b
         remaining_scores = pred_scores[batch_idx, remaining_indices]  # [B, N-k]
+
+        # Apply temperature scaling
+        if temperature != 1.0:
+            remaining_scores = remaining_scores / temperature
 
         # Target: the first item in remaining_indices is the correct one (index 0)
         targets = torch.zeros(B, dtype=torch.long, device=pred_scores.device)

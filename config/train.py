@@ -91,3 +91,10 @@ class TransformerTrainerConfig(BaseTrainerConfig):
     ranking_loss_weight: float = 1.0
     smooth_l1_weight: float = 0.1
     model_save_directory: Path = Path("artifacts/models/transformer")
+
+    # Temperature scheduling
+    use_temperature_scheduler: bool = True
+    initial_temperature: float = 3.0
+    final_temperature: float = 1.0
+    temperature_schedule: str = "cosine"  # "linear", "exponential", or "cosine"
+    temperature_warmup_steps: int = 0
