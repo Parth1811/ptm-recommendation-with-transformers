@@ -76,6 +76,7 @@ class CrossAttentionTransformer(nn.Module):
 
         # Squeeze last dimension: (batch_size, num_models, 1) -> (batch_size, num_models)
         logits = logits.squeeze(-1)
+        logits = torch.softmax(logits, dim=-1)  # Optional: convert to probabilities
 
         return logits
 
@@ -160,16 +161,23 @@ class TransformerTrainer(BaseTrainer):
 
         # 2. Smooth L1 loss for stability (optional regularization)
         # Convert ranks to target scores (inverse of rank for regression)
-        target_scores = self.config.num_models - true_ranks.float()
-        smooth_l1_loss = nn.SmoothL1Loss()(logits, target_scores)
+        # target_scores = self.config.num_models - true_ranks.float()
+        # smooth_l1_loss = nn.SmoothL1Loss()(logits, target_scores)
 
         # Combined loss
-        total_loss = (
-            self.config.ranking_loss_weight * rank_loss +
-            self.config.smooth_l1_weight * smooth_l1_loss
-        )
+        # total_loss = (
+        #     self.config.ranking_loss_weight * rank_loss +
+        #     self.config.smooth_l1_weight * smooth_l1_loss
+        # )
 
-        return total_loss
+        # 3. Add regularization loss if needed (e.g., L2 on model parameters)
+        reg_loss = 0.0
+        if self.config.weight_decay > 0:
+            reg_loss = sum(param.norm(2) ** 2 for param in self.model.parameters())
+            reg_loss = self.config.weight_decay * reg_loss
+
+        logger.batch(f"Rank Loss: {rank_loss.item():.6f}, Reg Loss: {reg_loss.item():.6f}")
+        return (rank_loss + reg_loss)
 
     def loss_fn(self, batch: dict[str, torch.Tensor]) -> torch.Tensor:
         """Compute loss (legacy method for compatibility)."""
@@ -189,7 +197,7 @@ class TransformerTrainer(BaseTrainer):
 
                 # BaseTrainer handles device placement via hooks
                 loss = self._forward_batch(batch)
-
+                logger.batch(f"Epoch {epoch} - Batch Loss: {loss.item():.6f}")
                 loss.backward()
 
                 # Gradient clipping if configured
