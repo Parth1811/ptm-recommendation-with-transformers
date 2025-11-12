@@ -33,7 +33,6 @@ class DatasetTokenLoaderConfig(SubSectionParser):
 
     root_dir: Path = Path("artifacts/extracted/datasets")
     dataset_names: Sequence[str] | None = None
-    splits: Sequence[str] = ("train", "validation", "test")
     shard_glob: str = "*.npz"
     batch_size: int = 1
     shuffle: bool = True

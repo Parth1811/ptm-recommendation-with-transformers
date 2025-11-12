@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import json
+import logging
 from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
 from typing import Dict, Iterable, Mapping, Sequence, Tuple
 
 import torch
-
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 
@@ -81,7 +81,7 @@ def _compute_weighted_score(
     return dataset_map.get(model_base_dataset, {}).get(model_key, 0.0) * similarity_scores
 
 
-def compute_true_ranks(dataset_name: str, model_names: Sequence[str]) -> torch.Tensor:
+def compute_true_ranks(dataset_name: str, model_names: Sequence[str], one_index: bool = False) -> torch.Tensor:
     """Return 1-based ranking tensor for the provided models on the given dataset."""
 
     dataset_map, model_map = _load_dataset_performance_maps()
@@ -107,9 +107,13 @@ def compute_true_ranks(dataset_name: str, model_names: Sequence[str]) -> torch.T
     augmented = score_tensor + tie_breaker
 
     sorted_indices = torch.argsort(augmented, descending=True)
-    ranks = torch.empty_like(sorted_indices, dtype=torch.long)
-    ranks[sorted_indices] = torch.arange(1, len(scores) + 1, dtype=torch.long)
-    return ranks
+
+    if one_index:
+        ranks = torch.empty_like(sorted_indices, dtype=torch.long)
+        ranks[sorted_indices] = torch.arange(1, len(scores) + 1, dtype=torch.long)
+        return ranks
+    else:
+        return sorted_indices
 
 
 __all__ = ["compute_true_ranks"]
