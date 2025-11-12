@@ -44,3 +44,71 @@ def ranking_loss(pred_scores: torch.Tensor, true_ranks: torch.Tensor, reverse_or
 
     return torch.stack(loss_terms).sum()
 
+
+def pairwise_ranking_loss(pred_scores: torch.Tensor, true_ranks: torch.Tensor, reverse_order: bool = True) -> torch.Tensor:
+    """Compute a pairwise ranking loss using sequential classification.
+
+    This loss formulation treats ranking as a sequence of classification problems:
+    at each position k in the ranking, predict which item should come next from
+    the remaining candidates. This is inspired by listwise learning-to-rank methods
+    like ListMLE.
+
+    Args:
+        pred_scores: Predicted relevance scores (shape: [B, N] or [N]).
+        true_ranks: Ground-truth ranks where 1 denotes the best item by default (shape: [B, N] or [N]).
+        reverse_order: When True, larger rank values are treated as better items.
+
+    Returns:
+        A scalar tensor representing the pairwise ranking loss.
+
+    Example:
+        >>> pred_scores = torch.tensor([[2.5, 1.0, 3.0], [1.5, 2.0, 0.5]])  # [B=2, N=3]
+        >>> true_ranks = torch.tensor([[2, 0, 1], [1, 2, 0]])  # higher = better
+        >>> loss = pairwise_ranking_loss(pred_scores, true_ranks, reverse_order=True)
+    """
+    if type(pred_scores) is not torch.Tensor or type(true_ranks) is not torch.Tensor:
+        raise TypeError("pred_scores and true_ranks must be torch.Tensor types.")
+    if pred_scores.ndim > 2 or true_ranks.ndim > 2:
+        raise ValueError(f"pred_scores and true_ranks must be 1-D or 2-D; got shapes {tuple(pred_scores.shape)} and {tuple(true_ranks.shape)}")
+    if pred_scores.shape != true_ranks.shape:
+        raise ValueError(f"pred_scores and true_ranks must have the same shape; got {pred_scores.shape} and {true_ranks.shape}")
+
+    # Ensure 2-D tensors for batch processing
+    squeeze_output = False
+    if pred_scores.ndim == 1:
+        pred_scores = pred_scores.unsqueeze(0)
+        true_ranks = true_ranks.unsqueeze(0)
+        squeeze_output = True
+
+    B, N = pred_scores.shape
+
+    # Get the ordering of items by ground truth ranking
+    # ordering[b, k] gives the index of the item that should be at position k
+    ordering = torch.argsort(true_ranks, descending=reverse_order, dim=1)  # [B, N]
+
+    # Create batch indices for advanced indexing
+    batch_idx = torch.arange(B, device=pred_scores.device).unsqueeze(1)  # [B, 1]
+
+    total_loss = torch.tensor(0.0, device=pred_scores.device, dtype=pred_scores.dtype)
+
+    # For each position in the ranking (except the last)
+    # At position k: predict which of the remaining N-k items should come next
+    for k in range(N - 1):
+        # Get indices of remaining items at position k
+        remaining_indices = ordering[:, k:]  # [B, N-k]
+
+        # Get scores for remaining items
+        # remaining_scores[b, i] = score of the i-th remaining item in batch b
+        remaining_scores = pred_scores[batch_idx, remaining_indices]  # [B, N-k]
+
+        # Target: the first item in remaining_indices is the correct one (index 0)
+        targets = torch.zeros(B, dtype=torch.long, device=pred_scores.device)
+
+        # Compute cross-entropy loss for this classification problem
+        log_probs = torch.log_softmax(remaining_scores, dim=1)
+        loss = torch.nn.functional.nll_loss(log_probs, targets, reduction='sum')
+        total_loss = total_loss + loss
+
+    # Normalize by batch size
+    return total_loss / B
+
