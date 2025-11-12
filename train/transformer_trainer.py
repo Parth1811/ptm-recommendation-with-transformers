@@ -156,7 +156,7 @@ class TransformerTrainer(BaseTrainer):
 
         # Compute combined loss
         # 1. Ranking loss (listwise)
-        rank_loss = ranking_loss(logits.squeeze(0), true_ranks.squeeze(0), reverse_order=True)
+        rank_loss = ranking_loss(logits, true_ranks, reverse_order=True)
 
         # 2. Smooth L1 loss for stability (optional regularization)
         # Convert ranks to target scores (inverse of rank for regression)

@@ -22,8 +22,8 @@ def ranking_loss(pred_scores: torch.Tensor, true_ranks: torch.Tensor, reverse_or
         raise TypeError("pred_scores and true_ranks must be torch.Tensor types.")
     # if pred_scores.dtype != torch.float32 or true_ranks.dtype != torch.float32:
     #     raise ValueError(f"pred_scores and true_ranks must be float32; got {pred_scores.dtype} and {true_ranks.dtype}")
-    if pred_scores.ndim != 1 or true_ranks.ndim != 1:
-        raise ValueError(f"pred_scores and true_ranks must be 1-D; got shapes {tuple(pred_scores.shape)} and {tuple(true_ranks.shape)}")
+    if pred_scores.ndim > 2 or true_ranks.ndim > 2:
+        raise ValueError(f"pred_scores and true_ranks must be 1-D or 2-D; got shapes {tuple(pred_scores.shape)} and {tuple(true_ranks.shape)}")
     if pred_scores.shape[0] != true_ranks.shape[0]:
         raise ValueError("pred_scores and true_ranks must have the same length.")
 

@@ -159,14 +159,14 @@ class CombinedSimilarityDataset(Dataset):
         dataset_name, shard_path = self.dataset_entries[index]
 
         # Sample models for this dataset
-        models = self.model_names[: self.model_cfg.max_models] if self.model_cfg.max_models else self.model_names
-        model_names = models[: self.model_cfg.max_models] if self.model_cfg.max_models else models
+        model_tokens = self.model_tokens[: self.model_cfg.max_models] if self.model_cfg.max_models else self.model_tokens
+        model_names = self.model_names[: self.model_cfg.max_models] if self.model_cfg.max_models else self.model_names
         model_indices = self.model_indices[: self.model_cfg.max_models] if self.model_cfg.max_models else self.model_indices
         if self.model_cfg.shuffle:
-            perm = torch.randperm(len(models))
-            models = [models[i] for i in perm]
+            perm = torch.randperm(len(model_tokens))
+            model_tokens = model_tokens[perm]
             model_names = [model_names[i] for i in perm]
-            model_indices = model_indices[perm]
+            model_indices = torch.tensor([model_indices[i] for i in perm], dtype=torch.int16)
 
         # Load dataset tokens from shard
         dataset_tokens = self._load_dataset_tokens(shard_path)
@@ -177,10 +177,10 @@ class CombinedSimilarityDataset(Dataset):
         return {
             "dataset_name": dataset_name,
             "dataset_tokens": dataset_tokens,
-            "model_tokens": models,
-            "model_names": model_names,
-            "model_indices": model_indices,
-            "true_ranks": true_ranks,
+            "model_tokens": torch.repeat_interleave(model_tokens.unsqueeze(0), repeats=dataset_tokens.shape[0], dim=0),
+            "model_names": [model_names] * dataset_tokens.shape[0],
+            "model_indices": torch.repeat_interleave(model_indices.unsqueeze(0), repeats=dataset_tokens.shape[0], dim=0),
+            "true_ranks": torch.repeat_interleave(true_ranks.unsqueeze(0), repeats=dataset_tokens.shape[0], dim=0),
         }
 
     def _load_dataset_tokens(self, shard_path: Path) -> torch.Tensor:
@@ -197,7 +197,7 @@ class CombinedSimilarityDataset(Dataset):
 
         # Stack batches: (batches, num_classes, dim) -> (num_classes, dim)
         # tokens = np.concatenate([features[i] for i in range(features.shape[0])], axis=0)
-        return features
+        return torch.tensor(features)
 
 
 def _collate_batch(batch: Sequence[dict]) -> CombinedSimilarityBatch:
