@@ -68,3 +68,26 @@ class CustomSimilarityTransformerTrainerConfig(BaseTrainerConfig):
     regularization_weight: float = 0.1
     validation_interval_epochs: int = 1
     model_save_directory: Path = Path("artifacts/models/custom_similarity_transformer")
+
+
+@dataclass
+class TransformerTrainerConfig(BaseTrainerConfig):
+    """Configuration for TransformerTrainer using torch.nn.Transformer."""
+
+    SECTION: ClassVar[str] = "transformer_trainer"
+
+    # Model architecture
+    d_model: int = 512
+    nhead: int = 8
+    num_encoder_layers: int = 6
+    num_decoder_layers: int = 6
+    dim_feedforward: int = 2048
+    dropout: float = 0.1
+    num_models: int = 16
+
+    # Training hyperparameters
+    shuffle: bool = True
+    validate_every_n_epochs: int = 1
+    ranking_loss_weight: float = 1.0
+    smooth_l1_weight: float = 0.1
+    model_save_directory: Path = Path("artifacts/models/transformer")
