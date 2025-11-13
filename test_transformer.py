@@ -40,7 +40,7 @@ def test_transformer():
 
     # Load test data
     logger.info("Loading test dataloader...")
-    test_loader = build_combined_similarity_loader(split="test", batch_size=config.batch_size)
+    test_loader = build_combined_similarity_loader(split="test")
     logger.info(f"Test set size: {len(test_loader)} batches")
 
     # Prepare results storage
@@ -73,11 +73,11 @@ def test_transformer():
             # Store results for each item in batch
             for i in range(logits.shape[0]):
                 result = {
-                    'dataset_name': batch['dataset_names'][i] if i < len(batch['dataset_names']) else 'unknown',
+                    'dataset_name': batch['dataset_names'],
                     'true_ranks': true_ranks[i].cpu().tolist(),
                     'predicted_ranks': predicted_ranks[i].cpu().tolist(),
                     'logits': logits[i].cpu().tolist(),
-                    'model_names': batch['model_names'] if 'model_names' in batch else [],
+                    'model_names': batch['model_names'][i],
                     'loss': loss.item()
                 }
                 results.append(result)
@@ -93,7 +93,7 @@ def test_transformer():
 
     logger.info(f"Saving results to {output_path}")
     with open(output_path, 'w', newline='') as csvfile:
-        fieldnames = ['dataset_name', 'model_names', 'true_ranks', 'predicted_ranks', 'logits', 'loss']
+        fieldnames = ['dataset_name', 'predicted_ranks', 'true_ranks', 'logits', 'loss', 'model_names']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         writer.writeheader()

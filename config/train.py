@@ -113,6 +113,5 @@ class TestTransformerConfig(SubSectionParser):
 
     checkpoint_path: Path
     device: str = "cuda"
-    batch_size: int = 1
     output_directory: Path = Path("artifacts/test_results")
     output_filename: str = "transformer_test_results.csv"
