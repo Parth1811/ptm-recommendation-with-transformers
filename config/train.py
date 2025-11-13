@@ -98,3 +98,8 @@ class TransformerTrainerConfig(BaseTrainerConfig):
     final_temperature: float = 1.0
     temperature_schedule: str = "cosine"  # "linear", "exponential", or "cosine"
     temperature_warmup_steps: int = 0
+
+    # Load from checkpoint
+    load_from_checkpoint: bool = False
+    checkpoint_path: Path | None = None
+    only_load_model_weights: bool = False
