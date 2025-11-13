@@ -242,21 +242,6 @@ class TransformerTrainer(BaseTrainer):
 
             avg_train_loss = train_loss / len(self.dataloader)
 
-            # Validate every N epochs
-            val_loss = -1
-            is_best = val_loss < self.best_val_loss
-
-            if epoch % self.config.validate_every_n_epochs == 0:
-                val_loss = self.validate()
-
-                # Scheduler steps on VALIDATION loss
-                self.scheduler.step(val_loss)
-
-                # Save if best
-                if is_best:
-                    self.best_val_loss = val_loss
-                    self.save_checkpoint(epoch, is_best=True)
-                    logger.checkpoint(f'New best validation loss: {val_loss:.6f} at epoch {epoch}')
 
             # Save periodic checkpoints
             if epoch % self.config.save_checkpoint_every_n_epochs == 0:
@@ -268,6 +253,14 @@ class TransformerTrainer(BaseTrainer):
                 other_metrics['temperature'] = self.temp_scheduler.get_temperature(
                     self.temp_scheduler.current_step - 1  # Get last used temperature
                 )
+
+
+            # Run Validation on every n epochs
+            val_loss = -1.0
+            if epoch % self.config.validate_every_n_epochs == 0:
+                val_loss = self.validate()
+
+            # Save metrics for every epoch, including validation loss if available
             self.save_metrics(
                 epoch=epoch,
                 loss=avg_train_loss,
@@ -275,10 +268,15 @@ class TransformerTrainer(BaseTrainer):
                 other_metrics=other_metrics
             )
 
-            # Check early stopping
-            if not is_best and self.check_early_stopping(val_loss):
-                logger.epoch(f'Early stopping at epoch {epoch}')
-                break
+            # Scheduler steps on validation loss every n epochs
+            if epoch % self.config.validate_every_n_epochs == 0:
+                # Scheduler steps on VALIDATION loss
+                self.scheduler.step(val_loss)
+
+                # Check early stopping
+                if self.check_early_stopping(val_loss):
+                    logger.epoch(f'Early stopping at epoch {epoch}')
+                    break
 
         self.save_metrics_to_file()
         self.plot_metrics()
