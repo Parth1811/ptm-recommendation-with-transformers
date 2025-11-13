@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import json
 from abc import ABC, abstractmethod
 from datetime import datetime
-import json
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
 from config import BaseTrainerConfig
-from utils.plot import plot_multiple
+from utils import plot_multiple
 
 
 @dataclass

@@ -59,18 +59,6 @@ class TrainModelAutoEncoderConfig(BaseTrainerConfig):
 
 
 @dataclass
-class CustomSimilarityTransformerTrainerConfig(BaseTrainerConfig):
-    """Training configuration for the CustomSimilarityTransformer model."""
-
-    SECTION: ClassVar[str] = "custom_similarity_transformer_trainer"
-
-    shuffle: bool = True
-    regularization_weight: float = 0.1
-    validation_interval_epochs: int = 1
-    model_save_directory: Path = Path("artifacts/models/custom_similarity_transformer")
-
-
-@dataclass
 class TransformerTrainerConfig(BaseTrainerConfig):
     """Configuration for TransformerTrainer using torch.nn.Transformer."""
 
@@ -103,15 +91,3 @@ class TransformerTrainerConfig(BaseTrainerConfig):
     load_from_checkpoint: bool = False
     checkpoint_path: Path | None = None
     only_load_model_weights: bool = False
-
-
-@dataclass
-class TestTransformerConfig(SubSectionParser):
-    """Configuration for testing the TransformerTrainer model."""
-
-    SECTION: ClassVar[str] = "test_transformer"
-
-    checkpoint_path: Path
-    device: str = "cuda"
-    output_directory: Path = Path("artifacts/test_results")
-    output_filename: str = "transformer_test_results.csv"

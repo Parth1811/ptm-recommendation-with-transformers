@@ -26,3 +26,15 @@ class ClipEvaluationConfig(SubSectionParser):
     dataset_names: Sequence[str] | None = None
     limit_batches_per_split: int | None = None
     extra_load_kwargs: dict[str, object] = field(default_factory=dict)
+
+
+@dataclass
+class TestTransformerConfig(SubSectionParser):
+    """Configuration for testing the TransformerTrainer model."""
+
+    SECTION: ClassVar[str] = "test_transformer"
+
+    checkpoint_path: Path
+    device: str = "cuda"
+    output_directory: Path = Path("artifacts/test_results")
+    output_filename: str = "transformer_test_results.csv"

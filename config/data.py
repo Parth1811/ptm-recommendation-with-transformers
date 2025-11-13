@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import ClassVar
+from typing import ClassVar, Sequence
 
 from .base import SubSectionParser
 
@@ -40,3 +40,35 @@ class DatasetRegistryConfig(SubSectionParser):
 
     default_loader_class: str = "GenericBalancedDataLoader"
     loader_registry: dict[str, dict[str, object]] = field(default_factory=dict)
+
+
+@dataclass
+class ModelEmbeddingLoaderConfig(SubSectionParser):
+    """Configuration for loading pre-computed model embeddings."""
+
+    SECTION: ClassVar[str] = "model_embedding_loader"
+
+    root_dir: Path = Path("models/embeddings")
+    embedding_key: str = "embedding"
+    batch_size: int = 32
+    shuffle: bool = True
+    max_models: int | None = None
+    num_workers: int = 0
+    pin_memory: bool = True
+
+
+@dataclass
+class DatasetTokenLoaderConfig(SubSectionParser):
+    """Configuration for loading dataset token shards."""
+
+    SECTION: ClassVar[str] = "dataset_token_loader"
+
+    root_dir: Path = Path("artifacts/extracted/datasets")
+    dataset_names: Sequence[str] | None = None
+    shard_glob: str = "*.npz"
+    batch_size: int = 1
+    shuffle: bool = True
+    include_class_metadata: bool = True
+    max_shards: int | None = None
+    num_workers: int = 0
+    pin_memory: bool = True
