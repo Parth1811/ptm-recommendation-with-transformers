@@ -101,9 +101,7 @@ class ModelAutoEncoder(AutoEncoder):
     """AutoEncoder initialized directly from configuration values."""
 
     def __init__(self, config: ModelAutoEncoderConfig | None = None, *, device: torch.device | str | None = None, auto_configure_device: bool = True) -> None:
-        ConfigParser.load()
-        self.config = config or ConfigParser.get(ModelAutoEncoderConfig)
-        resolved_device = self._resolve_device(device) if auto_configure_device else device
+        self.config = ConfigParser.get(ModelAutoEncoderConfig)
 
         super().__init__(
             encoder_input_size=self.config.encoder_input_size,
@@ -115,17 +113,3 @@ class ModelAutoEncoder(AutoEncoder):
             dropout=self.config.dropout,
             activation=self.config.activation,
         )
-
-        if resolved_device is not None:
-            self.device = torch.device(resolved_device)
-            self.to(self.device)
-        else:
-            self.device = torch.device("cpu")
-
-    @staticmethod
-    def _resolve_device(device: torch.device | str | None) -> torch.device:
-        if device is None:
-            return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        if isinstance(device, torch.device):
-            return device
-        return torch.device(device)

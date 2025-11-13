@@ -33,7 +33,6 @@ class DatasetTokenLoaderConfig(SubSectionParser):
 
     root_dir: Path = Path("artifacts/extracted/datasets")
     dataset_names: Sequence[str] | None = None
-    splits: Sequence[str] = ("train", "validation", "test")
     shard_glob: str = "*.npz"
     batch_size: int = 1
     shuffle: bool = True
@@ -100,3 +99,16 @@ class SimilarityTrainerConfig(BaseTrainerConfig):
     log_grad_stats: bool = True
     log_activation_stats: bool = True
     model_save_directory: Path = Path("artifacts/models/similarity_transformer")
+
+
+@dataclass
+class CustomSimilarityTransformerConfig(SubSectionParser):
+    """Configuration for the custom cross-attention similarity transformer."""
+
+    SECTION: ClassVar[str] = "custom_similarity_transformer"
+
+    embed_dim: int = 512
+    num_heads: int = 8
+    num_layers: int = 2
+    dropout: float = 0.1
+    batch_first: bool = True
