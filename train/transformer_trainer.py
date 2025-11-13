@@ -92,9 +92,6 @@ class TransformerTrainer(BaseTrainer):
 
         # 2. Initialize model
         self.model = CrossAttentionTransformer(self.config)
-        if self.config.load_from_checkpoint and self.config.checkpoint_path is not None:
-            self.checkpoint = torch.load(self.config.checkpoint_path, map_location=self.config.device, weights_only=False)
-            self.model.load_state_dict(self.checkpoint['model_state_dict'])
 
         # 3. Setup dataloaders
         self.dataloader = build_combined_similarity_loader(split="train")
@@ -114,9 +111,6 @@ class TransformerTrainer(BaseTrainer):
             lr=self.config.learning_rate,
             weight_decay=self.config.weight_decay,
         )
-        if getattr(self, 'checkpoint', None) is not None and not self.config.only_load_model_weights:
-            self.optimizer.load_state_dict(self.checkpoint['optimizer_state_dict'])
-            logger.info(f"Optimizer state loaded from checkpoint: {self.config.checkpoint_path}")
 
         # 5. Initialize scheduler
         self.scheduler = ReduceLROnPlateau(
@@ -127,9 +121,6 @@ class TransformerTrainer(BaseTrainer):
             min_lr=self.config.scheduler_min_lr,
             verbose=True,
         )
-        if getattr(self, 'checkpoint', None) is not None and not self.config.only_load_model_weights:
-            self.scheduler.load_state_dict(self.checkpoint['scheduler_state_dict'])
-            logger.info(f"Scheduler state loaded from checkpoint: {self.config.checkpoint_path}")
 
         # 6. Initialize temperature scheduler
         total_steps = len(self.dataloader) * self.config.num_epochs
@@ -145,9 +136,6 @@ class TransformerTrainer(BaseTrainer):
                 f"Temperature scheduler initialized: {self.config.initial_temperature} -> "
                 f"{self.config.final_temperature} over {total_steps} steps ({self.config.temperature_schedule})"
             )
-            if getattr(self, 'checkpoint', None) is not None and not self.config.only_load_model_weights and 'temp_scheduler_state_dict' in self.checkpoint:
-                self.temp_scheduler.load_state_dict(self.checkpoint['temp_scheduler_state_dict'])
-                logger.info(f"Temperature scheduler state loaded from checkpoint: {self.config.checkpoint_path}")
         else:
             self.temp_scheduler = None
 
@@ -157,13 +145,13 @@ class TransformerTrainer(BaseTrainer):
         # 8. Call super().__init__() LAST
         super().__init__()
 
-        # # 9. Load from checkpoint if configured
-        # if self.config.load_from_checkpoint and self.config.checkpoint_path is not None:
-        #     logger.info(f"Loading checkpoint from {self.config.checkpoint_path}")
-        #     self.load_checkpoint(
-        #         load_path=self.config.checkpoint_path,
-        #         only_model_weights=self.config.only_load_model_weights
-        #     )
+        # 9. Load from checkpoint if configured
+        if self.config.load_from_checkpoint and self.config.checkpoint_path is not None:
+            logger.info(f"Loading checkpoint from {self.config.checkpoint_path}")
+            self.load_checkpoint(
+                load_path=self.config.checkpoint_path,
+                only_model_weights=self.config.only_load_model_weights
+            )
 
         # 10. Additional state variables
         self.best_val_loss = float('inf')
@@ -358,10 +346,27 @@ class TransformerTrainer(BaseTrainer):
         self.model.load_state_dict(checkpoint['model_state_dict'])
         if not only_model_weights:
             self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+            # Move optimizer state tensors to the correct device
+            for state in self.optimizer.state.values():
+                for k, v in state.items():
+                    if isinstance(v, torch.Tensor):
+                        state[k] = v.to(self.device)
+
             self.scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+            # Move scheduler state tensors to the correct device
+            if hasattr(self.scheduler, 'state_dict'):
+                for key, value in self.scheduler.state_dict().items():
+                    if isinstance(value, torch.Tensor):
+                        setattr(self.scheduler, key, value.to(self.device))
+
             # Load temperature scheduler state if available
             if self.temp_scheduler is not None and 'temp_scheduler_state_dict' in checkpoint:
                 self.temp_scheduler.load_state_dict(checkpoint['temp_scheduler_state_dict'])
+                # Move temperature scheduler state tensors to the correct device
+                if hasattr(self.temp_scheduler, '__dict__'):
+                    for key, value in self.temp_scheduler.__dict__.items():
+                        if isinstance(value, torch.Tensor):
+                            setattr(self.temp_scheduler, key, value.to(self.device))
 
         self.best_val_loss = checkpoint.get('best_val_loss', float('inf'))
 
