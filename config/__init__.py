@@ -17,6 +17,7 @@ from .similarity import (
 from .train import (
     BaseTrainerConfig,
     CustomSimilarityTransformerTrainerConfig,
+    TestTransformerConfig,
     TrainModelAutoEncoderConfig,
     TransformerTrainerConfig,
 )

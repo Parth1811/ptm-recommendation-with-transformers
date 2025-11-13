@@ -103,3 +103,16 @@ class TransformerTrainerConfig(BaseTrainerConfig):
     load_from_checkpoint: bool = False
     checkpoint_path: Path | None = None
     only_load_model_weights: bool = False
+
+
+@dataclass
+class TestTransformerConfig(SubSectionParser):
+    """Configuration for testing the TransformerTrainer model."""
+
+    SECTION: ClassVar[str] = "test_transformer"
+
+    checkpoint_path: Path
+    device: str = "cuda"
+    batch_size: int = 1
+    output_directory: Path = Path("artifacts/test_results")
+    output_filename: str = "transformer_test_results.csv"
