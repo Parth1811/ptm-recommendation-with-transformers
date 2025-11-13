@@ -41,3 +41,19 @@ class ModelAutoEncoderEvalConfig(SubSectionParser):
     input_dtype: str = "float32"
     file_substring: str = "model_extracted"
     save_dtype: str = "float32"
+
+
+@dataclass
+class RankingCrossAttentionTransformerConfig(SubSectionParser):
+    """Configuration for TransformerTrainer using torch.nn.Transformer."""
+
+    SECTION: ClassVar[str] = "ranking_cross_attention_transformer"
+
+    # Model architecture
+    d_model: int = 512
+    nhead: int = 8
+    num_encoder_layers: int = 6
+    num_decoder_layers: int = 6
+    dim_feedforward: int = 2048
+    dropout: float = 0.1
+    num_models: int = 16
