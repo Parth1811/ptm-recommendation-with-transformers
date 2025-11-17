@@ -114,7 +114,8 @@ def compute_loss(self, batch: dict) -> torch.Tensor:
 
 ### Models
 - **AutoEncoder** (`model/model_encoder.py`): 8192→512 dim compression
-- **SimilarityTransformerModel** (`model/similarity_transformer.py`): Ranking model
+- **RankingCrossAttentionTransformer** (`model/ranking_transformer.py`): Cross-attention transformer for model-dataset ranking
+- **CustomSimilarityTransformer** (`model/custom_similarity_transformer.py`): Cross-attention based model selector
 - **ClipImageEncoder** (`model/clip_encoder.py`): Dataset feature extraction
 
 ### Data Loading

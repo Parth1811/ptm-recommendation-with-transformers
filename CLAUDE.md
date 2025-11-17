@@ -30,14 +30,14 @@ python train.py --list
 
 Run specific trainers:
 ```bash
-python train.py ModelAutoEncoderTrainer      # Train the autoencoder for model embeddings
-python train.py SimilarityTransformerTrainer # Train the similarity transformer
+python train.py ModelAutoEncoderTrainer # Train the autoencoder for model embeddings
+python train.py TransformerTrainer      # Train the ranking transformer
 ```
 
 Trainer names are case-insensitive and the "Trainer" suffix is optional, so these work too:
 ```bash
 python train.py modelautoencoder
-python train.py similarity
+python train.py transformer
 ```
 
 ### Evaluation and Extraction
@@ -104,11 +104,15 @@ Each subsystem (extractors, autoencoder, training, datasets) has its own section
 - Supports GELU, ReLU, LeakyReLU activations with dropout
 - `ModelAutoEncoder` subclass adds config-driven initialization
 
-**SimilarityTransformerModel** (`model/similarity_transformer.py`):
-- Takes model embeddings (fixed set) and dataset token embeddings (variable length batches)
-- Projects both to common hidden dimension
-- Uses BERT-based transformer with CLS token for classification
-- Outputs logits ranking which models are best for the dataset
+**RankingCrossAttentionTransformer** (`model/ranking_transformer.py`):
+- Cross-attention transformer for model-dataset ranking
+- Uses dataset_tokens as source (encoder input) and model_tokens as target (decoder input)
+- Outputs logits for ranking the models
+
+**CustomSimilarityTransformer** (`model/custom_similarity_transformer.py`):
+- Cross-attention based model selector using PyTorch MultiheadAttention
+- Learns to attend over model embeddings based on dataset features
+- Produces probability distribution over models
 
 **ClipImageEncoder** (`model/clip_encoder.py`):
 - Extracts dataset features using OpenAI CLIP models
@@ -150,7 +154,7 @@ Each subsystem (extractors, autoencoder, training, datasets) has its own section
 
 **RankingLoss** (`loss/ranking_loss.py`):
 - Compares model predictions against true performance rankings
-- Used by `SimilarityTransformerTrainer` to learn model-dataset compatibility
+- Used by `TransformerTrainer` to learn model-dataset compatibility
 
 ## Key File Locations
 
@@ -231,7 +235,7 @@ Generate production-ready PyTorch trainers that integrate with the BaseTrainer i
 
 **Trigger examples**:
 - "Create a trainer for [ModelName]"
-- "I need to train the similarity transformer"
+- "I need to train the ranking transformer"
 - "Update my trainer to use the combined dataloader"
 
 **Key capabilities**: Generates complete trainer classes with config dataclasses, ensures BaseTrainer patterns, validates model I/O contracts, recommends optimizers/schedulers.
