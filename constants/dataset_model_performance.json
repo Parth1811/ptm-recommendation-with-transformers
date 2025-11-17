@@ -1,44 +1,248 @@
 {
   "MNIST": [
-    {"model_name": "vit-base-mnist", "model_type": "ViTForImageClassification", "accuracy": 0.9949, "trained_on_dataset": true},
-    {"model_name": "clip-vit-base-patch32_mnist", "model_type": "CLIPVisionModel", "accuracy": 0.9957, "trained_on_dataset": true},
-    {"model_name": "Mnist-Digits-SigLIP2", "model_type": "SiglipForImageClassification", "accuracy": 0.9928, "trained_on_dataset": true}
+    {
+      "model_name": "vit-base-mnist",
+      "model_type": "ViTForImageClassification",
+      "accuracy": 0.9949,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "clip-vit-base-patch32_mnist",
+      "model_type": "CLIPVisionModel",
+      "accuracy": 0.9957,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "Mnist-Digits-SigLIP2",
+      "model_type": "SiglipForImageClassification",
+      "accuracy": 0.9928,
+      "trained_on_dataset": true
+    }
   ],
   "SVHN": [
-    {"model_name": "clip-vit-base-patch32_svhn", "model_type": "CLIPVisionModel", "accuracy": 0.9714, "trained_on_dataset": true},
-    {"model_name": "resnet34_svhn", "model_type": "Resnet34", "accuracy": 0.9626, "trained_on_dataset": true},
-    {"model_name": "densenet121_svhn", "model_type": "Densenet121", "accuracy": 0.9618, "trained_on_dataset": true},
-    {"model_name": "vgg16_bn_svhn", "model_type": "Vgg16_bn", "accuracy": 0.9612, "trained_on_dataset": true}
+    {
+      "model_name": "clip-vit-base-patch32_svhn",
+      "model_type": "CLIPVisionModel",
+      "accuracy": 0.9714,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34_svhn",
+      "model_type": "Resnet34",
+      "accuracy": 0.9626,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "densenet121_svhn",
+      "model_type": "Densenet121",
+      "accuracy": 0.9618,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vgg16_bn_svhn",
+      "model_type": "Vgg16_bn",
+      "accuracy": 0.9612,
+      "trained_on_dataset": true
+    }
   ],
   "Fashion-MNIST": [
-    {"model_name": "Fashion-Mnist-SigLIP2", "model_type": "SiglipForImageClassification", "accuracy": 0.9180, "trained_on_dataset": true},
-    {"model_name": "fashion_classification_model", "model_type": "ViTForImageClassification", "accuracy": 0.7920, "trained_on_dataset": true},
-    {"model_name": "clip-vit-base-patch16_fashion_mnist", "model_type": "CLIPVisionModel", "accuracy": 0.9452, "trained_on_dataset": true}
+    {
+      "model_name": "Fashion-Mnist-SigLIP2",
+      "model_type": "SiglipForImageClassification",
+      "accuracy": 0.9180,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fashion_classification_model",
+      "model_type": "ViTForImageClassification",
+      "accuracy": 0.7920,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "clip-vit-base-patch16_fashion_mnist",
+      "model_type": "CLIPVisionModel",
+      "accuracy": 0.9452,
+      "trained_on_dataset": true
+    }
   ],
   "ImageNet 1k": [
-    {"model_name": "vit-base-patch16-224", "model_type": "ViTForImageClassification", "accuracy": 0.8120, "trained_on_dataset": true},
-    {"model_name": "eva02_large_patch14_448.mim_m38m_ft_in22k_in1k", "model_type": "Eva02_large_patch14_448", "accuracy": 0.9005, "trained_on_dataset": true},
-    {"model_name": "eva02_large_patch14_448.mim_in22k_ft_in22k_in1k", "model_type": "Eva02_large_patch14_448", "accuracy": 0.8997, "trained_on_dataset": true},
-    {"model_name": "eva_giant_patch14_560.m30m_ft_in22k_in1k", "model_type": "Eva_giant_patch14_560", "accuracy": 0.8980, "trained_on_dataset": true},
-    {"model_name": "eva02_large_patch14_448.mim_in22k_ft_in1k", "model_type": "Eva02_large_patch14_448", "accuracy": 0.8963, "trained_on_dataset": true},
-    {"model_name": "eva_giant_patch14_336.m30m_ft_in22k_in1k", "model_type": "Eva_giant_patch14_336", "accuracy": 0.8957, "trained_on_dataset": true},
-    {"model_name": "eva02_large_patch14_448.mim_m38m_ft_in1k", "model_type": "Eva02_large_patch14_448", "accuracy": 0.8955, "trained_on_dataset": true},
-    {"model_name": "eva_giant_patch14_336.clip_ft_in1k", "model_type": "Eva_giant_patch14_336", "accuracy": 0.8946, "trained_on_dataset": true},
-    {"model_name": "eva_large_patch14_336.in22k_ft_in22k_in1k", "model_type": "Eva_large_patch14_336", "accuracy": 0.8925, "trained_on_dataset": true},
-    {"model_name": "eva_giant_patch14_224.clip_ft_in1k", "model_type": "Eva_giant_patch14_224", "accuracy": 0.8889, "trained_on_dataset": true},
-    {"model_name": "convnextv2_huge.fcmae_ft_in22k_in1k_512", "model_type": "Convnextv2_huge", "accuracy": 0.8886, "trained_on_dataset": true},
-    {"model_name": "eva_large_patch14_336.in22k_ft_in1k", "model_type": "Eva_large_patch14_336", "accuracy": 0.8869, "trained_on_dataset": true},
-    {"model_name": "eva02_base_patch14_448.mim_in22k_ft_in22k_in1k", "model_type": "Eva02_base_patch14_448", "accuracy": 0.8868, "trained_on_dataset": true},
-    {"model_name": "convnextv2_huge.fcmae_ft_in22k_in1k_384", "model_type": "Convnextv2_huge", "accuracy": 0.8866, "trained_on_dataset": true},
-    {"model_name": "vit_huge_patch14_clip_336.laion2b_ft_in12k_in1k", "model_type": "Vit_huge_patch14_clip_336", "accuracy": 0.8863, "trained_on_dataset": true}
+    {
+      "model_name": "vit-base-patch16-224",
+      "model_type": "ViTForImageClassification",
+      "accuracy": 0.8120,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva02_large_patch14_448.mim_m38m_ft_in22k_in1k",
+      "model_type": "Eva02_large_patch14_448",
+      "accuracy": 0.9005,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva02_large_patch14_448.mim_in22k_ft_in22k_in1k",
+      "model_type": "Eva02_large_patch14_448",
+      "accuracy": 0.8997,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva_giant_patch14_560.m30m_ft_in22k_in1k",
+      "model_type": "Eva_giant_patch14_560",
+      "accuracy": 0.8980,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva02_large_patch14_448.mim_in22k_ft_in1k",
+      "model_type": "Eva02_large_patch14_448",
+      "accuracy": 0.8963,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva_giant_patch14_336.m30m_ft_in22k_in1k",
+      "model_type": "Eva_giant_patch14_336",
+      "accuracy": 0.8957,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva02_large_patch14_448.mim_m38m_ft_in1k",
+      "model_type": "Eva02_large_patch14_448",
+      "accuracy": 0.8955,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva_giant_patch14_336.clip_ft_in1k",
+      "model_type": "Eva_giant_patch14_336",
+      "accuracy": 0.8946,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva_large_patch14_336.in22k_ft_in22k_in1k",
+      "model_type": "Eva_large_patch14_336",
+      "accuracy": 0.8925,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva_giant_patch14_224.clip_ft_in1k",
+      "model_type": "Eva_giant_patch14_224",
+      "accuracy": 0.8889,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_huge.fcmae_ft_in22k_in1k_512",
+      "model_type": "Convnextv2_huge",
+      "accuracy": 0.8886,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva_large_patch14_336.in22k_ft_in1k",
+      "model_type": "Eva_large_patch14_336",
+      "accuracy": 0.8869,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva02_base_patch14_448.mim_in22k_ft_in22k_in1k",
+      "model_type": "Eva02_base_patch14_448",
+      "accuracy": 0.8868,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_huge.fcmae_ft_in22k_in1k_384",
+      "model_type": "Convnextv2_huge",
+      "accuracy": 0.8866,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_huge_patch14_clip_336.laion2b_ft_in12k_in1k",
+      "model_type": "Vit_huge_patch14_clip_336",
+      "accuracy": 0.8863,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_xxlarge.clip_laion2b_soup_ft_in1k",
+      "model_type": "Convnext_xxlarge",
+      "accuracy": 0.88622,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva_large_patch14_196.in22k_ft_in22k_in1k",
+      "model_type": "Eva_large_patch14_196",
+      "accuracy": 0.88590,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beit_large_patch16_512.in22k_ft_in22k_in1k",
+      "model_type": "Beit_large_patch16_512",
+      "accuracy": 0.88576,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_xlarge_tf_512.in21k_ft_in1k",
+      "model_type": "ViTForImageClassification",
+      "accuracy": 0.88540,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beitv2_large_patch16_224.in1k_ft_in22k_in1k",
+      "model_type": "Beitv2_large_patch16_224",
+      "accuracy": 0.88406,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beit_large_patch16_384.in22k_ft_in22k_in1k",
+      "model_type": "Beit_large_patch16_384",
+      "accuracy": 0.88380,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_l2.ns_jft_in1k",
+      "model_type": "Tf_efficientnet_l2",
+      "accuracy": 0.88360,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_large_mlp.clip_laion2b_soup_ft_in12k_in1k_384",
+      "model_type": "Convnext_large_mlp",
+      "accuracy": 0.88334,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_xlarge_tf_384.in21k_ft_in1k",
+      "model_type": "ViTForImageClassification",
+      "accuracy": 0.88302,
+      "trained_on_dataset": true
+    }
   ],
   "CIFAR-10": [
-    {"model_name": "vit-base-patch16-224-in21k-finetuned-cifar10", "model_type": "ViTForImageClassification", "accuracy": 0.9788, "trained_on_dataset": true},
-    {"model_name": "resnet18_cifar10", "model_type": "Resnet18", "accuracy": 0.9473, "trained_on_dataset": true}
+    {
+      "model_name": "vit-base-patch16-224-in21k-finetuned-cifar10",
+      "model_type": "ViTForImageClassification",
+      "accuracy": 0.9788,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18_cifar10",
+      "model_type": "Resnet18",
+      "accuracy": 0.9473,
+      "trained_on_dataset": true
+    }
   ],
   "CIFAR-100": [
-    {"model_name": "resnet34_cifar100", "model_type": "Resnet34", "accuracy": 0.7978, "trained_on_dataset": true},
-    {"model_name": "resnet18_cifar100", "model_type": "Resnet18", "accuracy": 0.7926, "trained_on_dataset": true},
-    {"model_name": "Vit-Cifar100", "model_type": "ViTForImageClassification", "accuracy": 0.8985, "trained_on_dataset": true}
+    {
+      "model_name": "resnet34_cifar100",
+      "model_type": "Resnet34",
+      "accuracy": 0.7978,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18_cifar100",
+      "model_type": "Resnet18",
+      "accuracy": 0.7926,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "Vit-Cifar100",
+      "model_type": "ViTForImageClassification",
+      "accuracy": 0.8985,
+      "trained_on_dataset": true
+    }
   ]
 }

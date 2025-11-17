@@ -1,0 +1,10 @@
+name,url
+convnext_xxlarge.clip_laion2b_soup_ft_in1k,https://huggingface.co/timm/convnext_xxlarge.clip_laion2b_soup_ft_in1k
+eva_large_patch14_196.in22k_ft_in22k_in1k,https://huggingface.co/timm/eva_large_patch14_196.in22k_ft_in22k_in1k
+beit_large_patch16_512.in22k_ft_in22k_in1k,https://huggingface.co/timm/beit_large_patch16_512.in22k_ft_in22k_in1k
+maxvit_xlarge_tf_512.in21k_ft_in1k,https://huggingface.co/timm/maxvit_xlarge_tf_512.in21k_ft_in1k
+beitv2_large_patch16_224.in1k_ft_in22k_in1k,https://huggingface.co/timm/beitv2_large_patch16_224.in1k_ft_in22k_in1k
+beit_large_patch16_384.in22k_ft_in22k_in1k,https://huggingface.co/timm/beit_large_patch16_384.in22k_ft_in22k_in1k
+tf_efficientnet_l2.ns_jft_in1k,https://huggingface.co/timm/tf_efficientnet_l2.ns_jft_in1k
+convnext_large_mlp.clip_laion2b_soup_ft_in12k_in1k_384,https://huggingface.co/timm/convnext_large_mlp.clip_laion2b_soup_ft_in12k_in1k_384
+maxvit_xlarge_tf_384.in21k_ft_in1k,https://huggingface.co/timm/maxvit_xlarge_tf_384.in21k_ft_in1k

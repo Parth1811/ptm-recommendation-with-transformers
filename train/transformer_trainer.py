@@ -11,7 +11,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from config import ConfigParser, TransformerTrainerConfig
 from dataloader import build_combined_similarity_loader
-from loss import TemperatureScheduler, ranking_loss
+from loss import TemperatureScheduler, pairwise_ranking_loss, ranking_loss
 from model import RankingCrossAttentionTransformer
 
 from .base_trainer import BaseTrainer, TrainingMetrics
@@ -126,6 +126,7 @@ class TransformerTrainer(BaseTrainer):
         # Compute combined loss
         # 1. Ranking loss (listwise) with temperature scaling
         rank_loss = ranking_loss(logits, true_ranks, reverse_order=True, temperature=temperature)
+        # rank_loss = pairwise_ranking_loss(logits, true_ranks, reverse_order=True, temperature=temperature)
 
         # 2. Smooth L1 loss for stability (optional regularization)
         # Convert ranks to target scores (inverse of rank for regression)
@@ -229,7 +230,6 @@ class TransformerTrainer(BaseTrainer):
                 val_loss += loss.item()
 
         avg_loss = val_loss / len(self.val_dataloader)
-        logger.info(f"Validation Loss: {avg_loss:.6f}")
         return avg_loss
 
     def check_early_stopping(self, val_loss: float) -> bool:
