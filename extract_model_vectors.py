@@ -28,16 +28,17 @@ def get_models(csv_path: Path) -> list[tuple[str, str]]:
 
 
 def main() -> None:
-    ConfigParser.load()
     extractor_config = ConfigParser.get(ExtractorConfig)
     registry = extractor_config.extractor_registry
     default_class_name = extractor_config.default_extractor_class
     default_extractor_cls = EXTRACTOR_CLASSES.get(default_class_name)
 
 
-    csv_path = Path("constants/models.csv")
+    # csv_path = Path("constants/models.csv")
+    csv_path = Path("constants/models-test.csv")
     models = get_models(csv_path)
 
+    logger.info(f"Found {len(models)} models to process from {csv_path}")
     for model_name, model_url in models:
         try:
             logger.info(f"Processing model: {model_name} from {model_url}")
