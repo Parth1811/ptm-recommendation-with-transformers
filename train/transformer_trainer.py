@@ -211,6 +211,10 @@ class TransformerTrainer(BaseTrainer):
                 # Scheduler steps on VALIDATION loss
                 self.scheduler.step(val_loss)
 
+                if val_loss <= self.best_val_loss:
+                    logger.checkpoint(f"New best validation loss: {val_loss:.6f} (previous: {self.best_val_loss:.6f})")
+                    self.save_checkpoint(epoch=epoch, is_best=True)
+
                 # Check early stopping
                 if self.check_early_stopping(val_loss):
                     logger.epoch(f'Early stopping at epoch {epoch}')
@@ -239,6 +243,7 @@ class TransformerTrainer(BaseTrainer):
 
         if val_loss < self.best_val_loss - self.config.early_stopping_min_delta:
             self.best_val_loss = val_loss
+            logger.checkpoint(f"Validation loss improved to {val_loss:.6f}, resetting early stopping counter.")
             self.epochs_without_improvement = 0
             return False
 

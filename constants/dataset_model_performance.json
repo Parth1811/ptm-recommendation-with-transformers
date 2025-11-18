@@ -209,6 +209,56 @@
       "model_type": "ViTForImageClassification",
       "accuracy": 0.88302,
       "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b5.ns_jft_in1k",
+      "accuracy": 0.86096,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet269d.ra2_in1k",
+      "accuracy": 0.84724,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mvitv2_small.fb_in1k",
+      "accuracy": 0.83772,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_50x1_bit.goog_distilled_in1k",
+      "accuracy": 0.82820,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_large.e500_r256_in1k",
+      "accuracy": 0.81864,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tresnet_m.miil_in1k",
+      "accuracy": 0.80816,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_125.cvnets_in1k",
+      "accuracy": 0.79682,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pit_xs_224.in1k",
+      "accuracy": 0.78196,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_mixnet_s.in1k",
+      "accuracy": 0.75656,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_efficientnet_evos.r160_in1k",
+      "accuracy": 0.46504,
+      "trained_on_dataset": true
     }
   ],
   "CIFAR-10": [

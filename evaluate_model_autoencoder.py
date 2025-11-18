@@ -12,7 +12,6 @@ from config import ConfigParser, ModelAutoEncoderEvalConfig
 from dataloader import ModelParameterDataset
 from model import ModelAutoEncoder
 
-
 _TORCH_DTYPE_MAP: dict[str, torch.dtype] = {
     "float32": torch.float32,
     "float": torch.float32,
@@ -103,6 +102,7 @@ def main() -> None:
 
     device = _resolve_device(eval_config.device)
     model = _load_model(eval_config, device)
+    model.to(device)
 
     parameter_root = Path(eval_config.parameter_root).expanduser()
     if not parameter_root.exists():
