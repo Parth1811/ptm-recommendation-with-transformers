@@ -47,10 +47,25 @@ class HuggingFacePipelineExtractor(BaseExtractor):
                 logger.warning(f"Unseen Key: {key}")
                 sorted_tensors.append(tensor)
 
-        parameters = [
-            tensor.detach().cpu().numpy().reshape(-1, 1)
-            for tensor in sorted_tensors
-        ]
+        parameters = []
+        skipped_count = 0
+        for tensor in sorted_tensors:
+            # Skip meta tensors (they don't have actual data)
+            if tensor.is_meta:
+                skipped_count += 1
+                continue
+
+            try:
+                param = tensor.detach().cpu().numpy().reshape(-1, 1)
+                parameters.append(param)
+            except (NotImplementedError, RuntimeError) as e:
+                # Skip tensors that can't be converted (e.g., meta tensors, lazy tensors)
+                logger.warning(f"Skipping tensor due to error: {e}")
+                skipped_count += 1
+                continue
+
+        if skipped_count > 0:
+            logger.info(f"Skipped {skipped_count} meta/unconvertible tensors for model '{self.model_id}'")
 
         if not parameters:
             raise ValueError(f"No parameters discovered for model '{self.model_id}'.")
