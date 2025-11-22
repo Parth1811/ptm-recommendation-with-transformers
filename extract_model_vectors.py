@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import csv
-import multiprocessing as mp
 import os
 import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from beautilog import logger
@@ -73,13 +73,15 @@ def main() -> None:
     # csv_path = Path("constants/models-test.csv")
     models = get_models(csv_path)
 
-    # Determine number of workers (use all available cores)
-    num_workers = min(len(models), 1)  # Limit to 100 workers to avoid overload
+    # Conservative thread count to avoid memory issues
+    # Start with 4-8 threads for memory-intensive model loading
+    num_workers = int(os.environ.get("EXTRACT_WORKERS", "8"))
+    num_workers = min(num_workers, len(models))
 
     print(f"Found {len(models)} models to process from {csv_path}")
-    print(f"Using {num_workers} parallel workers")
+    print(f"Using {num_workers} thread workers (set EXTRACT_WORKERS env var to adjust)")
     logger.info(f"Found {len(models)} models to process from {csv_path}")
-    logger.info(f"Using {num_workers} parallel workers")
+    logger.info(f"Using {num_workers} thread workers")
 
     # Prepare arguments for parallel processing
     task_args = [
@@ -87,14 +89,21 @@ def main() -> None:
         for model_name, model_url in models
     ]
 
-    # Process models in parallel
+    # Process models in parallel using threads
     success_count = 0
     failure_count = 0
 
-    with mp.Pool(processes=num_workers) as pool:
-        results = pool.imap_unordered(process_single_model, task_args)
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
+        # Submit all tasks
+        future_to_model = {
+            executor.submit(process_single_model, args): args[0]
+            for args in task_args
+        }
 
-        for model_name, success, result in results:
+        # Process results as they complete
+        for future in as_completed(future_to_model):
+            model_name, success, result = future.result()
+
             if success:
                 success_count += 1
                 logger.info(f"[{success_count}/{len(models)}] ✓ {model_name} -> {result}")
