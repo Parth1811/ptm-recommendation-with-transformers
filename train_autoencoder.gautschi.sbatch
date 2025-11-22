@@ -6,9 +6,9 @@
 #SBATCH --ntasks=64
 #SBATCH --gpus-per-node=1
 #SBATCH --partition=smallgpu
-#SBATCH --mem=10G
+#SBATCH --mem=32G
 #SBATCH --qos=normal
-#SBATCH --time=12:00:00
+#SBATCH --time=08:00:00
 #SBATCH --job-name=train_similarity_transformer
 #SBATCH --output=/home/patil185/joboutput/train_autoencoder.%j.out
 #SBATCH --error=/home/patil185/joboutput/train_autoencoder.%j.err
@@ -48,12 +48,13 @@ echo ""
 # python -u train.py ModelAutoEncoderTrainer
 # python -u train.py SimilarityTransformerTrainer
 # python -u train.py CustomSimilarityTransformerTrainer
-python -u train.py TransformerTrainer
+# python -u train.py TransformerTrainer
 
 # -----------------------------
 # Evaluate model
 # -----------------------------
 # python -u evaluate_model_autoencoder.py
+python -u extract_model_vectors.py
 
 echo ""
 echo "Job end: $(date)"

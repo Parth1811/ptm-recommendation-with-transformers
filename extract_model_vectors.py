@@ -75,7 +75,7 @@ def main() -> None:
 
     # Conservative thread count to avoid memory issues
     # Start with 4-8 threads for memory-intensive model loading
-    num_workers = int(os.environ.get("EXTRACT_WORKERS", "8"))
+    num_workers = int(os.environ.get("EXTRACT_WORKERS", "16"))
     num_workers = min(num_workers, len(models))
 
     print(f"Found {len(models)} models to process from {csv_path}")
