@@ -10,13 +10,9 @@ from typing import Iterable, Sequence
 import numpy as np
 import torch
 import torch.nn.functional as F
-from sklearn.cluster import KMeans
+from torch_kmeans import KMeans as TorchKMeans
 
 from config import ConfigParser, ExtractorConfig
-
-# from models import KMeans
-
-
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +23,10 @@ class BaseExtractor(ABC):
         self.config = ConfigParser.get(ExtractorConfig)
         self.name = name
         self.output_stack_size = self.config.output_stack_size
+
+        # Determine device for KMeans (GPU if available, else CPU)
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        logger.info(f"Using torch-kmeans on {self.device} for {name}")
 
     @abstractmethod
     def load_parameters(self) -> list[torch.Tensor]:
@@ -70,15 +70,25 @@ class BaseExtractor(ABC):
 
     def k_means_clustering(self, values: Sequence[float] | np.ndarray, n_clusters: int) -> np.ndarray:
         """
-        Cluster scalar values using scikit-learn's KMeans implementation.
+        Cluster scalar values using torch-kmeans (GPU-accelerated if CUDA available).
         """
         data = np.asarray(values, dtype=float).reshape(-1, 1)
         if data.size == 0:
             raise ValueError("k_means_clustering requires at least one value.")
 
-        model = KMeans(n_clusters=n_clusters, n_init="auto").fit(data)
-        centers = np.sort(model.cluster_centers_.ravel())[::-1]
-        return centers[: n_clusters]
+        # Convert to PyTorch tensor and move to device
+        data_tensor = torch.from_numpy(data).float().to(self.device)
+
+        # Use torch-kmeans (automatically uses GPU if device is cuda)
+        kmeans = TorchKMeans(n_clusters=n_clusters, max_iter=300, init_method="kmeans++")
+        cluster_ids = kmeans.fit_predict(data_tensor)
+
+        # Get cluster centers and convert back to NumPy
+        centers = kmeans.centers.cpu().numpy().ravel()
+
+        # Sort centers in descending order
+        centers = np.sort(centers)[::-1]
+        return centers[:n_clusters]
 
     def save(self, data: Iterable[Iterable[float]] | np.ndarray) -> Path:
         """Save extracted parameters to a compressed .npz file."""
@@ -92,5 +102,4 @@ class BaseExtractor(ABC):
         output_name = f"{self.name}.npz"
         output_path = target_dir / output_name
         np.savez_compressed(output_path, parameters=array)
-        return output_path
         return output_path

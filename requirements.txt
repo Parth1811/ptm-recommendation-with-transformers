@@ -10,3 +10,4 @@ seaborn
 torchvision
 datasets
 Pillow
+torch-kmeans
