@@ -77,14 +77,19 @@ class BaseExtractor(ABC):
             raise ValueError("k_means_clustering requires at least one value.")
 
         # Convert to PyTorch tensor and move to device
-        data_tensor = torch.from_numpy(data).float().to(self.device)
+        # torch-kmeans expects shape (BS, N, D) where BS=batch_size, N=num_points, D=dimensions
+        # We add a batch dimension: (N, 1) -> (1, N, 1)
+        data_tensor = torch.from_numpy(data).float().unsqueeze(0).to(self.device)
 
         # Use torch-kmeans (automatically uses GPU if device is cuda)
         kmeans = TorchKMeans(n_clusters=n_clusters, max_iter=300, init_method="k-means++")
         cluster_ids = kmeans.fit_predict(data_tensor)
 
         # Get cluster centers and convert back to NumPy
-        centers = kmeans.centers.cpu().numpy().ravel()
+        # centers shape: (1, n_clusters, 1) -> squeeze to (n_clusters,)
+        centers = kmeans.centers.squeeze().cpu().numpy()
+        if centers.ndim == 0:  # Handle single cluster case
+            centers = centers.reshape(1)
 
         # Sort centers in descending order
         centers = np.sort(centers)[::-1]
