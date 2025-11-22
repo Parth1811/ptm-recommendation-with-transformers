@@ -49,13 +49,13 @@
     {
       "model_name": "Fashion-Mnist-SigLIP2",
       "model_type": "SiglipForImageClassification",
-      "accuracy": 0.9180,
+      "accuracy": 0.918,
       "trained_on_dataset": true
     },
     {
       "model_name": "fashion_classification_model",
       "model_type": "ViTForImageClassification",
-      "accuracy": 0.7920,
+      "accuracy": 0.792,
       "trained_on_dataset": true
     },
     {
@@ -66,12 +66,6 @@
     }
   ],
   "ImageNet 1k": [
-    {
-      "model_name": "vit-base-patch16-224",
-      "model_type": "ViTForImageClassification",
-      "accuracy": 0.8120,
-      "trained_on_dataset": true
-    },
     {
       "model_name": "eva02_large_patch14_448.mim_m38m_ft_in22k_in1k",
       "model_type": "Eva02_large_patch14_448",
@@ -87,7 +81,7 @@
     {
       "model_name": "eva_giant_patch14_560.m30m_ft_in22k_in1k",
       "model_type": "Eva_giant_patch14_560",
-      "accuracy": 0.8980,
+      "accuracy": 0.898,
       "trained_on_dataset": true
     },
     {
@@ -115,9 +109,19 @@
       "trained_on_dataset": true
     },
     {
+      "model_name": "vit_so400m_patch14_siglip_378.webli_ft_in1k",
+      "accuracy": 0.8941,
+      "trained_on_dataset": true
+    },
+    {
       "model_name": "eva_large_patch14_336.in22k_ft_in22k_in1k",
       "model_type": "Eva_large_patch14_336",
       "accuracy": 0.8925,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_so400m_patch14_siglip_gap_378.webli_ft_in1k",
+      "accuracy": 0.89056,
       "trained_on_dataset": true
     },
     {
@@ -165,7 +169,7 @@
     {
       "model_name": "eva_large_patch14_196.in22k_ft_in22k_in1k",
       "model_type": "Eva_large_patch14_196",
-      "accuracy": 0.88590,
+      "accuracy": 0.8859,
       "trained_on_dataset": true
     },
     {
@@ -177,7 +181,7 @@
     {
       "model_name": "maxvit_xlarge_tf_512.in21k_ft_in1k",
       "model_type": "ViTForImageClassification",
-      "accuracy": 0.88540,
+      "accuracy": 0.8854,
       "trained_on_dataset": true
     },
     {
@@ -189,13 +193,13 @@
     {
       "model_name": "beit_large_patch16_384.in22k_ft_in22k_in1k",
       "model_type": "Beit_large_patch16_384",
-      "accuracy": 0.88380,
+      "accuracy": 0.8838,
       "trained_on_dataset": true
     },
     {
       "model_name": "tf_efficientnet_l2.ns_jft_in1k",
       "model_type": "Tf_efficientnet_l2",
-      "accuracy": 0.88360,
+      "accuracy": 0.8836,
       "trained_on_dataset": true
     },
     {
@@ -211,8 +215,1418 @@
       "trained_on_dataset": true
     },
     {
+      "model_name": "vit_huge_patch14_clip_224.laion2b_ft_in12k_in1k",
+      "accuracy": 0.88288,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva02_base_patch14_448.mim_in22k_ft_in1k",
+      "accuracy": 0.88262,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch14_clip_336.openai_ft_in12k_in1k",
+      "accuracy": 0.8826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_l2.ns_jft_in1k_475",
+      "accuracy": 0.88246,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_large_tf_512.in21k_ft_in1k",
+      "accuracy": 0.88236,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_1280.swag_ft_in1k",
+      "accuracy": 0.88228,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_base_tf_512.in21k_ft_in1k",
+      "accuracy": 0.88214,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch14_clip_336.laion2b_ft_in12k_in1k",
+      "accuracy": 0.8819,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_large.fcmae_ft_in22k_in1k_384",
+      "accuracy": 0.8818,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch14_clip_224.openai_ft_in12k_in1k",
+      "accuracy": 0.88162,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_so150m2_patch16_reg1_gap_448.sbb_e200_in12k_ft_in1k",
+      "accuracy": 0.88074,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_b36.sail_in22k_ft_in1k_384",
+      "accuracy": 0.88058,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_large_tf_384.in21k_ft_in1k",
+      "accuracy": 0.87994,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_large_mlp.clip_laion2b_soup_ft_in12k_in1k_320",
+      "accuracy": 0.8797,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva_large_patch14_196.in22k_ft_in1k",
+      "accuracy": 0.87952,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_so150m2_patch16_reg1_gap_384.sbb_e200_in12k_ft_in1k",
+      "accuracy": 0.87932,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_base_tf_384.in21k_ft_in1k",
+      "accuracy": 0.8793,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch14_clip_224.laion2b_ft_in12k_in1k",
+      "accuracy": 0.879,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_large_mlp.clip_laion2b_augreg_ft_in1k_384",
+      "accuracy": 0.8789,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch14_clip_336.laion2b_ft_in1k",
+      "accuracy": 0.8787,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch14_clip_224.openai_ft_in1k",
+      "accuracy": 0.87858,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_rmlp_base_rw_384.sw_in12k_ft_in1k",
+      "accuracy": 0.8781,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_xlarge.fb_in22k_ft_in1k_384",
+      "accuracy": 0.87764,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_large_patch16_384.fb_in22k_ft_in1k",
+      "accuracy": 0.87736,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_base.fcmae_ft_in22k_in1k_384",
+      "accuracy": 0.87638,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beit3_large_patch16_224.in22k_ft_in1k",
+      "accuracy": 0.87628,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_huge_patch14_clip_224.laion2b_ft_in1k",
+      "accuracy": 0.87612,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_b36.sail_in22k_ft_in1k_384",
+      "accuracy": 0.87606,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beit3_large_patch16_224.indomain_in22k_ft_in1k",
+      "accuracy": 0.87534,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base_plus_rw.sw_e150_r384_in12k_ft_in1k",
+      "accuracy": 0.87508,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_large.fcmae_ft_in22k_in1k",
+      "accuracy": 0.87494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beit_large_patch16_224.in22k_ft_in22k_in1k",
+      "accuracy": 0.87486,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxxvitv2_rmlp_base_rw_384.sw_in12k_ft_in1k",
+      "accuracy": 0.8748,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_large_window12to24_192to384.ms_in22k_ft_in1k",
+      "accuracy": 0.87474,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_m36.sail_in22k_ft_in1k_384",
+      "accuracy": 0.8747,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_large.fb_in22k_ft_in1k_384",
+      "accuracy": 0.87456,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_b36.sail_in22k_ft_in1k",
+      "accuracy": 0.8745,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_mediumd_patch16_reg4_gap_384.sbb2_e200_in12k_ft_in1k",
+      "accuracy": 0.87438,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beitv2_large_patch16_224.in1k_ft_in1k",
+      "accuracy": 0.87414,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_rmlp_2_rw_384.sw_in12k_ft_in1k",
+      "accuracy": 0.87388,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_xlarge.fb_in22k_ft_in1k",
+      "accuracy": 0.87378,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_so150m_patch16_reg4_gap_384.sbb_e250_in12k_ft_in1k",
+      "accuracy": 0.8737,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_large_mlp.clip_laion2b_augreg_ft_in1k",
+      "accuracy": 0.87344,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_so150m2_patch16_reg1_gap_256.sbb_e200_in12k_ft_in1k",
+      "accuracy": 0.87318,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnextaa201d_32x8d.sw_in12k_ft_in1k_384",
+      "accuracy": 0.87304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch14_clip_224.laion2b_ft_in1k",
+      "accuracy": 0.87288,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_large.fcmae_ft_in22k_in1k",
+      "accuracy": 0.87266,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_clip_384.laion2b_ft_in12k_in1k",
+      "accuracy": 0.8721,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_huge_patch14_224.fb_in22k_ft_in1k",
+      "accuracy": 0.8718,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_base.clip_laion2b_augreg_ft_in12k_in1k_384",
+      "accuracy": 0.87144,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_large_patch4_window12_384.ms_in22k_ft_in1k",
+      "accuracy": 0.87142,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_base_window12to24_192to384.ms_in22k_ft_in1k",
+      "accuracy": 0.87142,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch16_384.augreg_in21k_ft_in1k",
+      "accuracy": 0.87096,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d5_512.sail_in1k",
+      "accuracy": 0.87068,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_clip_384.openai_ft_in12k_in1k",
+      "accuracy": 0.8703,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_large.fb_in22k_ft_in1k",
+      "accuracy": 0.87012,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_base.fcmae_ft_in22k_in1k",
+      "accuracy": 0.86994,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_b36.sail_in22k_ft_in1k",
+      "accuracy": 0.86992,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_large_patch16_224.fb_in22k_ft_in1k",
+      "accuracy": 0.8699,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d5_448.sail_in1k",
+      "accuracy": 0.86974,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_xlarge.fb_in22k_ft_in1k",
+      "accuracy": 0.8697,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_large_window12to16_192to256.ms_in22k_ft_in1k",
+      "accuracy": 0.86934,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base_plus_rw.sw_e150_in12k_ft_in1k",
+      "accuracy": 0.86916,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_rmlp_base_rw_224.sw_in12k_ft_in1k",
+      "accuracy": 0.86908,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_m36.sail_in22k_ft_in1k_384",
+      "accuracy": 0.86868,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_s36.sail_in22k_ft_in1k_384",
+      "accuracy": 0.8686,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b7.ns_jft_in1k",
+      "accuracy": 0.8685,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hiera_huge_224.mae_in1k_ft_in1k",
+      "accuracy": 0.8684,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_320.swag_ft_in1k",
+      "accuracy": 0.8683,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_base.fb_in22k_ft_in1k_384",
+      "accuracy": 0.86826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beit_base_patch16_384.in22k_ft_in22k_in1k",
+      "accuracy": 0.86814,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_l.in21k_ft_in1k",
+      "accuracy": 0.86802,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d4_448.sail_in1k",
+      "accuracy": 0.86788,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_xl.in21k_ft_in1k",
+      "accuracy": 0.86754,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_base.fcmae_ft_in22k_in1k",
+      "accuracy": 0.86752,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_base_patch16_384.fb_in22k_ft_in1k",
+      "accuracy": 0.86742,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnextaa101d_32x8d.sw_in12k_ft_in1k_288",
+      "accuracy": 0.86722,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_so150m_patch16_reg4_gap_256.sbb_e250_in12k_ft_in1k",
+      "accuracy": 0.8672,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base_plus_rw.sw_e150_in12k_ft_in1k",
+      "accuracy": 0.86642,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxxvitv2_rmlp_base_rw_224.sw_in12k_ft_in1k",
+      "accuracy": 0.8664,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_clip_384.laion2b_ft_in1k",
+      "accuracy": 0.86638,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_betwixt_patch16_reg4_gap_384.sbb2_e200_in12k_ft_in1k",
+      "accuracy": 0.86618,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_huge.fcmae_ft_in1k",
+      "accuracy": 0.86618,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_large.fb_in22k_ft_in1k",
+      "accuracy": 0.86612,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_mediumd_patch16_reg4_gap_256.sbb2_e200_in12k_ft_in1k",
+      "accuracy": 0.86608,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_m36.sail_in22k_ft_in1k",
+      "accuracy": 0.86606,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_base_tf_512.in1k",
+      "accuracy": 0.86598,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_2_rw_224.sw_in12k_ft_in1k",
+      "accuracy": 0.86582,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_large.bd_ssld_6m_in1k_384",
+      "accuracy": 0.86544,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_rmlp_2_rw_224.sw_in12k_ft_in1k",
+      "accuracy": 0.86538,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_large_tf_512.in1k",
+      "accuracy": 0.86534,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnextaa101d_32x8d.sw_in12k_ft_in1k_288",
+      "accuracy": 0.8653,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnextaa101d_32x8d.sw_in12k_ft_in1k",
+      "accuracy": 0.86524,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d3_448.sail_in1k",
+      "accuracy": 0.86514,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beitv2_base_patch16_224.in1k_ft_in22k_in1k",
+      "accuracy": 0.86494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_base.clip_laiona_augreg_ft_in1k_384",
+      "accuracy": 0.8649,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_m48_448.fb_dist_in1k",
+      "accuracy": 0.8648,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b6.ns_jft_in1k",
+      "accuracy": 0.86476,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tiny_vit_21m_512.dist_in22k_ft_in1k",
+      "accuracy": 0.86444,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_base_patch4_window12_384.ms_in22k_ft_in1k",
+      "accuracy": 0.86442,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_b36.sail_in1k_384",
+      "accuracy": 0.864,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_l3.r384_in1k",
+      "accuracy": 0.86396,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b6.ssld_stage2_ft_in1k",
+      "accuracy": 0.8638,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_base.clip_laion2b_augreg_ft_in12k_in1k",
+      "accuracy": 0.86378,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_s36.sail_in22k_ft_in1k_384",
+      "accuracy": 0.86374,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_base.bd_ssld_6m_in1k_384",
+      "accuracy": 0.86372,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f6.dm_in1k",
+      "accuracy": 0.86364,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_large_patch4_window7_224.ms_in22k_ft_in1k",
+      "accuracy": 0.8632,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_base.fb_in22k_ft_in1k",
+      "accuracy": 0.86302,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b6.ssld_stage1_in22k_in1k",
+      "accuracy": 0.863,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_base_tf_384.in1k",
+      "accuracy": 0.8629,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_base_window12to16_192to256.ms_in22k_ft_in1k",
+      "accuracy": 0.8627,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_huge.fcmae_ft_in1k",
+      "accuracy": 0.8626,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch8_224.augreg2_in21k_ft_in1k",
+      "accuracy": 0.86252,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_large_tf_384.in1k",
+      "accuracy": 0.86242,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_l3.r320_in1k",
+      "accuracy": 0.8623,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_clip_384.openai_ft_in1k",
+      "accuracy": 0.8621,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b6.ssld_stage2_ft_in1k",
+      "accuracy": 0.86206,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_clip_224.laion2b_ft_in12k_in1k",
+      "accuracy": 0.86204,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_mediumd_patch16_reg4_gap_256.sbb_in12k_ft_in1k",
+      "accuracy": 0.86198,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_r50_s32_384.augreg_in21k_ft_in1k",
+      "accuracy": 0.86188,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_small.in12k_ft_in1k_384",
+      "accuracy": 0.86186,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_base.clip_laion2b_augreg_ft_in1k",
+      "accuracy": 0.86184,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_m36.sail_in1k_384",
+      "accuracy": 0.86164,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f6.dm_in1k",
+      "accuracy": 0.86156,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_m36.sail_in22k_ft_in1k",
+      "accuracy": 0.86152,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_large.fcmae_ft_in1k",
+      "accuracy": 0.86132,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_small_tf_512.in1k",
+      "accuracy": 0.86102,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f5.dm_in1k",
+      "accuracy": 0.86102,
+      "trained_on_dataset": true
+    },
+    {
       "model_name": "tf_efficientnet_b5.ns_jft_in1k",
       "accuracy": 0.86096,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tiny_vit_21m_384.dist_in22k_ft_in1k",
+      "accuracy": 0.86088,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d5_224.sail_in1k",
+      "accuracy": 0.86076,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_m36_384.fb_dist_in1k",
+      "accuracy": 0.8606,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d2_384.sail_in1k",
+      "accuracy": 0.86054,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b6.ssld_stage1_in22k_in1k",
+      "accuracy": 0.86052,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hiera_large_224.mae_in1k_ft_in1k",
+      "accuracy": 0.86046,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.sw_in12k_ft_in1k",
+      "accuracy": 0.86028,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_large_24_p8_384.fb_dist_in1k",
+      "accuracy": 0.86024,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.swag_ft_in1k",
+      "accuracy": 0.8602,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_m.in21k_ft_in1k",
+      "accuracy": 0.86014,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_384.augreg_in21k_ft_in1k",
+      "accuracy": 0.8601,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.lion_in12k_ft_in1k",
+      "accuracy": 0.86004,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_l2.r384_in1k",
+      "accuracy": 0.85984,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_small.bd_ssld_6m_in1k_384",
+      "accuracy": 0.85966,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_1280.swag_lc_in1k",
+      "accuracy": 0.85964,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnextaa101d_32x8d.sw_in12k_ft_in1k",
+      "accuracy": 0.85956,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_clip_224.openai_ft_in12k_in1k",
+      "accuracy": 0.85954,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_l3.r256_in1k",
+      "accuracy": 0.85952,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b5.sw_in12k_ft_in1k",
+      "accuracy": 0.85894,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d4_224.sail_in1k",
+      "accuracy": 0.85868,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch16_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.85856,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_l.in21k_ft_in1k",
+      "accuracy": 0.85846,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rdnet_large.nv_in1k_ft_in1k_384",
+      "accuracy": 0.85844,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_medium_24_p8_384.fb_dist_in1k",
+      "accuracy": 0.85842,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch8_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.85838,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f4.dm_in1k",
+      "accuracy": 0.85838,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_large_patch16_384.fb_in1k",
+      "accuracy": 0.8582,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_base.fb_in22k_ft_in1k",
+      "accuracy": 0.85814,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_l3.r224_in1k",
+      "accuracy": 0.8581,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_clip_448.laion2b_ft_in12k_in1k",
+      "accuracy": 0.85792,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_s36.sail_in22k_ft_in1k",
+      "accuracy": 0.8578,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_large_24_p16_384.fb_dist_in1k",
+      "accuracy": 0.85778,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva02_small_patch14_336.mim_in22k_ft_in1k",
+      "accuracy": 0.8577,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_b36.sail_in1k_384",
+      "accuracy": 0.8577,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_s36.sail_in1k_384",
+      "accuracy": 0.85762,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_large.fcmae_ft_in1k",
+      "accuracy": 0.85762,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_small.fb_in22k_ft_in1k_384",
+      "accuracy": 0.85752,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_betwixt_patch16_reg4_gap_256.sbb2_e200_in12k_ft_in1k",
+      "accuracy": 0.85734,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_base_patch16_224.fb_in22k_ft_in1k",
+      "accuracy": 0.85728,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f5.dm_in1k",
+      "accuracy": 0.85712,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f3.dm_in1k",
+      "accuracy": 0.85676,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_l.in1k",
+      "accuracy": 0.8566,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_tiny_tf_512.in1k",
+      "accuracy": 0.85658,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "flexivit_large.1200ep_in1k",
+      "accuracy": 0.85646,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_l2.r288_in1k",
+      "accuracy": 0.85614,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.lion_in12k_ft_in1k",
+      "accuracy": 0.85602,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.sw_in12k_ft_in1k",
+      "accuracy": 0.85596,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beitv2_base_patch16_224.in1k_ft_in1k",
+      "accuracy": 0.85596,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_24_p8_384.fb_dist_in1k",
+      "accuracy": 0.8558,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_m36.sail_in1k_384",
+      "accuracy": 0.8558,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_xl.in21k_ft_in1k",
+      "accuracy": 0.85562,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_medium_patch16_gap_384.sw_in12k_ft_in1k",
+      "accuracy": 0.85556,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_small_tf_384.in1k",
+      "accuracy": 0.85534,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "flexivit_large.600ep_in1k",
+      "accuracy": 0.8553,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_large.bd_ssld_6m_in1k",
+      "accuracy": 0.85514,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f4.dm_in1k",
+      "accuracy": 0.85514,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_b36.sail_in1k",
+      "accuracy": 0.85502,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_base.fcmae_ft_in1k",
+      "accuracy": 0.8549,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_base.ssld_in1k",
+      "accuracy": 0.85488,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_clip_224.laion2b_ft_in1k",
+      "accuracy": 0.85488,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_s36_384.fb_dist_in1k",
+      "accuracy": 0.85458,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beit3_base_patch16_224.indomain_in22k_ft_in1k",
+      "accuracy": 0.85454,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_s18.sail_in22k_ft_in1k_384",
+      "accuracy": 0.85442,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d3_224.sail_in1k",
+      "accuracy": 0.8544,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit_base_distilled_patch16_384.fb_in1k",
+      "accuracy": 0.85438,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_medium_24_p16_384.fb_dist_in1k",
+      "accuracy": 0.85434,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_120.sw_in12k_ft_in1k",
+      "accuracy": 0.85428,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_betwixt_patch16_reg4_gap_256.sbb_in12k_ft_in1k",
+      "accuracy": 0.85426,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_s36.sail_in22k_ft_in1k",
+      "accuracy": 0.8542,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_clip_384.laion2b_ft_in12k_in1k",
+      "accuracy": 0.85398,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_large_24_p8_224.fb_dist_in1k",
+      "accuracy": 0.85396,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beit3_base_patch16_224.in22k_ft_in1k",
+      "accuracy": 0.8539,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_s36.sail_in1k_384",
+      "accuracy": 0.8538,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_l2.r256_in1k",
+      "accuracy": 0.8538,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b8.ap_in1k",
+      "accuracy": 0.85358,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b8.ra_in1k",
+      "accuracy": 0.85344,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_small.in12k_ft_in1k",
+      "accuracy": 0.85324,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "flexivit_large.300ep_in1k",
+      "accuracy": 0.85284,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_clip_224.openai_ft_in1k",
+      "accuracy": 0.85282,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_small.fb_in22k_ft_in1k",
+      "accuracy": 0.85276,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_base_patch4_window7_224.ms_in22k_ft_in1k",
+      "accuracy": 0.85276,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mvitv2_large.fb_in1k",
+      "accuracy": 0.85264,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d1_384.sail_in1k",
+      "accuracy": 0.85262,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_m36.sail_in1k",
+      "accuracy": 0.85242,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "beit_base_patch16_224.in22k_ft_in22k_in1k",
+      "accuracy": 0.85238,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_clip_384.openai_ft_in12k_in1k",
+      "accuracy": 0.85218,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_m.in1k",
+      "accuracy": 0.85208,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_huge_patch14_224.fb_in1k",
+      "accuracy": 0.85204,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d2_224.sail_in1k",
+      "accuracy": 0.85204,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_next_base.sail_in1k_384",
+      "accuracy": 0.85202,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_l.in1k",
+      "accuracy": 0.85202,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_base.bd_ssld_6m_in1k",
+      "accuracy": 0.85186,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f2.dm_in1k",
+      "accuracy": 0.85184,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_small.in12k_ft_in1k",
+      "accuracy": 0.85164,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b5.ssld_stage2_ft_in1k",
+      "accuracy": 0.85158,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b4.ns_jft_in1k",
+      "accuracy": 0.85156,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny.in12k_ft_in1k_384",
+      "accuracy": 0.85154,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_2560.seer_ft_in1k",
+      "accuracy": 0.85144,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hiera_base_plus_224.mae_in1k_ft_in1k",
+      "accuracy": 0.85136,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b7.ap_in1k",
+      "accuracy": 0.85132,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_224.augreg2_in21k_ft_in1k",
+      "accuracy": 0.85108,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_tiny_tf_384.in1k",
+      "accuracy": 0.85106,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_24_p16_384.fb_dist_in1k",
+      "accuracy": 0.85102,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_tiny.fcmae_ft_in22k_in1k_384",
+      "accuracy": 0.85098,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f3.dm_in1k",
+      "accuracy": 0.85092,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x32d.fb_wsl_ig1b_ft_in1k",
+      "accuracy": 0.8509,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tiny_vit_21m_224.dist_in22k_ft_in1k",
+      "accuracy": 0.85088,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_base_patch16_384.fb_in1k",
+      "accuracy": 0.85088,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_medium_24_p8_224.fb_dist_in1k",
+      "accuracy": 0.85078,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_12_p8_384.fb_dist_in1k",
+      "accuracy": 0.85068,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_s24_384.fb_dist_in1k",
+      "accuracy": 0.85048,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_l2.r224_in1k",
+      "accuracy": 0.85046,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_s18.sail_in1k_384",
+      "accuracy": 0.85036,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_e8.ra3_in1k",
+      "accuracy": 0.85016,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs420.tf_in1k",
+      "accuracy": 0.8501,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_s18.sail_in22k_ft_in1k_384",
+      "accuracy": 0.85004,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_120.sw_in12k_ft_in1k",
+      "accuracy": 0.84994,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_aa_large.e230_r448_in12k_ft_in1k",
+      "accuracy": 0.8499,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base_tall_rw.sw_e500_in1k",
+      "accuracy": 0.84988,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_r50_s16_384.orig_in21k_ft_in1k",
+      "accuracy": 0.84988,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base_wide_rw.sw_e500_in1k",
+      "accuracy": 0.84966,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_medium_patch16_reg4_gap_256.sbb_in12k_ft_in1k",
+      "accuracy": 0.84956,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_h_b5.sw_r448_e450_in1k",
+      "accuracy": 0.84942,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_rmlp_1_rw2_224.sw_in12k_ft_in1k",
+      "accuracy": 0.8494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_large_tf_224.in1k",
+      "accuracy": 0.84938,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_152x4_bit.goog_in21k_ft_in1k",
+      "accuracy": 0.84936,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_large_24_p16_224.fb_dist_in1k",
+      "accuracy": 0.84936,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b5.ssld_stage1_in22k_in1k",
+      "accuracy": 0.8493,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_large.bd_in1k_384",
+      "accuracy": 0.8493,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_x_b5.sw_r448_e450_in1k",
+      "accuracy": 0.84928,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b7.ra_in1k",
+      "accuracy": 0.84926,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hiera_small_abswin_256.sbb2_e200_in12k_ft_in1k",
+      "accuracy": 0.84912,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_base.ssld_in1k",
+      "accuracy": 0.84908,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coat_lite_medium_384.in1k",
+      "accuracy": 0.8489,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_base.fcmae_ft_in1k",
+      "accuracy": 0.8489,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_base_tf_224.in1k",
+      "accuracy": 0.84884,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_24_p8_224.fb_dist_in1k",
+      "accuracy": 0.84878,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_small.bd_ssld_6m_in1k",
+      "accuracy": 0.84872,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_large.fb_in1k",
+      "accuracy": 0.84862,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_small_patch16_384.fb_in22k_ft_in1k",
+      "accuracy": 0.84846,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch16_rope_mixed_ape_224.naver_in1k",
+      "accuracy": 0.84846,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base_short_rw.sw_e500_in1k",
+      "accuracy": 0.84842,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch16_rope_mixed_224.naver_in1k",
+      "accuracy": 0.8484,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnetv2_rw_m.agc_in1k",
+      "accuracy": 0.8483,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_b36.sail_in1k",
+      "accuracy": 0.84826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b5.ssld_stage2_ft_in1k",
+      "accuracy": 0.84824,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rdnet_large.nv_in1k",
+      "accuracy": 0.84794,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b6.ap_in1k",
+      "accuracy": 0.84794,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_aa_large.e230_r384_in12k_ft_in1k",
+      "accuracy": 0.84772,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_large_patch16_224.fb_in1k",
+      "accuracy": 0.84772,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_m.in21k_ft_in1k",
+      "accuracy": 0.84768,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_12_p16_384.fb_dist_in1k",
+      "accuracy": 0.84734,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base.in1k",
+      "accuracy": 0.8473,
       "trained_on_dataset": true
     },
     {
@@ -221,13 +1635,2318 @@
       "trained_on_dataset": true
     },
     {
+      "model_name": "eca_nfnet_l2.ra3_in1k",
+      "accuracy": 0.8471,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs350.tf_in1k",
+      "accuracy": 0.8471,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_base.bd_in1k_384",
+      "accuracy": 0.84706,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f1.dm_in1k",
+      "accuracy": 0.847,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "flexivit_base.1200ep_in1k",
+      "accuracy": 0.84678,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_aa_large.e230_r448_in12k_ft_in1k",
+      "accuracy": 0.84668,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch16_rope_ape_224.naver_in1k",
+      "accuracy": 0.8466,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_320.swag_lc_in1k",
+      "accuracy": 0.84654,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "davit_base.msft_in1k",
+      "accuracy": 0.84652,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch16_rope_224.naver_in1k",
+      "accuracy": 0.84646,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxxvit_rmlp_small_rw_256.sw_in1k",
+      "accuracy": 0.84634,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_base_window16_256.ms_in1k",
+      "accuracy": 0.84608,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_ma36.apple_dist_in1k",
+      "accuracy": 0.84608,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_rmlp_2_rw_224.sw_in1k",
+      "accuracy": 0.84608,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_small_rw.sw_e450_in1k",
+      "accuracy": 0.84604,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_small.fb_in22k_ft_in1k",
+      "accuracy": 0.84582,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rexnetr_300.sw_in12k_ft_in1k",
+      "accuracy": 0.84582,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnextaa101d_32x8d.ah_in1k",
+      "accuracy": 0.8458,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hiera_small_abswin_256.sbb2_pd_e200_in12k_ft_in1k",
+      "accuracy": 0.84564,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "flexivit_base.600ep_in1k",
+      "accuracy": 0.84564,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_m.in1k",
+      "accuracy": 0.84554,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_medium_patch16_224.fb_in22k_ft_in1k",
+      "accuracy": 0.8455,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnest269e.in1k",
+      "accuracy": 0.84542,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.84534,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hiera_base_224.mae_in1k_ft_in1k",
+      "accuracy": 0.84528,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_s36.sail_in1k",
+      "accuracy": 0.84528,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_small.in1k",
+      "accuracy": 0.84512,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_040_h.ra3_in1k",
+      "accuracy": 0.84498,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_rmlp_small_rw_224.sw_in1k",
+      "accuracy": 0.84488,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_m36.sail_in1k",
+      "accuracy": 0.84486,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w48_ssld.paddle_in1k",
+      "accuracy": 0.84484,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_base_patch4_window12_384.ms_in1k",
+      "accuracy": 0.84478,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_152x2_bit.goog_in21k_ft_in1k",
+      "accuracy": 0.84468,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_base.fb_in1k",
+      "accuracy": 0.84466,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_l1.r224_in1k",
+      "accuracy": 0.84464,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b5.ssld_stage1_in22k_in1k",
+      "accuracy": 0.84456,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcvit_base.in1k",
+      "accuracy": 0.84456,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_small_tf_224.in1k",
+      "accuracy": 0.84452,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny.in12k_ft_in1k",
+      "accuracy": 0.84448,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs200.tf_in1k",
+      "accuracy": 0.84448,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base_wide_rw.sw_e500_in1k",
+      "accuracy": 0.84448,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_medium_patch16_gap_256.sw_in12k_ft_in1k",
+      "accuracy": 0.84442,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs270.tf_in1k",
+      "accuracy": 0.84438,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base_tall_rw.sw_e500_in1k",
+      "accuracy": 0.84436,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_r50_s32_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.84434,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_101x3_bit.goog_in21k_ft_in1k",
+      "accuracy": 0.8443,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_tiny.fcmae_ft_in22k_in1k",
+      "accuracy": 0.84428,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_1280.seer_ft_in1k",
+      "accuracy": 0.84426,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b7.aa_in1k",
+      "accuracy": 0.84424,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mvitv2_base.fb_in1k",
+      "accuracy": 0.84424,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_h_b5.sw_r448_e450_in1k",
+      "accuracy": 0.84418,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_e8.ra3_in1k",
+      "accuracy": 0.84418,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resmlp_big_24_224.fb_in22k_ft_in1k",
+      "accuracy": 0.84414,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "flexivit_base.300ep_in1k",
+      "accuracy": 0.84402,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_s18.sail_in1k_384",
+      "accuracy": 0.84392,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext101d_32x8d.ah_in1k",
+      "accuracy": 0.8438,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_large_24_p8_224.fb_in1k",
+      "accuracy": 0.8438,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_small.ssld_in1k",
+      "accuracy": 0.84368,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rdnet_base.nv_in1k",
+      "accuracy": 0.84366,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base_short_rw.sw_e500_in1k",
+      "accuracy": 0.84364,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_large.ix_e600_r384_in1k",
+      "accuracy": 0.84352,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet152d.ra2_in1k",
+      "accuracy": 0.84344,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_s.in21k_ft_in1k",
+      "accuracy": 0.84332,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_mediumd_patch16_rope_reg1_gap_256.sbb_in1k",
+      "accuracy": 0.84316,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_aa_large.e230_r384_in12k_ft_in1k",
+      "accuracy": 0.84314,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs350.tf_in1k",
+      "accuracy": 0.84304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_large.fb_in1k",
+      "accuracy": 0.84304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnetv2_rw_m.agc_in1k",
+      "accuracy": 0.84296,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_medium_24_p16_224.fb_dist_in1k",
+      "accuracy": 0.84292,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_224_miil.in21k_ft_in1k",
+      "accuracy": 0.84278,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x8d.fb_swsl_ig1b_ft_in1k",
+      "accuracy": 0.84276,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_large.e600_r384_in1k",
+      "accuracy": 0.84264,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b5.ap_in1k",
+      "accuracy": 0.84258,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "davit_small.msft_in1k",
+      "accuracy": 0.84252,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_12_p8_224.fb_dist_in1k",
+      "accuracy": 0.84252,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_base_window8_256.ms_in1k",
+      "accuracy": 0.84246,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_040.ra3_in1k",
+      "accuracy": 0.84242,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs420.tf_in1k",
+      "accuracy": 0.8424,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_rmlp_tiny_rw_256.sw_in1k",
+      "accuracy": 0.84226,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_small_window16_256.ms_in1k",
+      "accuracy": 0.84216,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_384.orig_in21k_ft_in1k",
+      "accuracy": 0.84212,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_x_b5.sw_r448_e450_in1k",
+      "accuracy": 0.84202,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_18_dagger_408.in1k",
+      "accuracy": 0.84198,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_base.in1k",
+      "accuracy": 0.84194,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny.in12k_ft_in1k",
+      "accuracy": 0.84192,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext101_32x8d.ah_in1k",
+      "accuracy": 0.84192,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_nfnet_l2.ra3_in1k",
+      "accuracy": 0.8417,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x16d.fb_wsl_ig1b_ft_in1k",
+      "accuracy": 0.84166,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b3.r288_in1k",
+      "accuracy": 0.84162,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "volo_d1_224.sail_in1k",
+      "accuracy": 0.84148,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_d8_evos.ch_in1k",
+      "accuracy": 0.84138,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b6.aa_in1k",
+      "accuracy": 0.84124,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetaa101d.sw_in12k_ft_in1k",
+      "accuracy": 0.84114,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f2.dm_in1k",
+      "accuracy": 0.841,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny.fb_in22k_ft_in1k_384",
+      "accuracy": 0.84098,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_next_base.sail_in1k",
+      "accuracy": 0.84098,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_small.in1k",
+      "accuracy": 0.84094,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_s18.sail_in22k_ft_in1k",
+      "accuracy": 0.84092,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_base.in21k_ft_in1k",
+      "accuracy": 0.84076,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_s36.sail_in1k",
+      "accuracy": 0.84068,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_r26_s32_384.augreg_in21k_ft_in1k",
+      "accuracy": 0.84066,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_xs24_384.fb_dist_in1k",
+      "accuracy": 0.84064,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_nfnet_l1.ra2_in1k",
+      "accuracy": 0.84062,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b3.ns_jft_in1k",
+      "accuracy": 0.84054,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_d8.ra3_in1k",
+      "accuracy": 0.84044,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_small_rw.sw_e450_in1k",
+      "accuracy": 0.8404,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rexnetr_300.sw_in12k_ft_in1k",
+      "accuracy": 0.84036,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_small.bd_in1k_384",
+      "accuracy": 0.84036,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_d32.ra3_in1k",
+      "accuracy": 0.84028,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_sa36.apple_dist_in1k",
+      "accuracy": 0.84028,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_large.ix_e600_r384_in1k",
+      "accuracy": 0.83996,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_50x3_bit.goog_in21k_ft_in1k",
+      "accuracy": 0.83982,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet200d.ra2_in1k",
+      "accuracy": 0.83976,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_base.usi_in1k",
+      "accuracy": 0.8397,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b4.ssld_stage2_ft_in1k",
+      "accuracy": 0.83952,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_080.ra3_in1k",
+      "accuracy": 0.8394,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_640.seer_ft_in1k",
+      "accuracy": 0.83924,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_s3_base_224.ms_in1k",
+      "accuracy": 0.8392,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tresnet_v2_l.miil_in21k_ft_in1k",
+      "accuracy": 0.8391,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_betwixt_patch16_rope_reg4_gap_256.sbb_in1k",
+      "accuracy": 0.83906,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_tiny.fcmae_ft_in22k_in1k",
+      "accuracy": 0.83904,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcvit_small.in1k",
+      "accuracy": 0.83904,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_s.in1k",
+      "accuracy": 0.839,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnextaa101d_32x8d.ah_in1k",
+      "accuracy": 0.839,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_rope_mixed_ape_224.naver_in1k",
+      "accuracy": 0.83898,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hiera_small_224.mae_in1k_ft_in1k",
+      "accuracy": 0.83888,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs200.tf_in1k",
+      "accuracy": 0.83884,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_ma36.apple_in1k",
+      "accuracy": 0.83884,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnest200e.in1k",
+      "accuracy": 0.8388,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_24_p16_224.fb_dist_in1k",
+      "accuracy": 0.8388,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_rope_reg1_gap_256.sbb_in1k",
+      "accuracy": 0.83872,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_152x2_bit.goog_teacher_in21k_ft_in1k_384",
+      "accuracy": 0.83858,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_24_p8_224.fb_in1k",
+      "accuracy": 0.83854,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_small_window8_256.ms_in1k",
+      "accuracy": 0.83844,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_15_dagger_408.in1k",
+      "accuracy": 0.83842,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_base.fb_in1k",
+      "accuracy": 0.83838,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b5.ra_in1k",
+      "accuracy": 0.83834,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnetv2_rw_s.ra2_in1k",
+      "accuracy": 0.8383,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "focalnet_base_lrf.ms_in1k",
+      "accuracy": 0.83828,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_large.e600_r384_in1k",
+      "accuracy": 0.83826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_aa_large.e600_r384_in1k",
+      "accuracy": 0.83826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_small.ssld_in1k",
+      "accuracy": 0.83818,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch16_384.augreg_in21k_ft_in1k",
+      "accuracy": 0.83814,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_medium_patch16_rope_reg1_gap_256.sbb_in1k",
+      "accuracy": 0.8381,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "focalnet_base_srf.ms_in1k",
+      "accuracy": 0.83808,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.swag_lc_in1k",
+      "accuracy": 0.83806,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_rope_mixed_224.naver_in1k",
+      "accuracy": 0.83806,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_little_patch16_reg1_gap_256.sbb_in12k_ft_in1k",
+      "accuracy": 0.838,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_base_patch16_224.fb_in1k",
+      "accuracy": 0.838,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_24_p8_384.fb_dist_in1k",
+      "accuracy": 0.83784,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b3.r256_in1k",
+      "accuracy": 0.83782,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_rope_ape_224.naver_in1k",
+      "accuracy": 0.8378,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_s3_small_224.ms_in1k",
+      "accuracy": 0.83778,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pit_b_distilled_224.in1k",
+      "accuracy": 0.83774,
+      "trained_on_dataset": true
+    },
+    {
       "model_name": "mvitv2_small.fb_in1k",
       "accuracy": 0.83772,
       "trained_on_dataset": true
     },
     {
+      "model_name": "convformer_s18.sail_in22k_ft_in1k",
+      "accuracy": 0.83768,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_040_h.ra3_in1k",
+      "accuracy": 0.83764,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pvt_v2_b5.in1k",
+      "accuracy": 0.8376,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetv_064.ra3_in1k",
+      "accuracy": 0.83746,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m2_3.dist_450e_in1k",
+      "accuracy": 0.83746,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_medium_24_p8_224.fb_in1k",
+      "accuracy": 0.83744,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "twins_svt_large.in1k",
+      "accuracy": 0.83718,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_064.ra3_in1k",
+      "accuracy": 0.83716,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_rope_224.naver_in1k",
+      "accuracy": 0.83714,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pvt_v2_b4.in1k",
+      "accuracy": 0.8371,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_betwixt_patch16_reg4_gap_256.sbb_in1k",
+      "accuracy": 0.8371,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs152.tf_in1k",
+      "accuracy": 0.8371,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_small.fb_in1k",
+      "accuracy": 0.83704,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.deit_in1k",
+      "accuracy": 0.83704,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet152d.ra2_in1k",
+      "accuracy": 0.83702,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext101d_32x8d.ah_in1k",
+      "accuracy": 0.83702,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b4.ssld_stage2_ft_in1k",
+      "accuracy": 0.837,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b5.aa_in1k",
+      "accuracy": 0.83696,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152d.ra2_in1k",
+      "accuracy": 0.83684,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_base.usi_in1k",
+      "accuracy": 0.83684,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "caformer_s18.sail_in1k",
+      "accuracy": 0.83664,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rdnet_small.nv_in1k",
+      "accuracy": 0.83658,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w48_ssld.paddle_in1k",
+      "accuracy": 0.83656,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_large.bd_in1k",
+      "accuracy": 0.83654,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_betwixt_patch16_reg1_gap_256.sbb_in1k",
+      "accuracy": 0.83652,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_040.ra3_in1k",
+      "accuracy": 0.83644,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientformerv2_l.snap_dist_in1k",
+      "accuracy": 0.83642,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_1_rw_224.sw_in1k",
+      "accuracy": 0.8362,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext101_32x8d.ah_in1k",
+      "accuracy": 0.83618,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_base_patch4_window7_224.ms_in1k",
+      "accuracy": 0.83604,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coat_lite_medium.in1k",
+      "accuracy": 0.83602,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs270.tf_in1k",
+      "accuracy": 0.83596,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resmlp_big_24_224.fb_distilled_in1k",
+      "accuracy": 0.83594,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b3.ssld_stage2_ft_in1k",
+      "accuracy": 0.83588,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_next_small.sail_in1k",
+      "accuracy": 0.83584,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nest_base_jx.goog_in1k",
+      "accuracy": 0.83552,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_d2se.rvgg_in1k",
+      "accuracy": 0.8355,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3se_edgenet_x.c2ns_in1k",
+      "accuracy": 0.8355,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_d8.ra3_in1k",
+      "accuracy": 0.83546,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetaa101d.sw_in12k_ft_in1k",
+      "accuracy": 0.83544,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m2_3.dist_300e_in1k",
+      "accuracy": 0.83524,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_tiny_rw_224.sw_in1k",
+      "accuracy": 0.83522,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fasternet_l.in1k",
+      "accuracy": 0.83516,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "focalnet_small_lrf.ms_in1k",
+      "accuracy": 0.83508,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "naflexvit_base_patch16_par_gap.e300_s576_in1k",
+      "accuracy": 0.83508,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_sa36.apple_in1k",
+      "accuracy": 0.83502,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_base.bd_in1k",
+      "accuracy": 0.83498,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.a1h_in1k",
+      "accuracy": 0.83494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_cr_small_ns_224.sw_in1k",
+      "accuracy": 0.8349,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_s24_224.fb_dist_in1k",
+      "accuracy": 0.83484,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_tiny.fcmae_ft_in1k",
+      "accuracy": 0.83478,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b4.ra2_in1k",
+      "accuracy": 0.83468,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f0.dm_in1k",
+      "accuracy": 0.83468,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "naflexvit_base_patch16_parfac_gap.e300_s576_in1k",
+      "accuracy": 0.83468,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_medium_patch16_reg4_gap_256.sbb_in1k",
+      "accuracy": 0.83466,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_medium_patch16_reg1_gap_256.sbb_in1k",
+      "accuracy": 0.83462,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_tiny.in1k",
+      "accuracy": 0.83452,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b4.ssld_stage1_in22k_in1k",
+      "accuracy": 0.8345,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f1.dm_in1k",
+      "accuracy": 0.83444,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b3.r224_in1k",
+      "accuracy": 0.83444,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_small_patch16_384.fb_in1k",
+      "accuracy": 0.83432,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_d32.ra3_in1k",
+      "accuracy": 0.83432,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_200.cvnets_in22k_ft_in1k_384",
+      "accuracy": 0.8343,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "focalnet_small_srf.ms_in1k",
+      "accuracy": 0.83428,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_tiny_tf_224.in1k",
+      "accuracy": 0.83426,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_large.e600_r384_in1k",
+      "accuracy": 0.83418,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_base.in21k_ft_in1k",
+      "accuracy": 0.83416,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "sequencer2d_l.in1k",
+      "accuracy": 0.83406,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_d8_evos.ch_in1k",
+      "accuracy": 0.83404,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcvit_tiny.in1k",
+      "accuracy": 0.834,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientformer_l7.snap_dist_in1k",
+      "accuracy": 0.83396,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_medium.ix_e550_r384_in1k",
+      "accuracy": 0.8339,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit_base_distilled_patch16_224.fb_in1k",
+      "accuracy": 0.83384,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_sa24.apple_dist_in1k",
+      "accuracy": 0.83368,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_nano.fcmae_ft_in22k_in1k_384",
+      "accuracy": 0.83366,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_384.augreg_in21k_ft_in1k",
+      "accuracy": 0.83358,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_12_p8_224.fb_in1k",
+      "accuracy": 0.83354,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_12_p16_224.fb_dist_in1k",
+      "accuracy": 0.83354,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_rmlp_1_rw_224.sw_in1k",
+      "accuracy": 0.8335,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_s.in21k_ft_in1k",
+      "accuracy": 0.83348,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x16d.fb_swsl_ig1b_ft_in1k",
+      "accuracy": 0.8334,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "naflexvit_base_patch16_gap.e300_s576_in1k",
+      "accuracy": 0.8334,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_nano.r384_in12k_ft_in1k",
+      "accuracy": 0.83334,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_small_patch4_window7_224.ms_in22k_ft_in1k",
+      "accuracy": 0.8333,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_320.seer_ft_in1k",
+      "accuracy": 0.83324,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_clip_224.laion2b_ft_in12k_in1k",
+      "accuracy": 0.83304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ese_vovnet57b.ra4_e3600_r256_in1k",
+      "accuracy": 0.83298,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x4d.fb_swsl_ig1b_ft_in1k",
+      "accuracy": 0.83268,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tiny_vit_21m_224.in1k",
+      "accuracy": 0.83268,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_nfnet_l1.ra2_in1k",
+      "accuracy": 0.83264,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_aa_large.e600_r384_in1k",
+      "accuracy": 0.83264,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet200d.ra2_in1k",
+      "accuracy": 0.8325,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b4.ap_in1k",
+      "accuracy": 0.83246,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tiny_vit_11m_224.dist_in22k_ft_in1k",
+      "accuracy": 0.83232,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_small_patch4_window7_224.ms_in1k",
+      "accuracy": 0.83228,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetv_040.ra3_in1k",
+      "accuracy": 0.83204,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xception65.ra3_in1k",
+      "accuracy": 0.83186,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b5.in1k",
+      "accuracy": 0.8317,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_320.tv2_in1k",
+      "accuracy": 0.8317,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_080.ra3_in1k",
+      "accuracy": 0.83166,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_s.in1k",
+      "accuracy": 0.83162,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rexnetr_200.sw_in12k_ft_in1k",
+      "accuracy": 0.8316,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xception65p.ra3_in1k",
+      "accuracy": 0.8316,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152d.ra2_in1k",
+      "accuracy": 0.8316,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "twins_pcpvt_large.in1k",
+      "accuracy": 0.83158,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_64x4d.c1_in1k",
+      "accuracy": 0.83158,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_small.fb_in1k",
+      "accuracy": 0.83144,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nest_small_jx.goog_in1k",
+      "accuracy": 0.83132,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_cr_small_224.sw_in1k",
+      "accuracy": 0.83126,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "twins_svt_base.in1k",
+      "accuracy": 0.83122,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pvt_v2_b3.in1k",
+      "accuracy": 0.8312,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b3.ssld_stage1_in22k_in1k",
+      "accuracy": 0.83118,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetv_064.ra3_in1k",
+      "accuracy": 0.83118,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit_base_patch16_384.fb_in1k",
+      "accuracy": 0.83108,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxxvitv2_nano_rw_256.sw_in1k",
+      "accuracy": 0.83108,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_medium_patch16_224.fb_in1k",
+      "accuracy": 0.8309,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tresnet_m.miil_in21k_ft_in1k",
+      "accuracy": 0.8309,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_small_patch16_224.fb_in22k_ft_in1k",
+      "accuracy": 0.83082,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b2.r288_in1k",
+      "accuracy": 0.83078,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tresnet_xl.miil_in1k_448",
+      "accuracy": 0.83066,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_040.ra3_in1k",
+      "accuracy": 0.83048,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b4.aa_in1k",
+      "accuracy": 0.8304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxxvit_rmlp_nano_rw_256.sw_in1k",
+      "accuracy": 0.83036,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101d.ra2_in1k",
+      "accuracy": 0.8302,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet101d.miil_in1k",
+      "accuracy": 0.83006,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_064.ra3_in1k",
+      "accuracy": 0.83006,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_101.a1h_in1k",
+      "accuracy": 0.83002,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.deit_in1k",
+      "accuracy": 0.83,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_medium.e200_r256_in12k_ft_in1k",
+      "accuracy": 0.82998,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swiftformer_l3.dist_in1k",
+      "accuracy": 0.82994,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_rmlp_nano_rw_256.sw_in1k",
+      "accuracy": 0.82978,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_64x4d.tv_in1k",
+      "accuracy": 0.82978,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_large.e600_r384_in1k",
+      "accuracy": 0.82974,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convformer_s18.sail_in1k",
+      "accuracy": 0.82968,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_medium.ix_e550_r384_in1k",
+      "accuracy": 0.82952,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_tiny.fcmae_ft_in1k",
+      "accuracy": 0.82948,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_nano_rw_256.sw_in1k",
+      "accuracy": 0.82934,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_175.cvnets_in22k_ft_in1k_384",
+      "accuracy": 0.8292,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_152x2_bit.goog_teacher_in21k_ft_in1k",
+      "accuracy": 0.82918,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnest101e.in1k",
+      "accuracy": 0.82916,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b3.ssld_stage2_ft_in1k",
+      "accuracy": 0.82914,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny.fb_in22k_ft_in1k",
+      "accuracy": 0.829,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs152.tf_in1k",
+      "accuracy": 0.829,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b4.ssld_stage1_in22k_in1k",
+      "accuracy": 0.82892,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnetv2_rw_s.ra2_in1k",
+      "accuracy": 0.82888,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_large_24_p16_224.fb_in1k",
+      "accuracy": 0.82886,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_nano.in12k_ft_in1k",
+      "accuracy": 0.82882,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tnt_b_patch16_224.in1k",
+      "accuracy": 0.82864,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fasternet_m.in1k",
+      "accuracy": 0.82848,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "sequencer2d_m.in1k",
+      "accuracy": 0.82836,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x8d.tv2_in1k",
+      "accuracy": 0.82832,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_tiny_window16_256.ms_in1k",
+      "accuracy": 0.82828,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hiera_tiny_224.mae_in1k_ft_in1k",
+      "accuracy": 0.82826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_320.tv2_in1k",
+      "accuracy": 0.82824,
+      "trained_on_dataset": true
+    },
+    {
       "model_name": "resnetv2_50x1_bit.goog_distilled_in1k",
-      "accuracy": 0.82820,
+      "accuracy": 0.8282,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.a1h_in1k",
+      "accuracy": 0.82818,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rdnet_tiny.nv_in1k",
+      "accuracy": 0.82814,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pnasnet5large.tf_in1k",
+      "accuracy": 0.82814,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.a1h_in1k",
+      "accuracy": 0.82796,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rexnet_300.nav_in1k",
+      "accuracy": 0.8278,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_medium.e250_r384_in12k_ft_in1k",
+      "accuracy": 0.82776,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3se_edgenet_x.c2ns_in1k",
+      "accuracy": 0.82768,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nfnet_l0.ra2_in1k",
+      "accuracy": 0.82766,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_relpos_base_patch16_clsgap_224.sw_in1k",
+      "accuracy": 0.82758,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_tiny.in1k",
+      "accuracy": 0.82742,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.a1_in1k",
+      "accuracy": 0.82742,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3edgenet_x.c2_in1k",
+      "accuracy": 0.82734,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_032.ra_in1k",
+      "accuracy": 0.82724,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "twins_pcpvt_base.in1k",
+      "accuracy": 0.82724,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x8d.fb_wsl_ig1b_ft_in1k",
+      "accuracy": 0.8272,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b2.r256_in1k",
+      "accuracy": 0.82712,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_sa24.apple_in1k",
+      "accuracy": 0.82706,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "davit_tiny.msft_in1k",
+      "accuracy": 0.82694,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny.fb_in1k",
+      "accuracy": 0.82694,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_nano.fcmae_ft_in22k_in1k",
+      "accuracy": 0.82666,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_c16.ra3_in1k",
+      "accuracy": 0.82662,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_c16_evos.ch_in1k",
+      "accuracy": 0.8266,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b4.ra2_in1k",
+      "accuracy": 0.82658,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetaa50d.sw_in12k_ft_in1k",
+      "accuracy": 0.82656,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3sedarknet_x.c2ns_in1k",
+      "accuracy": 0.82654,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.tv2_in1k",
+      "accuracy": 0.82646,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nasnetalarge.tf_in1k",
+      "accuracy": 0.82638,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b3.in21k_ft_in1k",
+      "accuracy": 0.82634,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_medium_24_p16_224.fb_in1k",
+      "accuracy": 0.8263,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nextvit_small.bd_in1k",
+      "accuracy": 0.82626,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_clip_224.laion2b_ft_in1k",
+      "accuracy": 0.82614,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.a2_in1k",
+      "accuracy": 0.82614,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformerv2_m48.sail_in1k",
+      "accuracy": 0.82612,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny_hnf.a2h_in1k",
+      "accuracy": 0.82608,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_150.cvnets_in22k_ft_in1k_384",
+      "accuracy": 0.82606,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rexnetr_200.sw_in12k_ft_in1k",
+      "accuracy": 0.82602,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_384.fb_dist_in1k",
+      "accuracy": 0.826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_conv_384.fb_dist_in1k",
+      "accuracy": 0.826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b4.in1k",
+      "accuracy": 0.82598,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b3.ssld_stage1_in22k_in1k",
+      "accuracy": 0.82594,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_nfnet_l0.ra2_in1k",
+      "accuracy": 0.8259,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_24_p16_224.fb_in1k",
+      "accuracy": 0.82588,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_080_tv.tv2_in1k",
+      "accuracy": 0.8258,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_24_p16_384.fb_dist_in1k",
+      "accuracy": 0.8258,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_24_p8_224.fb_dist_in1k",
+      "accuracy": 0.82578,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "flexivit_small.1200ep_in1k",
+      "accuracy": 0.82576,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_160.tv2_in1k",
+      "accuracy": 0.82574,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientformer_l3.snap_dist_in1k",
+      "accuracy": 0.82562,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_relpos_medium_patch16_cls_224.sw_in1k",
+      "accuracy": 0.82558,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet61q.ra2_in1k",
+      "accuracy": 0.82532,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_tiny.ssld_in1k",
+      "accuracy": 0.82528,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_little_patch16_reg4_gap_256.sbb_in1k",
+      "accuracy": 0.8252,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m1_5.dist_450e_in1k",
+      "accuracy": 0.8252,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "wide_resnet101_2.tv2_in1k",
+      "accuracy": 0.82514,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_next_tiny.sail_in1k",
+      "accuracy": 0.82508,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_medium.ix_e550_r256_in1k",
+      "accuracy": 0.825,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_18_dagger_240.in1k",
+      "accuracy": 0.82494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_nano.fcmae_ft_in1k",
+      "accuracy": 0.8249,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gc_efficientnetv2_rw_t.agc_in1k",
+      "accuracy": 0.82486,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_relpos_base_patch16_224.sw_in1k",
+      "accuracy": 0.82482,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_relpos_medium_patch16_224.sw_in1k",
+      "accuracy": 0.82462,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformer_m48.sail_in1k",
+      "accuracy": 0.82462,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ese_vovnet57b.ra4_e3600_r256_in1k",
+      "accuracy": 0.8246,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pit_b_224.in1k",
+      "accuracy": 0.82458,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_64x4d.c1_in1k",
+      "accuracy": 0.82446,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetv_040.ra3_in1k",
+      "accuracy": 0.8244,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b2.ns_jft_in1k",
+      "accuracy": 0.82412,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mvitv2_tiny.fb_in1k",
+      "accuracy": 0.82408,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_0_rw_224.sw_in1k",
+      "accuracy": 0.82396,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_12_p8_384.fb_dist_in1k",
+      "accuracy": 0.82394,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_bn_0_rw_224.sw_in1k",
+      "accuracy": 0.82394,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_18_240.in1k",
+      "accuracy": 0.8239,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "flexivit_small.600ep_in1k",
+      "accuracy": 0.82388,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m1_5.dist_300e_in1k",
+      "accuracy": 0.82382,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coat_small.in1k",
+      "accuracy": 0.82378,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50t.ra2_in1k",
+      "accuracy": 0.8237,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b2.ssld_stage2_ft_in1k",
+      "accuracy": 0.82362,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_medium.e200_r256_in12k_ft_in1k",
+      "accuracy": 0.8236,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet51q.ra2_in1k",
+      "accuracy": 0.82356,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnetv2_rw_t.ra2_in1k",
+      "accuracy": 0.82354,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "sequencer2d_s.in1k",
+      "accuracy": 0.82336,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_101x1_bit.goog_in21k_ft_in1k",
+      "accuracy": 0.82332,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.a1_in1k",
+      "accuracy": 0.82326,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_200.cvnets_in22k_ft_in1k",
+      "accuracy": 0.8232,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_relpos_medium_patch16_rpn_224.sw_in1k",
+      "accuracy": 0.82314,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mixer_b16_224.miil_in21k_ft_in1k",
+      "accuracy": 0.82314,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_040.ra3_in1k",
+      "accuracy": 0.82308,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_nano.in12k_ft_in1k",
+      "accuracy": 0.82306,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coat_lite_small.in1k",
+      "accuracy": 0.82304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_15_dagger_240.in1k",
+      "accuracy": 0.82302,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b3.ra2_in1k",
+      "accuracy": 0.82296,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convit_base.fb_in1k",
+      "accuracy": 0.82296,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.tv2_in1k",
+      "accuracy": 0.82294,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs101.tf_in1k",
+      "accuracy": 0.82288,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tresnet_l.miil_in1k_448",
+      "accuracy": 0.82278,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "wide_resnet50_2.racm_in1k",
+      "accuracy": 0.8226,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_srelpos_medium_patch16_224.sw_in1k",
+      "accuracy": 0.82256,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101d.ra2_in1k",
+      "accuracy": 0.82254,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_x.c2ns_in1k",
+      "accuracy": 0.82234,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny_hnf.a2h_in1k",
+      "accuracy": 0.8223,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_small.paddle_in1k",
+      "accuracy": 0.82222,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_rpn_224.sw_in1k",
+      "accuracy": 0.82218,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.a2_in1k",
+      "accuracy": 0.82218,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformerv2_m36.sail_in1k",
+      "accuracy": 0.82214,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_base_240.in1k",
+      "accuracy": 0.82212,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_xxs36_384.fb_dist_in1k",
+      "accuracy": 0.82204,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pvt_v2_b2_li.in1k",
+      "accuracy": 0.822,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3edgenet_x.c2_in1k",
+      "accuracy": 0.82198,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext50_32x4d.racm_in1k",
+      "accuracy": 0.82186,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet101d.miil_in1k",
+      "accuracy": 0.8218,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "focalnet_tiny_lrf.ms_in1k",
+      "accuracy": 0.82174,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "flexivit_small.300ep_in1k",
+      "accuracy": 0.8217,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.fb_swsl_ig1b_ft_in1k",
+      "accuracy": 0.82162,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_c16.ra3_in1k",
+      "accuracy": 0.82162,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b2.r224_in1k",
+      "accuracy": 0.82162,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientformerv2_s2.snap_dist_in1k",
+      "accuracy": 0.82156,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "focalnet_tiny_srf.ms_in1k",
+      "accuracy": 0.82146,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_s3_tiny_224.ms_in1k",
+      "accuracy": 0.82128,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50t.a1_in1k",
+      "accuracy": 0.8211,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformer_m36.sail_in1k",
+      "accuracy": 0.82104,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "visformer_small.in1k",
+      "accuracy": 0.82092,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "halo2botnet50ts_256.a1h_in1k",
+      "accuracy": 0.82084,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny.fb_in1k",
+      "accuracy": 0.82066,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_rmlp_nano_rw_224.sw_in1k",
+      "accuracy": 0.82064,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pvt_v2_b2.in1k",
+      "accuracy": 0.82062,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tresnet_xl.miil_in1k",
+      "accuracy": 0.8206,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w18_ssld.paddle_in1k",
+      "accuracy": 0.82052,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_101.a1h_in1k",
+      "accuracy": 0.82042,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_nano.fcmae_ft_in22k_in1k",
+      "accuracy": 0.82038,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fbnetv3_g.ra2_in1k",
+      "accuracy": 0.82034,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_50d_evos.ah_in1k",
+      "accuracy": 0.82024,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet101d_pruned.miil_in1k",
+      "accuracy": 0.82016,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.a1h_in1k",
+      "accuracy": 0.82016,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnext_nano_rw_224.sw_in1k",
+      "accuracy": 0.81998,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.a1_in1k",
+      "accuracy": 0.81998,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x8d.tv2_in1k",
+      "accuracy": 0.8199,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_small_12_p16_224.fb_in1k",
+      "accuracy": 0.81982,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit_base_patch16_224.fb_in1k",
+      "accuracy": 0.8198,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xception41p.ra3_in1k",
+      "accuracy": 0.81978,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet61q.ra2_in1k",
+      "accuracy": 0.8197,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcvit_xtiny.in1k",
+      "accuracy": 0.81964,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_50d_gn.ah_in1k",
+      "accuracy": 0.8196,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b3.in1k",
+      "accuracy": 0.8196,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_175.cvnets_in22k_ft_in1k",
+      "accuracy": 0.8195,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.a1h_in1k",
+      "accuracy": 0.8195,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_032.ra_in1k",
+      "accuracy": 0.81948,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_clip_224.openai_ft_in1k",
+      "accuracy": 0.81944,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_tiny.ssld_in1k",
+      "accuracy": 0.81942,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_c16_evos.ch_in1k",
+      "accuracy": 0.8194,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3sedarknet_x.c2ns_in1k",
+      "accuracy": 0.81926,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.tv2_in1k",
+      "accuracy": 0.81906,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_24_p8_224.fb_in1k",
+      "accuracy": 0.81888,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nfnet_l0.ra2_in1k",
+      "accuracy": 0.8187,
       "trained_on_dataset": true
     },
     {
@@ -236,8 +3955,1549 @@
       "trained_on_dataset": true
     },
     {
+      "model_name": "resnext101_32x16d.fb_ssl_yfcc100m_ft_in1k",
+      "accuracy": 0.81856,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_r26_s32_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.81856,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_x.c2ns_in1k",
+      "accuracy": 0.81856,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_nano.fcmae_ft_in1k",
+      "accuracy": 0.81856,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b3.ap_in1k",
+      "accuracy": 0.81842,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.ra4_e3600_r224_in1k",
+      "accuracy": 0.8184,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_sa12.apple_dist_in1k",
+      "accuracy": 0.81838,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_large_150d.ra4_e3600_r256_in1k",
+      "accuracy": 0.81832,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pit_s_distilled_224.in1k",
+      "accuracy": 0.81826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_tiny_window8_256.ms_in1k",
+      "accuracy": 0.81824,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swinv2_cr_tiny_ns_224.sw_in1k",
+      "accuracy": 0.81796,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_032.tv2_in1k",
+      "accuracy": 0.81788,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_224.orig_in21k_ft_in1k",
+      "accuracy": 0.81782,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetaa50d.sw_in12k_ft_in1k",
+      "accuracy": 0.81782,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet51q.ra2_in1k",
+      "accuracy": 0.81774,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3sedarknet_l.c2ns_in1k",
+      "accuracy": 0.8177,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.a2_in1k",
+      "accuracy": 0.81764,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_nfnet_l0.ra2_in1k",
+      "accuracy": 0.81762,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tresnet_m.miil_in1k_448",
+      "accuracy": 0.8171,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coatnet_nano_rw_224.sw_in1k",
+      "accuracy": 0.81704,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "twins_svt_small.in1k",
+      "accuracy": 0.81694,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50t.a2_in1k",
+      "accuracy": 0.81682,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50d.miil_in1k",
+      "accuracy": 0.81648,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b3.aa_in1k",
+      "accuracy": 0.81648,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "halonet50ts.a1h_in1k",
+      "accuracy": 0.8164,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rexnet_200.nav_in1k",
+      "accuracy": 0.81636,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x8d.fb_ssl_yfcc100m_ft_in1k",
+      "accuracy": 0.8162,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetaa50.a1h_in1k",
+      "accuracy": 0.81618,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "wide_resnet50_2.tv2_in1k",
+      "accuracy": 0.81612,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_nano_ols.d1h_in1k",
+      "accuracy": 0.81612,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformerv2_s36.sail_in1k",
+      "accuracy": 0.81576,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_small.usi_in1k",
+      "accuracy": 0.81574,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b2.ssld_stage2_ft_in1k",
+      "accuracy": 0.81564,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_080.tv2_in1k",
+      "accuracy": 0.81552,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "lamhalobotnet50ts_256.a1h_in1k",
+      "accuracy": 0.81552,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_lite4.in1k",
+      "accuracy": 0.8154,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tiny_vit_11m_224.in1k",
+      "accuracy": 0.81538,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_15_240.in1k",
+      "accuracy": 0.81522,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tnt_s_legacy_patch16_224.in1k",
+      "accuracy": 0.81512,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_large_patch32_384.orig_in21k_ft_in1k",
+      "accuracy": 0.81508,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tnt_s_patch16_224.in1k",
+      "accuracy": 0.81506,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_256.fb_dist_in1k",
+      "accuracy": 0.81506,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_conv_256.fb_dist_in1k",
+      "accuracy": 0.81506,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tresnet_l.miil_in1k",
+      "accuracy": 0.81498,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m3.dist_in1k",
+      "accuracy": 0.81494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.a1_in1k",
+      "accuracy": 0.81494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.a1_in1k",
+      "accuracy": 0.8148,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_medium.ix_e550_r256_in1k",
+      "accuracy": 0.81478,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_relpos_small_patch16_224.sw_in1k",
+      "accuracy": 0.81476,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_nano.d1h_in1k",
+      "accuracy": 0.81474,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b3.ra2_in1k",
+      "accuracy": 0.81472,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_150.cvnets_in22k_ft_in1k",
+      "accuracy": 0.81466,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "wide_resnet50_2.racm_in1k",
+      "accuracy": 0.81466,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.a1_in1k",
+      "accuracy": 0.81466,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcresnet50t.ra2_in1k",
+      "accuracy": 0.81458,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b2.ssld_stage1_in22k_in1k",
+      "accuracy": 0.81456,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50t.ra2_in1k",
+      "accuracy": 0.8145,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b1.ra4_e3600_r240_in1k",
+      "accuracy": 0.81444,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dm_nfnet_f0.dm_in1k",
+      "accuracy": 0.81436,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnetlight.miil_in1k",
+      "accuracy": 0.8143,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nest_tiny_jx.goog_in1k",
+      "accuracy": 0.81428,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformer_s36.sail_in1k",
+      "accuracy": 0.81428,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_small.paddle_in1k",
+      "accuracy": 0.81426,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convit_small.fb_in1k",
+      "accuracy": 0.81412,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_50.a1h_in1k",
+      "accuracy": 0.81406,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch16_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.81402,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b1.ns_jft_in1k",
+      "accuracy": 0.81388,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_tiny_patch4_window7_224.ms_in1k",
+      "accuracy": 0.81388,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convmixer_1536_20.in1k",
+      "accuracy": 0.81382,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit3_small_patch16_224.fb_in1k",
+      "accuracy": 0.81382,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnetv2_rw_t.ra2_in1k",
+      "accuracy": 0.8137,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.ra2_in1k",
+      "accuracy": 0.81354,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gernet_l.idstcv_in1k",
+      "accuracy": 0.81354,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.a2_in1k",
+      "accuracy": 0.81344,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fasternet_s.in1k",
+      "accuracy": 0.81328,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_senet154.in1k",
+      "accuracy": 0.8132,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coat_mini.in1k",
+      "accuracy": 0.8132,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m1_1.dist_450e_in1k",
+      "accuracy": 0.81314,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_el.ra_in1k",
+      "accuracy": 0.81308,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.a2_in1k",
+      "accuracy": 0.81304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet50.ra2_in1k",
+      "accuracy": 0.81288,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_medium.e500_r224_in1k",
+      "accuracy": 0.81284,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50t.a1_in1k",
+      "accuracy": 0.81282,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gc_efficientnetv2_rw_t.agc_in1k",
+      "accuracy": 0.81276,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext50_32x4d.racm_in1k",
+      "accuracy": 0.81268,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "senet154.gluon_in1k",
+      "accuracy": 0.81258,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch16_rope_mixed_224.naver_in1k",
+      "accuracy": 0.81252,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fbnetv3_g.ra2_in1k",
+      "accuracy": 0.81246,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcresnext50ts.ch_in1k",
+      "accuracy": 0.81242,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.a1_in1k",
+      "accuracy": 0.8124,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "res2net101d.in1k",
+      "accuracy": 0.81236,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch16_rope_224.naver_in1k",
+      "accuracy": 0.81222,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50_gn.a1h_in1k",
+      "accuracy": 0.81216,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_12_p8_224.fb_dist_in1k",
+      "accuracy": 0.81214,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3sedarknet_l.c2ns_in1k",
+      "accuracy": 0.81208,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit_small_distilled_patch16_224.fb_in1k",
+      "accuracy": 0.81204,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit-base-patch16-224",
+      "model_type": "ViTForImageClassification",
+      "accuracy": 0.812,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.tv2_in1k",
+      "accuracy": 0.8119,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "lambda_resnet50ts.a1h_in1k",
+      "accuracy": 0.81184,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.a2_in1k",
+      "accuracy": 0.81164,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "sebotnet33ts_256.a1h_in1k",
+      "accuracy": 0.81156,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resmlp_36_224.fb_distilled_in1k",
+      "accuracy": 0.8115,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_200.cvnets_in1k",
+      "accuracy": 0.81148,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.fb_swsl_ig1b_ft_in1k",
+      "accuracy": 0.81146,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnest50d_4s2x40d.in1k",
+      "accuracy": 0.81146,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.a1h_in1k",
+      "accuracy": 0.8114,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch16_384.augreg_in1k",
+      "accuracy": 0.8113,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "twins_pcpvt_small.in1k",
+      "accuracy": 0.81116,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w18_ssld.paddle_in1k",
+      "accuracy": 0.81114,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pit_s_224.in1k",
+      "accuracy": 0.81114,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet50.a1_in1k",
+      "accuracy": 0.81114,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_srelpos_small_patch16_224.sw_in1k",
+      "accuracy": 0.81108,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_384.augreg_in1k",
+      "accuracy": 0.81102,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet50.a2_in1k",
+      "accuracy": 0.81094,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b3.in21k_ft_in1k",
+      "accuracy": 0.81078,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_s12.apple_dist_in1k",
+      "accuracy": 0.81074,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_small.usi_in1k",
+      "accuracy": 0.81068,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_kobe.in1k",
+      "accuracy": 0.81064,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_pico.fcmae_ft_in1k",
+      "accuracy": 0.81062,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "haloregnetz_b.ra3_in1k",
+      "accuracy": 0.81058,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152s.gluon_in1k",
+      "accuracy": 0.81048,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_small_240.in1k",
+      "accuracy": 0.81036,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resmlp_big_24_224.fb_in1k",
+      "accuracy": 0.81034,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnest50d_1s4x24d.in1k",
+      "accuracy": 0.81024,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch16_rope_ape_224.naver_in1k",
+      "accuracy": 0.81016,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.d_in1k",
+      "accuracy": 0.81012,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_large_150d.ra4_e3600_r256_in1k",
+      "accuracy": 0.80994,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "sehalonet33ts.ra2_in1k",
+      "accuracy": 0.80976,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch16_rope_mixed_ape_224.naver_in1k",
+      "accuracy": 0.80974,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swin_tiny_patch4_window7_224.ms_in22k_ft_in1k",
+      "accuracy": 0.80966,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnest50d.in1k",
+      "accuracy": 0.80958,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.ra4_e3600_r224_in1k",
+      "accuracy": 0.80956,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_xxs24_384.fb_dist_in1k",
+      "accuracy": 0.80954,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_12_p16_384.fb_dist_in1k",
+      "accuracy": 0.80954,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcresnet50t.ra2_in1k",
+      "accuracy": 0.80944,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x4d.fb_ssl_yfcc100m_ft_in1k",
+      "accuracy": 0.80936,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.c1_in1k",
+      "accuracy": 0.80928,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_032.tv2_in1k",
+      "accuracy": 0.80916,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swiftformer_l1.dist_in1k",
+      "accuracy": 0.80906,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_nano_ols.d1h_in1k",
+      "accuracy": 0.80906,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_focus_l.c2ns_in1k",
+      "accuracy": 0.80894,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_medium.e500_r256_in1k",
+      "accuracy": 0.8089,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext101_32x4d.gluon_in1k",
+      "accuracy": 0.80886,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext101_64x4d.gluon_in1k",
+      "accuracy": 0.80884,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50t.a2_in1k",
+      "accuracy": 0.80884,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_l.c2ns_in1k",
+      "accuracy": 0.80882,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b3.in1k",
+      "accuracy": 0.80878,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tiny_vit_5m_224.dist_in22k_ft_in1k",
+      "accuracy": 0.80874,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_175.cvnets_in1k",
+      "accuracy": 0.8087,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b3_pruned.in1k",
+      "accuracy": 0.80864,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.c2_in1k",
+      "accuracy": 0.80862,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.tv2_in1k",
+      "accuracy": 0.80846,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_sa12.apple_in1k",
+      "accuracy": 0.80846,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_50d_evos.ah_in1k",
+      "accuracy": 0.80828,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m1_1.dist_300e_in1k",
+      "accuracy": 0.80826,
+      "trained_on_dataset": true
+    },
+    {
       "model_name": "tresnet_m.miil_in1k",
       "accuracy": 0.80816,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet33ts.ra2_in1k",
+      "accuracy": 0.80814,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet101d_pruned.miil_in1k",
+      "accuracy": 0.8081,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50d_pruned.miil_in1k",
+      "accuracy": 0.80808,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_50d_gn.ah_in1k",
+      "accuracy": 0.808,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_320.pycls_in1k",
+      "accuracy": 0.80796,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.a2_in1k",
+      "accuracy": 0.80774,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resmlp_24_224.fb_distilled_in1k",
+      "accuracy": 0.80766,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_nano.d1h_in1k",
+      "accuracy": 0.80762,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformerv2_s24.sail_in1k",
+      "accuracy": 0.80746,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b2.ssld_stage1_in22k_in1k",
+      "accuracy": 0.80742,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_b16.ra3_in1k",
+      "accuracy": 0.8074,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.80732,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.a1_in1k",
+      "accuracy": 0.8073,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.ra_in1k",
+      "accuracy": 0.8072,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_resnet33ts.ra2_in1k",
+      "accuracy": 0.80716,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.b1k_in1k",
+      "accuracy": 0.80708,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b3.in1k",
+      "accuracy": 0.80708,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs101.tf_in1k",
+      "accuracy": 0.80706,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gernet_m.idstcv_in1k",
+      "accuracy": 0.80702,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenet_edgetpu_v2_m.ra4_e3600_r224_in1k",
+      "accuracy": 0.80684,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50d_32x4d.bt_in1k",
+      "accuracy": 0.80676,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_016.tv2_in1k",
+      "accuracy": 0.80668,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nf_resnet50.ra2_in1k",
+      "accuracy": 0.80658,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.a1h_in1k",
+      "accuracy": 0.80654,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eva02_tiny_patch14_336.mim_in22k_ft_in1k",
+      "accuracy": 0.80648,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_tiny.paddle_in1k",
+      "accuracy": 0.80644,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_64x4d.gluon_in1k",
+      "accuracy": 0.8064,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50d.miil_in1k",
+      "accuracy": 0.80634,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetaa50.a1h_in1k",
+      "accuracy": 0.80614,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b2.ra_in1k",
+      "accuracy": 0.80612,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcresnext50ts.ch_in1k",
+      "accuracy": 0.80608,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcresnet33ts.ra2_in1k",
+      "accuracy": 0.80588,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "maxvit_rmlp_pico_rw_256.sw_in1k",
+      "accuracy": 0.8055,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cspresnext50.ra_in1k",
+      "accuracy": 0.80548,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.a3_in1k",
+      "accuracy": 0.80548,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.ra2_in1k",
+      "accuracy": 0.80546,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "darknet53.c2ns_in1k",
+      "accuracy": 0.80542,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "darknetaa53.c2ns_in1k",
+      "accuracy": 0.80528,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_b3.rvgg_in1k",
+      "accuracy": 0.80528,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.a1_in1k",
+      "accuracy": 0.80526,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientformer_l1.snap_dist_in1k",
+      "accuracy": 0.80502,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "wide_resnet101_2.tv2_in1k",
+      "accuracy": 0.80494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mixnet_xl.ra_in1k",
+      "accuracy": 0.80494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch32_384.augreg_in21k_ft_in1k",
+      "accuracy": 0.80476,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152d.gluon_in1k",
+      "accuracy": 0.80476,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m2.dist_in1k",
+      "accuracy": 0.80468,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.b2k_in1k",
+      "accuracy": 0.80466,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101d.gluon_in1k",
+      "accuracy": 0.80466,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_24_p16_224.fb_dist_in1k",
+      "accuracy": 0.80462,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_pico_ols.d1_in1k",
+      "accuracy": 0.80458,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnetlight.miil_in1k",
+      "accuracy": 0.80454,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_small_rw.sw_in1k",
+      "accuracy": 0.80452,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.a2_in1k",
+      "accuracy": 0.80444,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "wide_resnet50_2.tv2_in1k",
+      "accuracy": 0.80442,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_resnet_v2.tf_in1k",
+      "accuracy": 0.80434,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_hybrid_medium.e500_r224_in1k",
+      "accuracy": 0.80432,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_34d.ra4_e3600_r384_in1k",
+      "accuracy": 0.8043,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m1_0.dist_450e_in1k",
+      "accuracy": 0.8043,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_pico.d1_in1k",
+      "accuracy": 0.80426,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_50.a1h_in1k",
+      "accuracy": 0.8041,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b1.ra4_e3600_r240_in1k",
+      "accuracy": 0.80404,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_50x1_bit.goog_in21k_ft_in1k",
+      "accuracy": 0.80386,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_120.pycls_in1k",
+      "accuracy": 0.80382,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.a1_in1k",
+      "accuracy": 0.80382,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet33ts.ra2_in1k",
+      "accuracy": 0.8038,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_150.cvnets_in1k",
+      "accuracy": 0.8038,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ese_vovnet39b.ra_in1k",
+      "accuracy": 0.80378,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_t12.apple_dist_in1k",
+      "accuracy": 0.80364,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_l.c2ns_in1k",
+      "accuracy": 0.8035,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x4d.gluon_in1k",
+      "accuracy": 0.80336,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rexnet_150.nav_in1k",
+      "accuracy": 0.80322,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b1.r288_in1k",
+      "accuracy": 0.80322,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.fb_ssl_yfcc100m_ft_in1k",
+      "accuracy": 0.80316,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_pico.fcmae_ft_in1k",
+      "accuracy": 0.80304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b2.ap_in1k",
+      "accuracy": 0.803,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformer_s24.sail_in1k",
+      "accuracy": 0.80294,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_el_pruned.in1k",
+      "accuracy": 0.80284,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_160.pycls_in1k",
+      "accuracy": 0.80284,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "res2net50d.in1k",
+      "accuracy": 0.8028,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101s.gluon_in1k",
+      "accuracy": 0.80278,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_seresnext101_32x4d.in1k",
+      "accuracy": 0.80274,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.a2_in1k",
+      "accuracy": 0.80268,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_wee_patch16_reg1_gap_256.sbb_in1k",
+      "accuracy": 0.80262,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet50.ra2_in1k",
+      "accuracy": 0.8026,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_320.pycls_in1k",
+      "accuracy": 0.80258,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_focus_l.c2ns_in1k",
+      "accuracy": 0.80254,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetblur50.bt_in1k",
+      "accuracy": 0.80248,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_el.in1k",
+      "accuracy": 0.80246,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_224.sam_in1k",
+      "accuracy": 0.80246,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nf_resnet50.ra2_in1k",
+      "accuracy": 0.80236,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b2.in1k",
+      "accuracy": 0.80226,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_b3g4.rvgg_in1k",
+      "accuracy": 0.80224,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.tv2_in1k",
+      "accuracy": 0.80222,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "skresnext50_32x4d.ra_in1k",
+      "accuracy": 0.80168,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dpn107.mx_in1k",
+      "accuracy": 0.80166,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convmixer_768_32.in1k",
+      "accuracy": 0.80158,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_blur_medium.e500_r224_in1k",
+      "accuracy": 0.80152,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m1_0.dist_300e_in1k",
+      "accuracy": 0.80152,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_v4.tf_in1k",
+      "accuracy": 0.80144,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenet_edgetpu_v2_m.ra4_e3600_r224_in1k",
+      "accuracy": 0.80116,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet50.a2_in1k",
+      "accuracy": 0.80102,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_resnet33ts.ra2_in1k",
+      "accuracy": 0.80084,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_pwee_patch16_reg1_gap_256.sbb_in1k",
+      "accuracy": 0.80082,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cspdarknet53.ra_in1k",
+      "accuracy": 0.80078,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50_gn.a1h_in1k",
+      "accuracy": 0.80074,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b2.aa_in1k",
+      "accuracy": 0.80074,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcresnet33ts.ra2_in1k",
+      "accuracy": 0.80072,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dpn92.mx_in1k",
+      "accuracy": 0.80032,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet50.a1_in1k",
+      "accuracy": 0.80012,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "darknet53.c2ns_in1k",
+      "accuracy": 0.80008,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_resnet_v2.tf_ens_adv_in1k",
+      "accuracy": 0.79998,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_kobe.in1k",
+      "accuracy": 0.79986,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.ram_in1k",
+      "accuracy": 0.79982,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs50.tf_in1k",
+      "accuracy": 0.79934,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xception71.tf_in1k",
+      "accuracy": 0.7992,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_medium.e500_r256_in1k",
+      "accuracy": 0.79916,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b1.ssld_stage2_ft_in1k",
+      "accuracy": 0.79916,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext50_32x4d.gluon_in1k",
+      "accuracy": 0.79916,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_femto.in1k",
+      "accuracy": 0.79912,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.tv2_in1k",
+      "accuracy": 0.79908,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152c.gluon_in1k",
+      "accuracy": 0.79904,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b2_pruned.in1k",
+      "accuracy": 0.79904,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.d_in1k",
+      "accuracy": 0.79904,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet26t.ra2_in1k",
+      "accuracy": 0.799,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnet_tiny.paddle_in1k",
+      "accuracy": 0.79892,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_s12.apple_in1k",
+      "accuracy": 0.79882,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_080.pycls_in1k",
+      "accuracy": 0.79874,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.c2_in1k",
+      "accuracy": 0.79868,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetz_b16.ra3_in1k",
+      "accuracy": 0.79864,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.ra_in1k",
+      "accuracy": 0.79864,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_conv_192.fb_dist_in1k",
+      "accuracy": 0.7986,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_192.fb_dist_in1k",
+      "accuracy": 0.79858,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit_small_patch16_224.fb_in1k",
+      "accuracy": 0.79856,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_160.pycls_in1k",
+      "accuracy": 0.79844,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_medium.e500_r224_in1k",
+      "accuracy": 0.79836,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dpn131.mx_in1k",
+      "accuracy": 0.79836,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.a3_in1k",
+      "accuracy": 0.79836,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.a2_in1k",
+      "accuracy": 0.79828,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_lite3.in1k",
+      "accuracy": 0.79808,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.ra_in1k",
+      "accuracy": 0.798,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_34d.ra4_e3600_r384_in1k",
+      "accuracy": 0.79792,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resmlp_36_224.fb_in1k",
+      "accuracy": 0.79772,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.c1_in1k",
+      "accuracy": 0.79766,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcvit_xxtiny.in1k",
+      "accuracy": 0.79756,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "darknetaa53.c2ns_in1k",
+      "accuracy": 0.79754,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_xxs36_224.fb_dist_in1k",
+      "accuracy": 0.7975,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b1.r256_in1k",
+      "accuracy": 0.79734,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_064.pycls_in1k",
+      "accuracy": 0.79734,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50d_pruned.miil_in1k",
+      "accuracy": 0.79714,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.gluon_in1k",
+      "accuracy": 0.79712,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_12_p8_224.fb_in1k",
+      "accuracy": 0.7971,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet33ts.ra2_in1k",
+      "accuracy": 0.7971,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientformerv2_s1.snap_dist_in1k",
+      "accuracy": 0.79684,
       "trained_on_dataset": true
     },
     {
@@ -246,8 +5506,1553 @@
       "trained_on_dataset": true
     },
     {
+      "model_name": "fbnetv3_d.ra2_in1k",
+      "accuracy": 0.79682,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50d_32x4d.bt_in1k",
+      "accuracy": 0.79672,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dpn98.mx_in1k",
+      "accuracy": 0.79664,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.bt_in1k",
+      "accuracy": 0.79652,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gmlp_s16_224.ra3_in1k",
+      "accuracy": 0.79652,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_34d.ra4_e3600_r224_in1k",
+      "accuracy": 0.79614,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b2.in1k",
+      "accuracy": 0.79612,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_120.pycls_in1k",
+      "accuracy": 0.79608,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_small_rw.sw_in1k",
+      "accuracy": 0.79596,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cspresnet50.ra_in1k",
+      "accuracy": 0.79578,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.b1k_in1k",
+      "accuracy": 0.79564,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xception65.tf_in1k",
+      "accuracy": 0.79558,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50t.a3_in1k",
+      "accuracy": 0.79548,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_pico_ols.d1_in1k",
+      "accuracy": 0.79542,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101c.gluon_in1k",
+      "accuracy": 0.79542,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b1.in1k",
+      "accuracy": 0.79518,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_halonext26ts.c1_in1k",
+      "accuracy": 0.79518,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_pico.d1_in1k",
+      "accuracy": 0.79516,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_relpos_base_patch32_plus_rpn_256.sw_in1k",
+      "accuracy": 0.79508,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rexnet_130.nav_in1k",
+      "accuracy": 0.79492,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_24_p16_224.fb_in1k",
+      "accuracy": 0.79474,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w64.ms_in1k",
+      "accuracy": 0.79458,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla102x2.in1k",
+      "accuracy": 0.79448,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_blur_medium.e500_r224_in1k",
+      "accuracy": 0.79446,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobileone_s4.apple_in1k",
+      "accuracy": 0.79446,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_016.tv2_in1k",
+      "accuracy": 0.7944,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.tv2_in1k",
+      "accuracy": 0.79434,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_b2g4.rvgg_in1k",
+      "accuracy": 0.79396,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet32ts.ra2_in1k",
+      "accuracy": 0.79388,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.b2k_in1k",
+      "accuracy": 0.79388,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.tv2_in1k",
+      "accuracy": 0.79384,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resmlp_24_224.fb_in1k",
+      "accuracy": 0.7938,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nf_regnet_b1.ra2_in1k",
+      "accuracy": 0.79368,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b0.ra4_e3600_r224_in1k",
+      "accuracy": 0.79364,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "shvit_s4.in1k",
+      "accuracy": 0.79362,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.gluon_in1k",
+      "accuracy": 0.79354,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_femto.fcmae_ft_in1k",
+      "accuracy": 0.79342,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dpn68b.ra_in1k",
+      "accuracy": 0.79342,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w48.ms_in1k",
+      "accuracy": 0.79328,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b2.ra_in1k",
+      "accuracy": 0.79324,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_cc_b1_8e.in1k",
+      "accuracy": 0.79318,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ese_vovnet39b.ra_in1k",
+      "accuracy": 0.79312,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext101_32x8d.tv_in1k",
+      "accuracy": 0.79308,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetblur50.bt_in1k",
+      "accuracy": 0.79306,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.gluon_in1k",
+      "accuracy": 0.79306,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b1.ap_in1k",
+      "accuracy": 0.79288,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_t12.apple_in1k",
+      "accuracy": 0.79276,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.a1h_in1k",
+      "accuracy": 0.79264,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_botnext26ts_256.c1_in1k",
+      "accuracy": 0.79262,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.a3_in1k",
+      "accuracy": 0.79258,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_em.ra2_in1k",
+      "accuracy": 0.79256,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "botnet26t_256.c1_in1k",
+      "accuracy": 0.79256,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b1.r224_in1k",
+      "accuracy": 0.79254,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.fb_ssl_yfcc100m_ft_in1k",
+      "accuracy": 0.79252,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_040.pycls_in1k",
+      "accuracy": 0.79246,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet33ts.ra2_in1k",
+      "accuracy": 0.79216,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_080.pycls_in1k",
+      "accuracy": 0.79214,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b2.in1k",
+      "accuracy": 0.79208,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tiny_vit_5m_224.in1k",
+      "accuracy": 0.79196,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "res2net101_26w_4s.in1k",
+      "accuracy": 0.79192,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pit_xs_distilled_224.in1k",
+      "accuracy": 0.79172,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fbnetv3_b.ra2_in1k",
+      "accuracy": 0.79154,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch16_224.augreg_in1k",
+      "accuracy": 0.79154,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "halonet26t.a1h_in1k",
+      "accuracy": 0.79134,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "lambda_resnet26t.c1_in1k",
+      "accuracy": 0.79126,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coat_lite_mini.in1k",
+      "accuracy": 0.79104,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_medium.e500_r224_in1k",
+      "accuracy": 0.79092,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.gluon_in1k",
+      "accuracy": 0.7908,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_seresnext50_32x4d.in1k",
+      "accuracy": 0.7908,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_34.ra4_e3600_r224_in1k",
+      "accuracy": 0.7907,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_064.pycls_in1k",
+      "accuracy": 0.79062,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_xception.tf_in1k",
+      "accuracy": 0.79058,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m0_9.dist_450e_in1k",
+      "accuracy": 0.79058,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet32ts.ra2_in1k",
+      "accuracy": 0.79054,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b1.ssld_stage1_in22k_in1k",
+      "accuracy": 0.7905,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.ram_in1k",
+      "accuracy": 0.79034,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.am_in1k",
+      "accuracy": 0.79004,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.ra4_e3600_r224_in1k",
+      "accuracy": 0.78972,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mixnet_l.ft_in1k",
+      "accuracy": 0.7897,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "lambda_resnet26rpt_256.c1_in1k",
+      "accuracy": 0.7896,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_tiny.fb_in22k_ft_in1k",
+      "accuracy": 0.7895,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "res2net50_26w_8s.in1k",
+      "accuracy": 0.7895,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w40.ms_in1k",
+      "accuracy": 0.78928,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_femto_ols.d1_in1k",
+      "accuracy": 0.78916,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_032.pycls_in1k",
+      "accuracy": 0.78902,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.a3_in1k",
+      "accuracy": 0.78896,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet26t.ra2_in1k",
+      "accuracy": 0.78894,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w44.ms_in1k",
+      "accuracy": 0.7889,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b1.ssld_stage2_ft_in1k",
+      "accuracy": 0.78884,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mambaout_femto.in1k",
+      "accuracy": 0.7888,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "wide_resnet101_2.tv_in1k",
+      "accuracy": 0.78862,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch16_224.augreg_in1k",
+      "accuracy": 0.78842,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b1.aa_in1k",
+      "accuracy": 0.7884,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "starnet_s4.in1k",
+      "accuracy": 0.78824,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.ra_in1k",
+      "accuracy": 0.7882,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext26d_32x4d.bt_in1k",
+      "accuracy": 0.78816,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_v3.gluon_in1k",
+      "accuracy": 0.78806,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b1.ft_in1k",
+      "accuracy": 0.78806,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repghostnet_200.in1k",
+      "accuracy": 0.78802,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_b2.rvgg_in1k",
+      "accuracy": 0.78788,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_mixnet_l.in1k",
+      "accuracy": 0.78774,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_384.augreg_in1k",
+      "accuracy": 0.7875,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.a3_in1k",
+      "accuracy": 0.78742,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fasternet_t2.in1k",
+      "accuracy": 0.78738,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext26t_32x4d.bt_in1k",
+      "accuracy": 0.78736,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_femto.d1_in1k",
+      "accuracy": 0.78712,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "nf_regnet_b1.ra2_in1k",
+      "accuracy": 0.7871,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50s.gluon_in1k",
+      "accuracy": 0.7871,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla169.in1k",
+      "accuracy": 0.78702,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pvt_v2_b1.in1k",
+      "accuracy": 0.78698,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b0.ns_jft_in1k",
+      "accuracy": 0.7868,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_008_tv.tv2_in1k",
+      "accuracy": 0.78672,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_seresnet152.in1k",
+      "accuracy": 0.78662,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fbnetv3_d.ra2_in1k",
+      "accuracy": 0.78658,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m0_9.dist_300e_in1k",
+      "accuracy": 0.78652,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b0.ssld_stage2_ft_in1k",
+      "accuracy": 0.7859,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "res2net50_26w_6s.in1k",
+      "accuracy": 0.78586,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_12_p16_224.fb_dist_in1k",
+      "accuracy": 0.78572,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b0.ra4_e3600_r224_in1k",
+      "accuracy": 0.78568,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xception41.tf_in1k",
+      "accuracy": 0.7855,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b1.in1k",
+      "accuracy": 0.78546,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dpn68b.ra_in1k",
+      "accuracy": 0.78546,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvit_m1.dist_in1k",
+      "accuracy": 0.78542,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla102x.in1k",
+      "accuracy": 0.78516,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla60_res2next.in1k",
+      "accuracy": 0.78488,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_conv_128.fb_dist_in1k",
+      "accuracy": 0.78488,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_040.pycls_in1k",
+      "accuracy": 0.78486,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "wide_resnet50_2.tv_in1k",
+      "accuracy": 0.78486,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_128.fb_dist_in1k",
+      "accuracy": 0.78486,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla60_res2net.in1k",
+      "accuracy": 0.7848,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnest26d.gluon_in1k",
+      "accuracy": 0.78476,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_femto.fcmae_ft_in1k",
+      "accuracy": 0.78476,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swiftformer_s.dist_in1k",
+      "accuracy": 0.78462,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w32.ms_in1k",
+      "accuracy": 0.78452,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.bt_in1k",
+      "accuracy": 0.78444,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coat_tiny.in1k",
+      "accuracy": 0.78442,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34d.ra2_in1k",
+      "accuracy": 0.7844,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_tiny_patch16_384.augreg_in21k_ft_in1k",
+      "accuracy": 0.78438,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcresnext26ts.ch_in1k",
+      "accuracy": 0.78436,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "selecsls60b.in1k",
+      "accuracy": 0.7841,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cait_xxs24_224.fb_dist_in1k",
+      "accuracy": 0.784,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b0.in1k",
+      "accuracy": 0.78386,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_seresnet101.in1k",
+      "accuracy": 0.7837,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_b1.rvgg_in1k",
+      "accuracy": 0.7837,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet26t.ra2_in1k",
+      "accuracy": 0.7833,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet152.tv_in1k",
+      "accuracy": 0.7833,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevit_s.cvnets_in1k",
+      "accuracy": 0.78298,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext26ts.ch_in1k",
+      "accuracy": 0.78292,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "bat_resnext26ts.ch_in1k",
+      "accuracy": 0.7828,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_34d.ra4_e3600_r224_in1k",
+      "accuracy": 0.7827,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b1_pruned.in1k",
+      "accuracy": 0.78252,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "res2next50.in1k",
+      "accuracy": 0.78238,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla60x.in1k",
+      "accuracy": 0.78234,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w30.ms_in1k",
+      "accuracy": 0.78202,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w18_small_v2.gluon_in1k",
+      "accuracy": 0.78202,
+      "trained_on_dataset": true
+    },
+    {
       "model_name": "pit_xs_224.in1k",
       "accuracy": 0.78196,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fbnetv3_b.ra2_in1k",
+      "accuracy": 0.78184,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "visformer_tiny.in1k",
+      "accuracy": 0.7816,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_032.pycls_in1k",
+      "accuracy": 0.7816,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "res2net50_14w_8s.in1k",
+      "accuracy": 0.78142,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_em.in1k",
+      "accuracy": 0.78128,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w18.ms_aug_in1k",
+      "accuracy": 0.7811,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_es.ra_in1k",
+      "accuracy": 0.781,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hardcorenas_f.miil_green_in1k",
+      "accuracy": 0.781,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_100.cvnets_in1k",
+      "accuracy": 0.78088,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b1.ssld_stage1_in22k_in1k",
+      "accuracy": 0.7808,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.a3_in1k",
+      "accuracy": 0.78052,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gmixer_24_224.ra3_in1k",
+      "accuracy": 0.78048,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b0.ssld_stage1_in22k_in1k",
+      "accuracy": 0.78038,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_resnext26ts.ch_in1k",
+      "accuracy": 0.7802,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50c.gluon_in1k",
+      "accuracy": 0.78016,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla102.in1k",
+      "accuracy": 0.78016,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformerv2_s12.sail_in1k",
+      "accuracy": 0.78008,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobileone_s3.apple_in1k",
+      "accuracy": 0.78002,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "res2net50_26w_4s.in1k",
+      "accuracy": 0.77994,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext26t_32x4d.bt_in1k",
+      "accuracy": 0.7798,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "selecsls60.in1k",
+      "accuracy": 0.77974,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_cc_b0_8e.in1k",
+      "accuracy": 0.77956,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resmlp_12_224.fb_distilled_in1k",
+      "accuracy": 0.77948,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b1.in1k",
+      "accuracy": 0.77934,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.a1_in1k",
+      "accuracy": 0.7793,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.a3_in1k",
+      "accuracy": 0.77928,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_large_100.miil_in21k_ft_in1k",
+      "accuracy": 0.7792,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_016.pycls_in1k",
+      "accuracy": 0.7788,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet26t.ra2_in1k",
+      "accuracy": 0.77878,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_v3.tf_in1k",
+      "accuracy": 0.77866,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "rexnet_100.nav_in1k",
+      "accuracy": 0.77862,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext26ts.ch_in1k",
+      "accuracy": 0.7786,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetrs50.tf_in1k",
+      "accuracy": 0.77858,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_femto_ols.d1_in1k",
+      "accuracy": 0.77852,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ghostnetv2_160.in1k",
+      "accuracy": 0.77836,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_nano_12_p8_384.fb_dist_in1k",
+      "accuracy": 0.7781,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gcresnext26ts.ch_in1k",
+      "accuracy": 0.7781,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_atto.fcmae_ft_in1k",
+      "accuracy": 0.77794,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ese_vovnet19b_dw.ra_in1k",
+      "accuracy": 0.77788,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hardcorenas_e.miil_green_in1k",
+      "accuracy": 0.77788,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ecaresnet50t.a3_in1k",
+      "accuracy": 0.77786,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.a3_in1k",
+      "accuracy": 0.77732,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b0.ra_in1k",
+      "accuracy": 0.77698,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tinynet_a.in1k",
+      "accuracy": 0.77666,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_seresnet50.in1k",
+      "accuracy": 0.7765,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_m.c2ns_in1k",
+      "accuracy": 0.77636,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext50_32x4d.tv_in1k",
+      "accuracy": 0.77632,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_34.ra4_e3600_r224_in1k",
+      "accuracy": 0.77626,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv1_125.ra4_e3600_r224_in1k",
+      "accuracy": 0.77612,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_b1g4.rvgg_in1k",
+      "accuracy": 0.77608,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_v3.tf_adv_in1k",
+      "accuracy": 0.77598,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_b1.ft_in1k",
+      "accuracy": 0.77592,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnext26d_32x4d.bt_in1k",
+      "accuracy": 0.77592,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.gluon_in1k",
+      "accuracy": 0.7758,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "coat_lite_tiny.in1k",
+      "accuracy": 0.77548,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "res2net50_48w_2s.in1k",
+      "accuracy": 0.77528,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobileone_s2.apple_in1k",
+      "accuracy": 0.77504,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_femto.d1_in1k",
+      "accuracy": 0.77498,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dpn68b.mx_in1k",
+      "accuracy": 0.77494,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.ra4_e3600_r224_in1k",
+      "accuracy": 0.77492,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repghostnet_150.in1k",
+      "accuracy": 0.77474,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_v3.tv_in1k",
+      "accuracy": 0.77472,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_lite2.in1k",
+      "accuracy": 0.7747,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hardcorenas_d.miil_green_in1k",
+      "accuracy": 0.7745,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "eca_resnext26ts.ch_in1k",
+      "accuracy": 0.77446,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet26d.bt_in1k",
+      "accuracy": 0.77422,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet101.tv_in1k",
+      "accuracy": 0.77404,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "densenet161.tv_in1k",
+      "accuracy": 0.77384,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "starnet_s3.in1k",
+      "accuracy": 0.77378,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b0.ssld_stage2_ft_in1k",
+      "accuracy": 0.77362,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "shvit_s3.in1k",
+      "accuracy": 0.77356,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_cc_b0_4e.in1k",
+      "accuracy": 0.77324,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "densenetblur121d.ra_in1k",
+      "accuracy": 0.7732,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv2_120d.ra_in1k",
+      "accuracy": 0.773,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_008.tv2_in1k",
+      "accuracy": 0.77294,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_focus_m.c2ns_in1k",
+      "accuracy": 0.77286,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "densenet201.tv_in1k",
+      "accuracy": 0.77284,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mixnet_m.ft_in1k",
+      "accuracy": 0.77268,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "poolformer_s12.sail_in1k",
+      "accuracy": 0.77238,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50d.a3_in1k",
+      "accuracy": 0.77222,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_atto_ols.a2_in1k",
+      "accuracy": 0.7722,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext26ts.ra2_in1k",
+      "accuracy": 0.77186,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "selecsls42b.in1k",
+      "accuracy": 0.77184,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_large_100.ra4_e3600_r224_in1k",
+      "accuracy": 0.77182,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_t8.apple_dist_in1k",
+      "accuracy": 0.7717,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.a2_in1k",
+      "accuracy": 0.7715,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_tiny_12_p16_224.fb_in1k",
+      "accuracy": 0.77122,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34d.ra2_in1k",
+      "accuracy": 0.77108,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_seresnext26_32x4d.in1k",
+      "accuracy": 0.771,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b0.ap_in1k",
+      "accuracy": 0.771,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hardcorenas_c.miil_green_in1k",
+      "accuracy": 0.77092,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_m5.r224_in1k",
+      "accuracy": 0.77092,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla60.in1k",
+      "accuracy": 0.77036,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet50.a3_in1k",
+      "accuracy": 0.77036,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_atto.d2_in1k",
+      "accuracy": 0.77016,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_9_dagger_240.in1k",
+      "accuracy": 0.7699,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_m.c2ns_in1k",
+      "accuracy": 0.76974,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "skresnet34.ra_in1k",
+      "accuracy": 0.76956,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_mixnet_m.in1k",
+      "accuracy": 0.76952,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convmixer_1024_20_ks9_p14.in1k",
+      "accuracy": 0.76944,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_016.pycls_in1k",
+      "accuracy": 0.76936,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ghostnetv3_100.in1k",
+      "accuracy": 0.76936,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv1_125.ra4_e3600_r224_in1k",
+      "accuracy": 0.7692,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b0.aa_in1k",
+      "accuracy": 0.76882,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnetv2_b0.in1k",
+      "accuracy": 0.76876,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "gernet_s.idstcv_in1k",
+      "accuracy": 0.76874,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hgnetv2_b0.ssld_stage1_in22k_in1k",
+      "accuracy": 0.76868,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ese_vovnet19b_dw.ra_in1k",
+      "accuracy": 0.76828,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w18.ms_in1k",
+      "accuracy": 0.7677,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnext26ts.ra2_in1k",
+      "accuracy": 0.76768,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_focus_m.c2ns_in1k",
+      "accuracy": 0.76754,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ghostnetv2_130.in1k",
+      "accuracy": 0.76746,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet26d.bt_in1k",
+      "accuracy": 0.76698,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_lite1.in1k",
+      "accuracy": 0.76674,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resmlp_12_224.fb_in1k",
+      "accuracy": 0.7666,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnextv2_atto.fcmae_ft_in1k",
+      "accuracy": 0.76644,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mixer_b16_224.goog_in21k_ft_in1k",
+      "accuracy": 0.76616,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_es.in1k",
+      "accuracy": 0.76608,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv1_100h.ra4_e3600_r224_in1k",
+      "accuracy": 0.76598,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "densenetblur121d.ra_in1k",
+      "accuracy": 0.76574,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hardcorenas_b.miil_green_in1k",
+      "accuracy": 0.7655,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_b0.in1k",
+      "accuracy": 0.76542,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_conv_128s.fb_dist_in1k",
+      "accuracy": 0.76534,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv2_140.ra_in1k",
+      "accuracy": 0.76528,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "levit_128s.fb_dist_in1k",
+      "accuracy": 0.7652,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.bt_in1k",
+      "accuracy": 0.76506,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_a2.rvgg_in1k",
+      "accuracy": 0.76488,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "densenet121.ra_in1k",
+      "accuracy": 0.76486,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.a1_in1k",
+      "accuracy": 0.7642,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet26.bt_in1k",
+      "accuracy": 0.76384,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repghostnet_130.in1k",
+      "accuracy": 0.76378,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_008.pycls_in1k",
+      "accuracy": 0.76334,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_nano_12_p8_224.fb_dist_in1k",
+      "accuracy": 0.7633,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_large_100.ra4_e3600_r224_in1k",
+      "accuracy": 0.7631,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dpn68.mx_in1k",
+      "accuracy": 0.76304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fastvit_t8.apple_in1k",
+      "accuracy": 0.76184,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.tv_in1k",
+      "accuracy": 0.76156,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientformerv2_s0.snap_dist_in1k",
+      "accuracy": 0.76102,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv1_100.ra4_e3600_r224_in1k",
+      "accuracy": 0.76088,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_18d.ra4_e3600_r224_in1k",
+      "accuracy": 0.76058,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18d.ra4_e3600_r224_in1k",
+      "accuracy": 0.76012,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_small_patch32_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.7601,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mixnet_s.ft_in1k",
+      "accuracy": 0.76,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet50.a3_in1k",
+      "accuracy": 0.75994,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_tiny_r_s16_p8_384.augreg_in21k_ft_in1k",
+      "accuracy": 0.75962,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hardcorenas_a.miil_green_in1k",
+      "accuracy": 0.75926,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "densenet169.tv_in1k",
+      "accuracy": 0.75922,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fasternet_t1.in1k",
+      "accuracy": 0.75922,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_atto_ols.a2_in1k",
+      "accuracy": 0.75902,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_large_100.ra_in1k",
+      "accuracy": 0.75784,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobileone_s1.apple_in1k",
+      "accuracy": 0.7576,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_x_small.in1k",
+      "accuracy": 0.75706,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_atto.d2_in1k",
+      "accuracy": 0.75672,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv1_100h.ra4_e3600_r224_in1k",
+      "accuracy": 0.75664,
       "trained_on_dataset": true
     },
     {
@@ -256,8 +7061,808 @@
       "trained_on_dataset": true
     },
     {
+      "model_name": "mobilenetv4_conv_small.e3600_r256_in1k",
+      "accuracy": 0.75616,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_rw.rmsp_in1k",
+      "accuracy": 0.75616,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_075.cvnets_in1k",
+      "accuracy": 0.75612,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "swiftformer_xs.dist_in1k",
+      "accuracy": 0.756,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_004.tv2_in1k",
+      "accuracy": 0.75594,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "densenet121.ra_in1k",
+      "accuracy": 0.75574,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.a2_in1k",
+      "accuracy": 0.7552,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnest14d.gluon_in1k",
+      "accuracy": 0.75516,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_mobilenetv3_large_100.in1k",
+      "accuracy": 0.7551,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_lite0.ra_in1k",
+      "accuracy": 0.75488,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_nano_12_p16_384.fb_dist_in1k",
+      "accuracy": 0.7546,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_tiny_patch16_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.75452,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "semnasnet_100.rmsp_in1k",
+      "accuracy": 0.75452,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv1_100.ra4_e3600_r224_in1k",
+      "accuracy": 0.75388,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_18.ra4_e3600_r224_in1k",
+      "accuracy": 0.75364,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "inception_next_atto.sail_in1k",
+      "accuracy": 0.75348,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet26.bt_in1k",
+      "accuracy": 0.75298,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_006.pycls_in1k",
+      "accuracy": 0.75274,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ghostnetv2_100.in1k",
+      "accuracy": 0.75186,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "shvit_s2.in1k",
+      "accuracy": 0.75184,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.bt_in1k",
+      "accuracy": 0.75176,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_b0.rvgg_in1k",
+      "accuracy": 0.75158,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fbnetc_100.rmsp_in1k",
+      "accuracy": 0.7512,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "seresnet50.a3_in1k",
+      "accuracy": 0.75104,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w18_small_v2.ms_in1k",
+      "accuracy": 0.75094,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repghostnet_111.in1k",
+      "accuracy": 0.7506,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv2_110d.ra_in1k",
+      "accuracy": 0.75056,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_008.pycls_in1k",
+      "accuracy": 0.75054,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientnet_es_pruned.in1k",
+      "accuracy": 0.7501,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tinynet_b.in1k",
+      "accuracy": 0.74946,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_224.augreg_in1k",
+      "accuracy": 0.74908,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_x_small.in1k",
+      "accuracy": 0.74874,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_efficientnet_lite0.in1k",
+      "accuracy": 0.74846,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_seresnet34.in1k",
+      "accuracy": 0.74788,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "densenet121.tv_in1k",
+      "accuracy": 0.7475,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mnasnet_100.rmsp_in1k",
+      "accuracy": 0.74672,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "starnet_s2.in1k",
+      "accuracy": 0.74666,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_small.e2400_r224_in1k",
+      "accuracy": 0.74644,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla34.in1k",
+      "accuracy": 0.74632,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevit_xs.cvnets_in1k",
+      "accuracy": 0.74618,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_004_tv.tv2_in1k",
+      "accuracy": 0.74596,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.gluon_in1k",
+      "accuracy": 0.74574,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit_tiny_distilled_patch16_224.fb_in1k",
+      "accuracy": 0.74538,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_small.e3600_r256_in1k",
+      "accuracy": 0.74534,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_a1.rvgg_in1k",
+      "accuracy": 0.74474,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_18d.ra4_e3600_r224_in1k",
+      "accuracy": 0.74422,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18d.ra4_e3600_r224_in1k",
+      "accuracy": 0.74356,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_m4.r224_in1k",
+      "accuracy": 0.74344,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_small.e1200_r224_in1k",
+      "accuracy": 0.74282,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pit_ti_distilled_224.in1k",
+      "accuracy": 0.74276,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vgg19_bn.tv_in1k",
+      "accuracy": 0.7423,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repghostnet_100.in1k",
+      "accuracy": 0.74208,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "spnasnet_100.rmsp_in1k",
+      "accuracy": 0.74086,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_004.pycls_in1k",
+      "accuracy": 0.74004,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_9_240.in1k",
+      "accuracy": 0.73994,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "ghostnet_100.in1k",
+      "accuracy": 0.73958,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w18_small.gluon_in1k",
+      "accuracy": 0.73934,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_006.pycls_in1k",
+      "accuracy": 0.73904,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_nano_12_p8_224.fb_in1k",
+      "accuracy": 0.739,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18d.ra2_in1k",
+      "accuracy": 0.7379,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_small.e2400_r224_in1k",
+      "accuracy": 0.73756,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_base_patch32_224.sam_in1k",
+      "accuracy": 0.73704,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnetv2_18.ra4_e3600_r224_in1k",
+      "accuracy": 0.73572,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "starnet_s1.in1k",
+      "accuracy": 0.73532,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_small.e1200_r224_in1k",
+      "accuracy": 0.7345,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_mobilenetv3_large_075.in1k",
+      "accuracy": 0.73442,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_m3.r224_in1k",
+      "accuracy": 0.73394,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vgg16_bn.tv_in1k",
+      "accuracy": 0.73354,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "crossvit_tiny_240.in1k",
+      "accuracy": 0.73352,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.tv_in1k",
+      "accuracy": 0.73298,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.fb_swsl_ig1b_ft_in1k",
+      "accuracy": 0.73286,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_zepto_rms_ols.ra4_e3600_r224_in1k",
+      "accuracy": 0.73234,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.a1_in1k",
+      "accuracy": 0.73164,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_focus_s.ra4_e3600_r256_in1k",
+      "accuracy": 0.73158,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convit_tiny.fb_in1k",
+      "accuracy": 0.7314,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "skresnet18.ra_in1k",
+      "accuracy": 0.7302,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "semnasnet_075.rmsp_in1k",
+      "accuracy": 0.73,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.a3_in1k",
+      "accuracy": 0.72996,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pit_ti_224.in1k",
+      "accuracy": 0.72926,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv2_100.ra_in1k",
+      "accuracy": 0.7291,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "convnext_zepto_rms.ra4_e3600_r224_in1k",
+      "accuracy": 0.7282,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "shvit_s1.in1k",
+      "accuracy": 0.7278,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.fb_ssl_yfcc100m_ft_in1k",
+      "accuracy": 0.72636,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_004.pycls_in1k",
+      "accuracy": 0.72482,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repvgg_a0.rvgg_in1k",
+      "accuracy": 0.72426,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vgg19.tv_in1k",
+      "accuracy": 0.724,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.a2_in1k",
+      "accuracy": 0.72364,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "hrnet_w18_small.ms_in1k",
+      "accuracy": 0.7234,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_nano_12_p16_224.fb_dist_in1k",
+      "accuracy": 0.72318,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18d.ra2_in1k",
+      "accuracy": 0.72296,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_mobilenetv3_large_minimal_100.in1k",
+      "accuracy": 0.7227,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet14t.c3_in1k",
+      "accuracy": 0.72242,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repghostnet_080.in1k",
+      "accuracy": 0.7224,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "deit_tiny_patch16_224.fb_in1k",
+      "accuracy": 0.7219,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "cs3darknet_focus_s.ra4_e3600_r256_in1k",
+      "accuracy": 0.72178,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "lcnet_100.ra2_in1k",
+      "accuracy": 0.7213,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mixer_l16_224.goog_in21k_ft_in1k",
+      "accuracy": 0.72084,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_xx_small.in1k",
+      "accuracy": 0.71886,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vit_tiny_r_s16_p8_224.augreg_in21k_ft_in1k",
+      "accuracy": 0.718,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "legacy_seresnet18.in1k",
+      "accuracy": 0.71742,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "fasternet_t0.in1k",
+      "accuracy": 0.71732,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vgg16.tv_in1k",
+      "accuracy": 0.71594,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vgg13_bn.tv_in1k",
+      "accuracy": 0.7156,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.a1_in1k",
+      "accuracy": 0.71504,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_b0.r224_in1k",
+      "accuracy": 0.71408,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobileone_s0.apple_in1k",
+      "accuracy": 0.71398,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet14t.c3_in1k",
+      "accuracy": 0.71318,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tinynet_c.in1k",
+      "accuracy": 0.71214,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "edgenext_xx_small.in1k",
+      "accuracy": 0.71132,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.gluon_in1k",
+      "accuracy": 0.70844,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_m2.r224_in1k",
+      "accuracy": 0.70796,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "pvt_v2_b0.in1k",
+      "accuracy": 0.70654,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.a2_in1k",
+      "accuracy": 0.70634,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet34.a3_in1k",
+      "accuracy": 0.7058,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vgg11_bn.tv_in1k",
+      "accuracy": 0.70374,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnety_002.pycls_in1k",
+      "accuracy": 0.70288,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevitv2_050.cvnets_in1k",
+      "accuracy": 0.70156,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "xcit_nano_12_p16_224.fb_in1k",
+      "accuracy": 0.69982,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vgg13.tv_in1k",
+      "accuracy": 0.6995,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.tv_in1k",
+      "accuracy": 0.69752,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "vgg11.tv_in1k",
+      "accuracy": 0.6905,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repghostnet_058.in1k",
+      "accuracy": 0.68938,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilevit_xxs.cvnets_in1k",
+      "accuracy": 0.68936,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "lcnet_075.ra2_in1k",
+      "accuracy": 0.68786,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "regnetx_002.pycls_in1k",
+      "accuracy": 0.68758,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet10t.c3_in1k",
+      "accuracy": 0.68354,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_m1.r224_in1k",
+      "accuracy": 0.6834,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.a3_in1k",
+      "accuracy": 0.6825,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla60x_c.in1k",
+      "accuracy": 0.67928,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_mobilenetv3_small_100.in1k",
+      "accuracy": 0.67922,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_small_100.lamb_in1k",
+      "accuracy": 0.67636,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "repghostnet_050.in1k",
+      "accuracy": 0.66978,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tinynet_d.in1k",
+      "accuracy": 0.66936,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet10t.c3_in1k",
+      "accuracy": 0.66724,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mnasnet_small.lamb_in1k",
+      "accuracy": 0.66204,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla46x_c.in1k",
+      "accuracy": 0.66008,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv2_050.lamb_in1k",
+      "accuracy": 0.65928,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_small_050.e3000_r224_in1k",
+      "accuracy": 0.65826,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_mobilenetv3_small_075.in1k",
+      "accuracy": 0.65706,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "resnet18.a3_in1k",
+      "accuracy": 0.6567,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_small_075.lamb_in1k",
+      "accuracy": 0.65284,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "dla46_c.in1k",
+      "accuracy": 0.6488,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv4_conv_small_050.e3000_r224_in1k",
+      "accuracy": 0.64778,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "efficientvit_m0.r224_in1k",
+      "accuracy": 0.63304,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "lcnet_050.ra2_in1k",
+      "accuracy": 0.63138,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tf_mobilenetv3_small_minimal_100.in1k",
+      "accuracy": 0.62892,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "tinynet_e.in1k",
+      "accuracy": 0.59874,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "mobilenetv3_small_050.lamb_in1k",
+      "accuracy": 0.57918,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_vit3.r160_in1k",
+      "accuracy": 0.56908,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_convnext2.r160_in1k",
+      "accuracy": 0.5352,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_convnext3.r160_in1k",
+      "accuracy": 0.53302,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_convnext.r160_in1k",
+      "accuracy": 0.47774,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_nfnet.r160_in1k",
+      "accuracy": 0.47634,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_efficientnet.r160_in1k",
+      "accuracy": 0.46506,
+      "trained_on_dataset": true
+    },
+    {
       "model_name": "test_efficientnet_evos.r160_in1k",
       "accuracy": 0.46504,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_byobnet.r160_in1k",
+      "accuracy": 0.45858,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_efficientnet_ln.r160_in1k",
+      "accuracy": 0.43958,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_efficientnet_gn.r160_in1k",
+      "accuracy": 0.43888,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_vit2.r160_in1k",
+      "accuracy": 0.4225,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_resnet.r160_in1k",
+      "accuracy": 0.41602,
+      "trained_on_dataset": true
+    },
+    {
+      "model_name": "test_vit.r160_in1k",
+      "accuracy": 0.40982,
       "trained_on_dataset": true
     }
   ],
