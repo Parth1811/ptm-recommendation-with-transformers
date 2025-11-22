@@ -69,13 +69,15 @@ def main() -> None:
     registry = extractor_config.extractor_registry
     default_class_name = extractor_config.default_extractor_class
 
-    # csv_path = Path("constants/models.csv")
-    csv_path = Path("constants/models-test.csv")
+    csv_path = Path("constants/models.csv")
+    # csv_path = Path("constants/models-test.csv")
     models = get_models(csv_path)
 
     # Determine number of workers (use all available cores)
-    num_workers = min(len(models), os.cpu_count() or 128)
+    num_workers = min(len(models), 1)  # Limit to 100 workers to avoid overload
 
+    print(f"Found {len(models)} models to process from {csv_path}")
+    print(f"Using {num_workers} parallel workers")
     logger.info(f"Found {len(models)} models to process from {csv_path}")
     logger.info(f"Using {num_workers} parallel workers")
 
