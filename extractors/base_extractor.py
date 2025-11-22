@@ -80,7 +80,7 @@ class BaseExtractor(ABC):
         data_tensor = torch.from_numpy(data).float().to(self.device)
 
         # Use torch-kmeans (automatically uses GPU if device is cuda)
-        kmeans = TorchKMeans(n_clusters=n_clusters, max_iter=300, init_method="kmeans++")
+        kmeans = TorchKMeans(n_clusters=n_clusters, max_iter=300, init_method="k-means++")
         cluster_ids = kmeans.fit_predict(data_tensor)
 
         # Get cluster centers and convert back to NumPy
