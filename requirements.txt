@@ -11,3 +11,4 @@ torchvision
 datasets
 Pillow
 faiss-gpu
+huggingface_hub
