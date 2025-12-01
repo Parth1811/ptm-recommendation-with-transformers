@@ -35,8 +35,42 @@ class ModelAutoEncoderTrainer(BaseTrainer):
         if dataset[0].numel() != self.model.encoder_input_size:
             raise ValueError(f"Input dimension mismatch: dataset sample has {dataset[0].numel()} features but encoder_input_size is {self.model.encoder_input_size}.")
 
-        self.dataloader = DataLoader(dataset, batch_size=self.config.batch_size, shuffle=self.config.shuffle, pin_memory=torch.cuda.is_available(), num_workers=self.config.num_workers)
-        self.val_dataloader = DataLoader(dataset, batch_size=self.config.batch_size, shuffle=False, pin_memory=torch.cuda.is_available(), num_workers=self.config.num_workers)
+        # create train / val / test splits (80% / 10% / 10%)
+        total_len = len(dataset)
+        train_len = int(0.8 * total_len)
+        val_len = int(0.1 * total_len)
+        test_len = total_len - train_len - val_len
+
+        # ensure reproducible splits if a seed is provided in config
+        seed = getattr(self.config, "seed", 42)
+        generator = torch.Generator()
+        generator.manual_seed(seed)
+
+        train_dataset, val_dataset, test_dataset = torch.utils.data.random_split(
+            dataset, [train_len, val_len, test_len], generator=generator
+        )
+
+        self.dataloader = DataLoader(
+            train_dataset,
+            batch_size=self.config.batch_size,
+            shuffle=self.config.shuffle,
+            pin_memory=torch.cuda.is_available(),
+            num_workers=self.config.num_workers,
+        )
+        self.val_dataloader = DataLoader(
+            val_dataset,
+            batch_size=self.config.batch_size,
+            shuffle=False,
+            pin_memory=torch.cuda.is_available(),
+            num_workers=self.config.num_workers,
+        )
+        self.test_dataloader = DataLoader(
+            test_dataset,
+            batch_size=self.config.batch_size,
+            shuffle=False,
+            pin_memory=torch.cuda.is_available(),
+            num_workers=self.config.num_workers,
+        )
         self.optimizer = Adam(self.model.parameters(), lr=self.config.learning_rate, weight_decay=self.config.weight_decay,betas=(self.config.beta1, self.config.beta2))
         self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=self.config.scheduler_factor, patience=self.config.scheduler_patience, min_lr=self.config.scheduler_min_lr)
 

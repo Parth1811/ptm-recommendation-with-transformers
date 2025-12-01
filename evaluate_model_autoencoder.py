@@ -58,6 +58,8 @@ def _load_model(config: ModelAutoEncoderEvalConfig, device: torch.device) -> Mod
 
     model = ModelAutoEncoder(device=device)
     state_dict = torch.load(weights_path, map_location=device)
+    if "model_state_dict" in state_dict:
+        state_dict = state_dict["model_state_dict"]
     model.load_state_dict(state_dict)
     model.eval()
     logger.info("Loaded AutoEncoder weights from %s", weights_path)
