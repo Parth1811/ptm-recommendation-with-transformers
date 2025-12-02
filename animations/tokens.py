@@ -34,6 +34,9 @@ class Tokens(VGroup):
             box.shift(RIGHT * i * (box_width + spacing))
             self.token_boxes.add(box)
 
+        # Center the token boxes
+        self.token_boxes.move_to(ORIGIN)
+
         self.add(self.token_boxes)
 
         # Add dimension label

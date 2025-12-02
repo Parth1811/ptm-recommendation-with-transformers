@@ -14,6 +14,8 @@ class RoundBox(VGroup):
         fill_opacity=0.3,
         stroke_color=WHITE,
         stroke_width=2,
+        text_align="center",
+        font_size=24,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -32,9 +34,28 @@ class RoundBox(VGroup):
 
         if content is not None:
             if isinstance(content, str):
-                self.content = Text(content, font_size=24)
+                # Map text_align to Manim's alignment parameter
+                alignment_map = {
+                    "left": LEFT,
+                    "center": ORIGIN,
+                    "right": RIGHT
+                }
+                align_point = alignment_map.get(text_align.lower(), ORIGIN)
+
+                self.content = Text(content, font_size=font_size)
+                # Align text within the box
+                if text_align.lower() == "center":
+                    self.content.move_to(self.box.get_center())
+                elif text_align.lower() == "left":
+                    self.content.move_to(self.box.get_center())
+                    self.content.align_to(self.box, LEFT)
+                    self.content.shift(RIGHT * 0.2)  # Small padding
+                elif text_align.lower() == "right":
+                    self.content.move_to(self.box.get_center())
+                    self.content.align_to(self.box, RIGHT)
+                    self.content.shift(LEFT * 0.2)  # Small padding
             else:
                 self.content = content
+                self.content.move_to(self.box.get_center())
 
-            self.content.move_to(self.box.get_center())
             self.add(self.content)

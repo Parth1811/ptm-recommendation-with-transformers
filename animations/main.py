@@ -11,15 +11,15 @@ class ShowcaseAll(Scene):
 
     def construct(self):
         # Title
-        title = Text("ML Pipeline Components", font_size=48)
-        self.play(Write(title), run_time=2)
-        self.play(FadeOut(title))
+        # title = Text("ML Pipeline Components", font_size=48)
+        # self.play(Write(title), run_time=2)
+        # self.play(FadeOut(title))
 
         # 1. Neural Network
         # self.show_neural_network()
 
         # # 2. Tokens
-        self.show_tokens()
+        # self.show_tokens()
 
         # # 3. Cross Attention Block
         # self.show_cross_attention()
@@ -28,7 +28,7 @@ class ShowcaseAll(Scene):
         # self.show_transformer()
 
         # # 5. Dataset Pipeline
-        # self.show_dataset_pipeline()
+        self.show_dataset_pipeline()
 
         # # 6. Round Box
         # self.show_round_box()
@@ -108,7 +108,7 @@ class ShowcaseAll(Scene):
         label.to_edge(UP)
 
         pipeline = DatasetPipeline()
-        pipeline.scale(0.5).shift(DOWN * 0.5)
+        pipeline.shift(DOWN * 0.5)
 
         self.play(Write(label))
         self.play(Create(pipeline), run_time=3)
