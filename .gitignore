@@ -5,6 +5,7 @@ __pycache__/
 
 # Extracted Data
 extracted/**
+**/media/**
 
 # C extensions
 *.so
