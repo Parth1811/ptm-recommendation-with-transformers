@@ -1,4 +1,5 @@
 from manim import *
+from color_constants import get_stroke_color, get_box_default_color
 
 
 class RoundBox(VGroup):
@@ -10,15 +11,21 @@ class RoundBox(VGroup):
         width=2,
         height=1,
         corner_radius=0.1,
-        fill_color=BLUE,
+        fill_color=None,
         fill_opacity=0.3,
-        stroke_color=WHITE,
+        stroke_color=None,
         stroke_width=2,
         text_align="center",
         font_size=24,
         **kwargs
     ):
         super().__init__(**kwargs)
+
+        # Set default colors if not provided
+        if fill_color is None:
+            fill_color = get_box_default_color()
+        if stroke_color is None:
+            stroke_color = get_stroke_color()
 
         self.box = RoundedRectangle(
             width=width,

@@ -1,3 +1,5 @@
+from color_constants import (MATERIAL_BLUE, MATERIAL_GREEN, MATERIAL_RED,
+                             ColorTheme, get_text_color)
 from dataset_pipeline import DatasetPipeline
 from manim import *
 from neural_network import NeuralNetwork
@@ -34,13 +36,13 @@ class ShowcaseAll(Scene):
         # self.show_round_box()
 
         # End
-        end_text = Text("End of Showcase", font_size=36)
+        end_text = Text("End of Showcase", font_size=36, color=get_text_color())
         self.play(Write(end_text), run_time=2)
         self.wait(1)
 
     def show_neural_network(self):
         """Display neural network."""
-        label = Text("Neural Network", font_size=32)
+        label = Text("Neural Network", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         nn = NeuralNetwork(
@@ -61,7 +63,7 @@ class ShowcaseAll(Scene):
 
     def show_tokens(self):
         """Display different token types."""
-        label = Text("Token Visualizations", font_size=32)
+        label = Text("Token Visualizations", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         # Model tokens
@@ -79,7 +81,7 @@ class ShowcaseAll(Scene):
 
     def show_cross_attention(self):
         """Display cross-attention block."""
-        label = Text("Cross Attention Block", font_size=32)
+        label = Text("Cross Attention Block", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         attention = CrossAttentionBlock()
@@ -91,7 +93,7 @@ class ShowcaseAll(Scene):
 
     def show_transformer(self):
         """Display transformer architecture."""
-        label = Text("Transformer Architecture", font_size=32)
+        label = Text("Transformer Architecture", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         transformer = Transformer(show_fc_layer=True)
@@ -104,27 +106,33 @@ class ShowcaseAll(Scene):
 
     def show_dataset_pipeline(self):
         """Display dataset processing pipeline."""
-        label = Text("Dataset Processing Pipeline", font_size=32)
+        label = Text("Dataset Processing Pipeline", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         pipeline = DatasetPipeline()
-        pipeline.shift(DOWN * 0.5)
+        pipeline.scale(0.7)
+        pipeline.shift(DOWN * 0.3)
 
         self.play(Write(label))
         self.play(Create(pipeline), run_time=3)
+        self.wait(1)
+
+        # Animate the forward pass (extended time for 3 samples)
+        pipeline.animate_forward(self, run_time=12)
+
         self.wait(2)
         self.play(FadeOut(pipeline), FadeOut(label))
 
     def show_round_box(self):
         """Display round box utility."""
-        label = Text("Round Box Utility", font_size=32)
+        label = Text("Round Box Utility", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         boxes = VGroup()
 
-        box1 = RoundBox("Example 1", width=2, height=1, fill_color=BLUE)
-        box2 = RoundBox("Example 2", width=2.5, height=1.2, fill_color=RED)
-        box3 = RoundBox("Example 3", width=1.8, height=0.8, fill_color=GREEN)
+        box1 = RoundBox("Example 1", width=2, height=1, fill_color=MATERIAL_BLUE)
+        box2 = RoundBox("Example 2", width=2.5, height=1.2, fill_color=MATERIAL_RED)
+        box3 = RoundBox("Example 3", width=1.8, height=0.8, fill_color=MATERIAL_GREEN)
 
         box1.shift(LEFT * 3)
         box3.shift(RIGHT * 3)
@@ -142,7 +150,7 @@ class NeuralNetworkScene(Scene):
 
     def construct(self):
         # Title with smooth animation
-        title = Text("Neural Network Forward Pass", font_size=36)
+        title = Text("Neural Network Forward Pass", font_size=36, color=get_text_color())
         title.to_edge(UP)
         self.play(FadeIn(title, shift=DOWN), run_time=0.8, rate_func=smooth)
         self.wait(0.5)
@@ -177,7 +185,12 @@ class DatasetPipelineScene(Scene):
         pipeline = DatasetPipeline()
         pipeline.scale(0.6)
         self.play(Create(pipeline), run_time=3)
-        self.wait(3)
+        self.wait(1)
+
+        # Animate the forward pass (extended time for 3 samples)
+        pipeline.animate_forward(self, run_time=12)
+
+        self.wait(2)
 
 
 class TokensScene(Scene):

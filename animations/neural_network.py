@@ -1,4 +1,5 @@
 from manim import *
+from color_constants import get_neural_node_color, get_neural_edge_color, get_stroke_color
 
 
 class NeuralNetwork(VGroup):
@@ -10,8 +11,8 @@ class NeuralNetwork(VGroup):
         layer_spacing=2,
         node_radius=0.15,
         node_opacity=0.8,
-        node_color=BLUE,
-        edge_color=BLUE_E,
+        node_color=None,
+        edge_color=None,
         edge_opacity=0.6,
         show_labels=True,
         abbreviated_hidden=False,
@@ -24,8 +25,8 @@ class NeuralNetwork(VGroup):
         self.layer_spacing = layer_spacing
         self.node_radius = node_radius
         self.node_opacity = node_opacity
-        self.node_color = node_color
-        self.edge_color = edge_color
+        self.node_color = node_color if node_color is not None else get_neural_node_color()
+        self.edge_color = edge_color if edge_color is not None else get_neural_edge_color()
         self.edge_opacity = edge_opacity
         self.abbreviated_hidden = abbreviated_hidden
         # Cap abbreviated_spacing to layer_spacing
@@ -66,9 +67,9 @@ class NeuralNetwork(VGroup):
                 y_offset = (num_nodes - 1) * node_spacing / 2
                 node = Circle(
                     radius=node_radius,
-                    fill_color=node_color,
+                    fill_color=self.node_color,
                     fill_opacity=self.node_opacity,
-                    stroke_color=WHITE,
+                    stroke_color=get_stroke_color(),
                     stroke_width=2,
                 )
                 node.move_to(
@@ -119,8 +120,8 @@ class NeuralNetwork(VGroup):
                         edge = Line(
                             node1_center,
                             end_point,
-                            stroke_color=edge_color,
-                            stroke_opacity=edge_opacity,
+                            stroke_color=self.edge_color,
+                            stroke_opacity=self.edge_opacity,
                             stroke_width=2,
                         )
                         layer_edges.add(edge)
@@ -140,8 +141,8 @@ class NeuralNetwork(VGroup):
                         edge = Line(
                             start_point,
                             node2_center,
-                            stroke_color=edge_color,
-                            stroke_opacity=edge_opacity,
+                            stroke_color=self.edge_color,
+                            stroke_opacity=self.edge_opacity,
                             stroke_width=2,
                         )
                         layer_edges.add(edge)
@@ -153,8 +154,8 @@ class NeuralNetwork(VGroup):
                         edge = Line(
                             node1.get_center(),
                             node2.get_center(),
-                            stroke_color=edge_color,
-                            stroke_opacity=edge_opacity,
+                            stroke_color=self.edge_color,
+                            stroke_opacity=self.edge_opacity,
                             stroke_width=2,
                         )
                         layer_edges.add(edge)

@@ -1,5 +1,6 @@
 from manim import *
 from round_box import RoundBox
+from color_constants import get_token_model_color, get_token_dataset_color
 
 
 class Tokens(VGroup):
@@ -14,12 +15,14 @@ class Tokens(VGroup):
         spacing=0.3,
         color=BLUE,
         label=None,
+        abbreviated=False,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         self.num_tokens = num_tokens
         self.token_dim = token_dim
+        self.abbreviated = abbreviated
 
         # Create token boxes
         self.token_boxes = VGroup()
@@ -33,6 +36,22 @@ class Tokens(VGroup):
             )
             box.shift(RIGHT * i * (box_width + spacing))
             self.token_boxes.add(box)
+
+        # Add "..." ellipsis if abbreviated
+        if abbreviated:
+            ellipsis_box = RoundBox(
+                width=box_width,
+                height=box_height,
+                fill_color=color,
+                fill_opacity=0.3,
+                stroke_color=WHITE,
+                stroke_width=1,
+            )
+            ellipsis_text = Text("...", font_size=32, color=WHITE)
+            ellipsis_text.move_to(ellipsis_box.get_center())
+            ellipsis_box.add(ellipsis_text)
+            ellipsis_box.shift(RIGHT * num_tokens * (box_width + spacing))
+            self.token_boxes.add(ellipsis_box)
 
         # Center the token boxes
         self.token_boxes.move_to(ORIGIN)
@@ -59,7 +78,7 @@ class ModelTokens(Tokens):
         super().__init__(
             num_tokens=num_models,
             token_dim=512,
-            color=PINK,
+            color=get_token_model_color(),
             label="Model Tokens",
             **kwargs
         )
@@ -72,7 +91,7 @@ class DatasetTokens(Tokens):
         super().__init__(
             num_tokens=num_samples,
             token_dim=512,
-            color=TEAL,
+            color=get_token_dataset_color(),
             label="Dataset Tokens",
             **kwargs
         )
