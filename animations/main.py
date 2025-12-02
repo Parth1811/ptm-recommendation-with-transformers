@@ -30,7 +30,7 @@ class ShowcaseAll(Scene):
         # self.show_transformer()
 
         # # 5. Dataset Pipeline
-        self.show_dataset_pipeline()
+        # self.show_dataset_pipeline()
 
         # # 6. Round Box
         # self.show_round_box()
@@ -145,65 +145,79 @@ class ShowcaseAll(Scene):
         self.play(FadeOut(boxes), FadeOut(label))
 
 
-class NeuralNetworkScene(Scene):
-    """Dedicated scene for neural network."""
+class RecommendationPipeline(Scene):
+    """Show the complete recommendation pipeline with model pipeline, dataset pipeline, and transformer."""
 
     def construct(self):
-        # Title with smooth animation
-        title = Text("Neural Network Forward Pass", font_size=36, color=get_text_color())
+        # Title
+        title = Text("Model Recommendation Pipeline", font_size=40, color=get_text_color())
         title.to_edge(UP)
-        self.play(FadeIn(title, shift=DOWN), run_time=0.8, rate_func=smooth)
+        self.play(Write(title))
         self.wait(0.5)
 
-        # Create network with smooth animation
-        nn = NeuralNetwork(layers=[4, 6, 6, 3])
-        self.play(Create(nn), run_time=2, rate_func=smooth)
-        self.wait(0.5)
+        # ===== MODEL PIPELINE (Top Left) =====
+        model_network = NeuralNetwork(
+            layers=[4, 3, 3, 4],
+            node_radius=0.15,
+            node_opacity=1,
+            layer_spacing=0.8,
+        )
+        model_network.scale(0.8)
+        model_network.shift(LEFT * 5 + UP * 1.5)
 
-        # Fade out title
-        self.play(FadeOut(title, shift=UP), run_time=0.5, rate_func=smooth)
+        model_pipeline_label = RoundBox(
+            "Model\nPipeline",
+            width=1.5,
+            height=1.2,
+            fill_color=MATERIAL_BLUE,
+            text_align="center",
+            font_size=18,
+        )
+        model_pipeline_label.next_to(model_network, RIGHT, buff=0.3)
 
-        # Forward pass animation
-        nn.animate_forward_pass(self, run_time=4)
-        self.wait(1)
+        model_tokens = ModelTokens(num_models=3, abbreviated=True)
+        model_tokens.scale(0.8)
+        model_tokens.next_to(model_pipeline_label, RIGHT, buff=0.3)
+
+        # ===== DATASET PIPELINE (Bottom Left) =====
+        dataset_pipeline = DatasetPipeline()
+        dataset_pipeline.next_to(model_network, DOWN, buff=0.5)
+        dataset_pipeline.scale(0.6)
+        dataset_pipeline.shift(RIGHT * 4 + UP * 0.5)
 
 
-class TransformerScene(Scene):
-    """Dedicated scene for transformer."""
-
-    def construct(self):
+        # ===== TRANSFORMER (Right) =====
         transformer = Transformer(show_fc_layer=True)
-        transformer.scale(0.8)
-        self.play(Create(transformer))
-        self.wait(3)
+        transformer.next_to(model_tokens, RIGHT)
+        transformer.scale(0.6)
+        transformer.shift(DOWN * 1.5 + LEFT * 1)
 
+        # Create all components
+        self.play(Create(model_network), run_time=2)
+        self.play(Create(model_pipeline_label), run_time=1)
+        self.play(Create(model_tokens), run_time=1)
 
-class DatasetPipelineScene(Scene):
-    """Dedicated scene for dataset pipeline."""
+        self.play(Create(dataset_pipeline), run_time=2)
 
-    def construct(self):
-        pipeline = DatasetPipeline()
-        pipeline.scale(0.6)
-        self.play(Create(pipeline), run_time=3)
+        self.play(Create(transformer), run_time=2)
         self.wait(1)
 
-        # Animate the forward pass (extended time for 3 samples)
-        pipeline.animate_forward(self, run_time=12)
-
-        self.wait(2)
-
-
-class TokensScene(Scene):
-    """Dedicated scene for tokens."""
-
-    def construct(self):
-        model_tokens = ModelTokens(num_models=5)
-        model_tokens.shift(UP * 2)
-
-        dataset_tokens = DatasetTokens(num_samples=3)
-        dataset_tokens.shift(DOWN * 2)
-
-        self.play(Create(model_tokens))
+        # Animate model pipeline forward pass
+        model_network.animate_forward_pass(self, run_time=3)
         self.wait(1)
-        self.play(Create(dataset_tokens))
-        self.wait(2)
+
+        # Animate dataset pipeline forward pass
+        dataset_pipeline.animate_forward(self, run_time=8)
+        self.wait(1)
+
+        # Fade out all components
+        self.play(
+            FadeOut(title),
+            FadeOut(model_network),
+            FadeOut(model_pipeline_label),
+            FadeOut(model_tokens),
+            FadeOut(dataset_pipeline),
+            FadeOut(transformer),
+        )
+        self.wait(1)
+
