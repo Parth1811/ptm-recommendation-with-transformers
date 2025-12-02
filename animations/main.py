@@ -12,15 +12,14 @@ class ShowcaseAll(Scene):
     def construct(self):
         # Title
         title = Text("ML Pipeline Components", font_size=48)
-        self.play(Write(title))
-        self.wait(1)
+        self.play(Write(title), run_time=2)
         self.play(FadeOut(title))
 
         # 1. Neural Network
-        self.show_neural_network()
+        # self.show_neural_network()
 
         # # 2. Tokens
-        # self.show_tokens()
+        self.show_tokens()
 
         # # 3. Cross Attention Block
         # self.show_cross_attention()
@@ -36,8 +35,8 @@ class ShowcaseAll(Scene):
 
         # End
         end_text = Text("End of Showcase", font_size=36)
-        self.play(Write(end_text))
-        self.wait(2)
+        self.play(Write(end_text), run_time=2)
+        self.wait(1)
 
     def show_neural_network(self):
         """Display neural network."""
@@ -48,13 +47,15 @@ class ShowcaseAll(Scene):
             layers=[3, 5, 4, 2],
             node_radius=0.2,
             node_opacity=1,
-            layer_spacing=1
+            layer_spacing=1,
+            abbreviated_hidden=True,
+            abbreviated_spacing=0.8,
         )
         nn.scale(1.6)
 
         self.play(Write(label))
         self.play(Create(nn))
-        nn.animate_forward_pass(self, run_time=2)
+        nn.animate_forward_pass(self, run_time=5)
         self.wait(1)
         self.play(FadeOut(nn), FadeOut(label))
 
@@ -140,10 +141,23 @@ class NeuralNetworkScene(Scene):
     """Dedicated scene for neural network."""
 
     def construct(self):
+        # Title with smooth animation
+        title = Text("Neural Network Forward Pass", font_size=36)
+        title.to_edge(UP)
+        self.play(FadeIn(title, shift=DOWN), run_time=0.8, rate_func=smooth)
+        self.wait(0.5)
+
+        # Create network with smooth animation
         nn = NeuralNetwork(layers=[4, 6, 6, 3])
-        self.play(Create(nn))
-        nn.animate_forward_pass(self, run_time=3)
-        self.wait(2)
+        self.play(Create(nn), run_time=2, rate_func=smooth)
+        self.wait(0.5)
+
+        # Fade out title
+        self.play(FadeOut(title, shift=UP), run_time=0.5, rate_func=smooth)
+
+        # Forward pass animation
+        nn.animate_forward_pass(self, run_time=4)
+        self.wait(1)
 
 
 class TransformerScene(Scene):

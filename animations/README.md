@@ -29,13 +29,19 @@ dataset_tokens = DatasetTokens(num_samples=4)
 ```
 
 ### 3. `neural_network.py`
-Neural network visualization with configurable layers.
+Neural network visualization with configurable layers and smooth forward pass animation.
+
+**Features:**
+- Configurable layer sizes
+- Smooth color flow from nodes through edges to next layer
+- Customizable flow color and timing
+- Automatic centering
 
 **Usage:**
 ```python
-from animations.neural_network import NeuralNetwork
+from neural_network import NeuralNetwork
 nn = NeuralNetwork(layers=[4, 6, 6, 3])  # [input, hidden1, hidden2, output]
-nn.animate_forward_pass(scene, run_time=2)
+nn.animate_forward_pass(scene, run_time=4, flow_color=YELLOW)
 ```
 
 ### 4. `transformer.py`
