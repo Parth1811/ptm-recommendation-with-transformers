@@ -255,19 +255,14 @@ def main(results_path: str | Path = "artifacts/transformer_results.csv", output_
 
     if not results_path.exists():
         logger.error(f"Results file not found: {results_path}")
-        logger.info("Please run test_transformer.py first to generate results.")
         return
 
-    logger.info(f"Loading results from {results_path}")
+    # Load and evaluate results
     results = load_results(results_path)
-    logger.info(f"Loaded {len(results)} result rows")
-
-    # Evaluate each row
     all_metrics: list[RankingMetrics] = []
     detailed_results = []
 
-    logger.info("Calculating rank correlation metrics...")
-    for i, row in enumerate(results):
+    for row in results:
         true_ranks = parse_rank_list(row['true_ranks'])
         pred_ranks = parse_rank_list(row['predicted_ranks'])
 
@@ -288,67 +283,73 @@ def main(results_path: str | Path = "artifacts/transformer_results.csv", output_
             'loss': row['loss'],
         })
 
-    # Calculate aggregate statistics
-    logger.info("\n" + "=" * 70)
+    # Print results
+    logger.info("\n" + "=" * 80)
     logger.info("RANKING EVALUATION RESULTS")
-    logger.info("=" * 70)
+    logger.info("=" * 80)
 
+    # Overall aggregate metrics
     metrics_arrays = {
         'Kendall Tau-a': [m.kendall_tau_a for m in all_metrics],
         'Kendall Tau-b': [m.kendall_tau_b for m in all_metrics],
-        'Kendall Tau-w (Model Spider)': [m.kendall_tau_w for m in all_metrics],
+        'Kendall Tau-w': [m.kendall_tau_w for m in all_metrics],
         'Spearman Rho': [m.spearman_rho for m in all_metrics],
         'NDCG': [m.ndcg for m in all_metrics],
         'Average Precision': [m.average_precision for m in all_metrics],
     }
 
-    logger.info("\nAggregate Metrics (mean ± std):")
-    logger.info("-" * 70)
+    logger.info("\nOVERALL METRICS (n={} datasets):".format(len(results)))
+    logger.info("-" * 80)
     for metric_name, values in metrics_arrays.items():
         mean_val = np.mean(values)
         std_val = np.std(values)
-        min_val = np.min(values)
-        max_val = np.max(values)
-        logger.info(f"{metric_name:20s}: {mean_val:.4f} ± {std_val:.4f}  (min: {min_val:.4f}, max: {max_val:.4f})")
+        logger.info(f"{metric_name:20s}: {mean_val:.4f} ± {std_val:.4f}")
 
-    # Count pairs
-    total_concordant = sum(m.num_concordant for m in all_metrics)
-    total_discordant = sum(m.num_discordant for m in all_metrics)
-    total_ties = sum(m.num_ties for m in all_metrics)
+    # Per-dataset breakdown
+    logger.info("\n" + "=" * 80)
+    logger.info("PER-DATASET METRICS")
+    logger.info("=" * 80)
 
-    logger.info("\nPair Counts:")
-    logger.info("-" * 70)
-    logger.info(f"Total Concordant Pairs: {total_concordant:,}")
-    logger.info(f"Total Discordant Pairs: {total_discordant:,}")
-    logger.info(f"Total Tied Pairs: {total_ties:,}")
+    # Sort by tau_w (primary metric) descending
+    sorted_results = sorted(detailed_results, key=lambda x: x['kendall_tau_w'], reverse=True)
+
+    logger.info(f"\n{'Dataset':<20} {'τ_a':>8} {'τ_b':>8} {'τ_w':>8} {'ρ':>8} {'NDCG':>8} {'AP':>8}")
+    logger.info("-" * 80)
+    for result in sorted_results:
+        logger.info(
+            f"{result['dataset_name']:<20} "
+            f"{result['kendall_tau_a']:>8.4f} "
+            f"{result['kendall_tau_b']:>8.4f} "
+            f"{result['kendall_tau_w']:>8.4f} "
+            f"{result['spearman_rho']:>8.4f} "
+            f"{result['ndcg']:>8.4f} "
+            f"{result['average_precision']:>8.4f}"
+        )
 
     # Save detailed results if requested
     if output_path:
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        logger.info(f"\nSaving detailed metrics to {output_path}")
         with open(output_path, 'w', newline='') as f:
             fieldnames = list(detailed_results[0].keys())
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(detailed_results)
 
-        logger.info(f"Detailed metrics saved to {output_path}")
+        logger.info(f"\nDetailed metrics saved to {output_path}")
 
-    logger.info("=" * 70)
-    logger.info("\nMetric Interpretation:")
-    logger.info("-" * 70)
-    logger.info("Kendall Tau: Measures ordinal association (-1 to 1)")
-    logger.info("  - Tau-a: Original Kendall (1938), no tie adjustment")
-    logger.info("  - Tau-b: Adjusted for ties in both rankings")
-    logger.info("  - Tau-w: Weighted version (Model Spider, NeurIPS 2023)")
-    logger.info("           Gives higher weight to top-ranked items")
-    logger.info("           Weight for exchange at ranks r,s: 1/(r+1) + 1/(s+1)")
-    logger.info("Spearman Rho: Pearson correlation on ranks (-1 to 1)")
-    logger.info("NDCG: Normalized discounted cumulative gain (0 to 1)")
-    logger.info("Average Precision: Mean precision at relevant positions (0 to 1)")
-    logger.info("=" * 70)
+    logger.info("\n" + "=" * 80)
+    logger.info("METRIC LEGEND")
+    logger.info("-" * 80)
+    logger.info("τ_a  = Kendall Tau-a (original, no tie adjustment)")
+    logger.info("τ_b  = Kendall Tau-b (adjusted for ties)")
+    logger.info("τ_w  = Kendall Tau-w (weighted, Model Spider metric)")
+    logger.info("       Weight: 1/(r+1) + 1/(s+1) for ranks r,s")
+    logger.info("ρ    = Spearman's Rho (Pearson correlation on ranks)")
+    logger.info("NDCG = Normalized Discounted Cumulative Gain")
+    logger.info("AP   = Average Precision")
+    logger.info("=" * 80)
 
 
 if __name__ == "__main__":
