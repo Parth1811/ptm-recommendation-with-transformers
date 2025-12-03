@@ -259,46 +259,49 @@ def main(results_path: str | Path = "artifacts/transformer_results.csv", output_
 
     # Load and evaluate results
     results = load_results(results_path)
-    all_metrics: list[RankingMetrics] = []
-    detailed_results = []
+
+    # Group results by dataset name
+    from collections import defaultdict
+    dataset_metrics: dict[str, list[RankingMetrics]] = defaultdict(list)
 
     for row in results:
         true_ranks = parse_rank_list(row['true_ranks'])
         pred_ranks = parse_rank_list(row['predicted_ranks'])
 
         metrics = evaluate_ranking(true_ranks, pred_ranks)
-        all_metrics.append(metrics)
+        dataset_metrics[row['dataset_name']].append(metrics)
 
-        detailed_results.append({
-            'dataset_name': row['dataset_name'],
-            'kendall_tau_a': metrics.kendall_tau_a,
-            'kendall_tau_b': metrics.kendall_tau_b,
-            'kendall_tau_w': metrics.kendall_tau_w,
-            'spearman_rho': metrics.spearman_rho,
-            'ndcg': metrics.ndcg,
-            'average_precision': metrics.average_precision,
-            'concordant_pairs': metrics.num_concordant,
-            'discordant_pairs': metrics.num_discordant,
-            'tied_pairs': metrics.num_ties,
-            'loss': row['loss'],
-        })
+    # Average metrics for each unique dataset
+    averaged_results = []
+    for dataset_name, metrics_list in dataset_metrics.items():
+        avg_result = {
+            'dataset_name': dataset_name,
+            'kendall_tau_a': np.mean([m.kendall_tau_a for m in metrics_list]),
+            'kendall_tau_b': np.mean([m.kendall_tau_b for m in metrics_list]),
+            'kendall_tau_w': np.mean([m.kendall_tau_w for m in metrics_list]),
+            'spearman_rho': np.mean([m.spearman_rho for m in metrics_list]),
+            'ndcg': np.mean([m.ndcg for m in metrics_list]),
+            'average_precision': np.mean([m.average_precision for m in metrics_list]),
+            'num_samples': len(metrics_list),
+        }
+        averaged_results.append(avg_result)
 
     # Print results
     logger.info("\n" + "=" * 80)
     logger.info("RANKING EVALUATION RESULTS")
     logger.info("=" * 80)
 
-    # Overall aggregate metrics
+    # Overall aggregate metrics (averaged across unique datasets)
     metrics_arrays = {
-        'Kendall Tau-a': [m.kendall_tau_a for m in all_metrics],
-        'Kendall Tau-b': [m.kendall_tau_b for m in all_metrics],
-        'Kendall Tau-w': [m.kendall_tau_w for m in all_metrics],
-        'Spearman Rho': [m.spearman_rho for m in all_metrics],
-        'NDCG': [m.ndcg for m in all_metrics],
-        'Average Precision': [m.average_precision for m in all_metrics],
+        'Kendall Tau-a': [r['kendall_tau_a'] for r in averaged_results],
+        'Kendall Tau-b': [r['kendall_tau_b'] for r in averaged_results],
+        'Kendall Tau-w': [r['kendall_tau_w'] for r in averaged_results],
+        'Spearman Rho': [r['spearman_rho'] for r in averaged_results],
+        'NDCG': [r['ndcg'] for r in averaged_results],
+        'Average Precision': [r['average_precision'] for r in averaged_results],
     }
 
-    logger.info("\nOVERALL METRICS (n={} datasets):".format(len(results)))
+    logger.info("\nOVERALL METRICS (n={} unique datasets):".format(len(averaged_results)))
     logger.info("-" * 80)
     for metric_name, values in metrics_arrays.items():
         mean_val = np.mean(values)
@@ -311,7 +314,7 @@ def main(results_path: str | Path = "artifacts/transformer_results.csv", output_
     logger.info("=" * 80)
 
     # Sort by tau_w (primary metric) descending
-    sorted_results = sorted(detailed_results, key=lambda x: x['kendall_tau_w'], reverse=True)
+    sorted_results = sorted(averaged_results, key=lambda x: x['kendall_tau_w'], reverse=True)
 
     logger.info(f"\n{'Dataset':<20} {'τ_a':>8} {'τ_b':>8} {'τ_w':>8} {'ρ':>8} {'NDCG':>8} {'AP':>8}")
     logger.info("-" * 80)
@@ -332,10 +335,10 @@ def main(results_path: str | Path = "artifacts/transformer_results.csv", output_
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(output_path, 'w', newline='') as f:
-            fieldnames = list(detailed_results[0].keys())
+            fieldnames = list(averaged_results[0].keys())
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
-            writer.writerows(detailed_results)
+            writer.writerows(averaged_results)
 
         logger.info(f"\nDetailed metrics saved to {output_path}")
 
