@@ -5,6 +5,7 @@ from animations.tokens import Tokens, ModelTokens, DatasetTokens
 from animations.neural_network import NeuralNetwork
 from animations.transformer import Transformer, CrossAttentionBlock
 from animations.dataset_pipeline import DatasetPipeline
+from animations.moving_pipeline import MovingRecommendationPipeline, FocusedPipelineView
 
 __all__ = [
     "RoundBox",
@@ -15,4 +16,6 @@ __all__ = [
     "Transformer",
     "CrossAttentionBlock",
     "DatasetPipeline",
+    "MovingRecommendationPipeline",
+    "FocusedPipelineView",
 ]

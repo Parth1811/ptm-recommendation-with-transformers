@@ -69,24 +69,33 @@ pipeline = DatasetPipeline()
 
 ## Running Animations
 
+### New: Moving Camera Scenes (Recommended for Presentations)
+```bash
+# Full pipeline with camera panning (60-90 seconds)
+manim -pql animations/moving_pipeline.py MovingRecommendationPipeline
+
+# Focused view with dramatic zooms (30-40 seconds)
+manim -pql animations/moving_pipeline.py FocusedPipelineView
+
+# High quality for presentations
+manim -pqh animations/moving_pipeline.py MovingRecommendationPipeline
+```
+
 ### Run the main showcase (all components):
 ```bash
 manim -pql main.py ShowcaseAll
 ```
 
-### Run individual scenes:
+### Run static pipeline scenes:
 ```bash
-# Neural Network only
-manim -pql main.py NeuralNetworkScene
+# Simple static pipeline overview
+manim -pql main.py RecommendationPipelineBasic
 
-# Transformer only
-manim -pql main.py TransformerScene
+# Detailed pipeline with zoom animations
+manim -pql main.py RecommendationPipelineAnimated
 
-# Dataset Pipeline only
-manim -pql main.py DatasetPipelineScene
-
-# Tokens only
-manim -pql main.py TokensScene
+# Birds-eye view of attention mechanisms
+manim -pql main.py ShowcaseAll  # Includes BirdsEyeView demo
 ```
 
 ### Quality Options:
@@ -124,18 +133,43 @@ Then run:
 manim -pql main.py MyCustomScene
 ```
 
+### 6. `moving_pipeline.py` (NEW)
+MovingCameraScene implementations with dynamic camera movements.
+
+**Scenes:**
+- `MovingRecommendationPipeline` - Full pipeline with camera panning to different sections
+- `FocusedPipelineView` - Dramatic close-ups on individual components
+
+**Features:**
+- Bird's eye view of entire pipeline
+- Camera pans to model pipeline, dataset pipeline, and transformer
+- Smooth transitions with professional timing
+- Section-focused narrative structure
+
+**Camera Movement Sequence:**
+1. Overview of complete pipeline
+2. Zoom to model embedding section (network → tokens)
+3. Zoom to dataset processing section (clustering → encoding)
+4. Return to overview showing transformer integration
+
+**See:** `MOVING_CAMERA_README.md` and `CAMERA_REFERENCE.md` for detailed usage
+
 ## File Structure
 
 ```
 animations/
-├── round_box.py          # Utility: rounded rectangles
-├── tokens.py             # Token visualizations
-├── neural_network.py     # Neural network with layers
-├── transformer.py        # Transformer & attention blocks
-├── dataset_pipeline.py   # Dataset processing pipeline
-├── main.py              # Showcase scenes
-├── manim.cfg            # Manim configuration
-└── README.md            # This file
+├── round_box.py               # Utility: rounded rectangles
+├── tokens.py                  # Token visualizations
+├── neural_network.py          # Neural network with layers
+├── transformer.py             # Transformer & attention blocks
+├── dataset_pipeline.py        # Dataset processing pipeline
+├── birdseyeview.py            # Attention mechanism views
+├── color_constants.py         # Color theme system
+├── main.py                    # Static showcase scenes
+├── moving_pipeline.py         # MovingCameraScene implementations (NEW)
+├── MOVING_CAMERA_README.md    # Moving camera detailed guide (NEW)
+├── CAMERA_REFERENCE.md        # Camera operations reference (NEW)
+└── README.md                  # This file
 ```
 
 ## Tips
