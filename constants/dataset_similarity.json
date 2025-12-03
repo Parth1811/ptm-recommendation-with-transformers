@@ -11,7 +11,8 @@
     "CIFAR-100": 0.1,
     "Caltech-101": 0.15,
     "HAM10000": 0.05,
-    "pokemon-classification": 0.1
+    "pokemon-classification": 0.1,
+    "Aircraft": 0.15
   },
   "SVHN": {
     "MNIST": 0.6,
@@ -25,7 +26,8 @@
     "CIFAR-100": 0.15,
     "Caltech-101": 0.2,
     "HAM10000": 0.05,
-    "pokemon-classification": 0.15
+    "pokemon-classification": 0.15,
+    "Aircraft": 0.2
   },
   "USPS Digits": {
     "MNIST": 0.85,
@@ -39,7 +41,8 @@
     "CIFAR-100": 0.1,
     "Caltech-101": 0.15,
     "HAM10000": 0.05,
-    "pokemon-classification": 0.1
+    "pokemon-classification": 0.1,
+    "Aircraft": 0.15
   },
   "Fashion-MNIST": {
     "MNIST": 0.4,
@@ -53,7 +56,8 @@
     "CIFAR-100": 0.2,
     "Caltech-101": 0.35,
     "HAM10000": 0.2,
-    "pokemon-classification": 0.25
+    "pokemon-classification": 0.25,
+    "Aircraft": 0.3
   },
   "Deepfashion Inshop": {
     "MNIST": 0.1,
@@ -67,7 +71,8 @@
     "CIFAR-100": 0.25,
     "Caltech-101": 0.45,
     "HAM10000": 0.25,
-    "pokemon-classification": 0.35
+    "pokemon-classification": 0.35,
+    "Aircraft": 0.4
   },
   "Fashion Product": {
     "MNIST": 0.1,
@@ -81,7 +86,8 @@
     "CIFAR-100": 0.3,
     "Caltech-101": 0.5,
     "HAM10000": 0.3,
-    "pokemon-classification": 0.4
+    "pokemon-classification": 0.4,
+    "Aircraft": 0.45
   },
   "ImageNet 1k": {
     "MNIST": 0.05,
@@ -95,7 +101,8 @@
     "CIFAR-100": 1.0,
     "Caltech-101": 0.8,
     "HAM10000": 0.3,
-    "pokemon-classification": 0.7
+    "pokemon-classification": 0.7,
+    "Aircraft": 0.75
   },
   "CIFAR-10": {
     "MNIST": 0.2,
@@ -109,7 +116,8 @@
     "CIFAR-100": 0.75,
     "Caltech-101": 0.55,
     "HAM10000": 0.25,
-    "pokemon-classification": 0.65
+    "pokemon-classification": 0.65,
+    "Aircraft": 0.6
   },
   "CIFAR-100": {
     "MNIST": 0.1,
@@ -123,7 +131,8 @@
     "CIFAR-100": 1.0,
     "Caltech-101": 0.65,
     "HAM10000": 0.25,
-    "pokemon-classification": 0.7
+    "pokemon-classification": 0.7,
+    "Aircraft": 0.7
   },
   "Caltech-101": {
     "MNIST": 0.15,
@@ -137,7 +146,8 @@
     "CIFAR-100": 0.65,
     "Caltech-101": 1.0,
     "HAM10000": 0.35,
-    "pokemon-classification": 0.75
+    "pokemon-classification": 0.75,
+    "Aircraft": 0.8
   },
   "HAM10000": {
     "MNIST": 0.05,
@@ -151,7 +161,8 @@
     "CIFAR-100": 0.25,
     "Caltech-101": 0.35,
     "HAM10000": 1.0,
-    "pokemon-classification": 0.2
+    "pokemon-classification": 0.2,
+    "Aircraft": 0.25
   },
   "pokemon-classification": {
     "MNIST": 0.1,
@@ -165,6 +176,22 @@
     "CIFAR-100": 0.7,
     "Caltech-101": 0.75,
     "HAM10000": 0.2,
-    "pokemon-classification": 1.0
+    "pokemon-classification": 1.0,
+    "Aircraft": 0.75
+  },
+  "Aircraft": {
+    "MNIST": 0.15,
+    "SVHN": 0.2,
+    "USPS Digits": 0.15,
+    "Fashion-MNIST": 0.3,
+    "Deepfashion Inshop": 0.4,
+    "Fashion Product": 0.45,
+    "ImageNet 1k": 0.75,
+    "CIFAR-10": 0.6,
+    "CIFAR-100": 0.7,
+    "Caltech-101": 0.8,
+    "HAM10000": 0.25,
+    "pokemon-classification": 0.75,
+    "Aircraft": 1.0
   }
 }
