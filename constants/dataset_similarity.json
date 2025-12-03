@@ -11,7 +11,7 @@
     "CIFAR-100": 0.1,
     "Caltech-101": 0.15,
     "HAM10000": 0.05,
-    "pokemon-classification": 0.1,
+    "pokemon": 0.1,
     "Aircraft": 0.15
   },
   "SVHN": {
@@ -26,7 +26,7 @@
     "CIFAR-100": 0.15,
     "Caltech-101": 0.2,
     "HAM10000": 0.05,
-    "pokemon-classification": 0.15,
+    "pokemon": 0.15,
     "Aircraft": 0.2
   },
   "USPS Digits": {
@@ -41,7 +41,7 @@
     "CIFAR-100": 0.1,
     "Caltech-101": 0.15,
     "HAM10000": 0.05,
-    "pokemon-classification": 0.1,
+    "pokemon": 0.1,
     "Aircraft": 0.15
   },
   "Fashion-MNIST": {
@@ -56,7 +56,7 @@
     "CIFAR-100": 0.2,
     "Caltech-101": 0.35,
     "HAM10000": 0.2,
-    "pokemon-classification": 0.25,
+    "pokemon": 0.25,
     "Aircraft": 0.3
   },
   "Deepfashion Inshop": {
@@ -71,7 +71,7 @@
     "CIFAR-100": 0.25,
     "Caltech-101": 0.45,
     "HAM10000": 0.25,
-    "pokemon-classification": 0.35,
+    "pokemon": 0.35,
     "Aircraft": 0.4
   },
   "Fashion Product": {
@@ -86,7 +86,7 @@
     "CIFAR-100": 0.3,
     "Caltech-101": 0.5,
     "HAM10000": 0.3,
-    "pokemon-classification": 0.4,
+    "pokemon": 0.4,
     "Aircraft": 0.45
   },
   "ImageNet 1k": {
@@ -101,7 +101,7 @@
     "CIFAR-100": 1.0,
     "Caltech-101": 0.8,
     "HAM10000": 0.3,
-    "pokemon-classification": 0.7,
+    "pokemon": 0.7,
     "Aircraft": 0.75
   },
   "CIFAR-10": {
@@ -116,7 +116,7 @@
     "CIFAR-100": 0.75,
     "Caltech-101": 0.55,
     "HAM10000": 0.25,
-    "pokemon-classification": 0.65,
+    "pokemon": 0.65,
     "Aircraft": 0.6
   },
   "CIFAR-100": {
@@ -131,7 +131,7 @@
     "CIFAR-100": 1.0,
     "Caltech-101": 0.65,
     "HAM10000": 0.25,
-    "pokemon-classification": 0.7,
+    "pokemon": 0.7,
     "Aircraft": 0.7
   },
   "Caltech-101": {
@@ -146,7 +146,7 @@
     "CIFAR-100": 0.65,
     "Caltech-101": 1.0,
     "HAM10000": 0.35,
-    "pokemon-classification": 0.75,
+    "pokemon": 0.75,
     "Aircraft": 0.8
   },
   "HAM10000": {
@@ -161,10 +161,10 @@
     "CIFAR-100": 0.25,
     "Caltech-101": 0.35,
     "HAM10000": 1.0,
-    "pokemon-classification": 0.2,
+    "pokemon": 0.2,
     "Aircraft": 0.25
   },
-  "pokemon-classification": {
+  "pokemon": {
     "MNIST": 0.1,
     "SVHN": 0.15,
     "USPS Digits": 0.1,
@@ -176,7 +176,7 @@
     "CIFAR-100": 0.7,
     "Caltech-101": 0.75,
     "HAM10000": 0.2,
-    "pokemon-classification": 1.0,
+    "pokemon": 1.0,
     "Aircraft": 0.75
   },
   "Aircraft": {
@@ -191,7 +191,7 @@
     "CIFAR-100": 0.7,
     "Caltech-101": 0.8,
     "HAM10000": 0.25,
-    "pokemon-classification": 0.75,
+    "pokemon": 0.75,
     "Aircraft": 1.0
   }
 }

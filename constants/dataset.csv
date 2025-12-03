@@ -13,4 +13,4 @@ HAM10000,https://huggingface.co/datasets/Nagabu/HAM10000
 LIDC-IDRI,https://huggingface.co/datasets/jmanuelc87/lidc-idri-segmentation
 BCW,https://huggingface.co/datasets/scikit-learn/breast-cancer-wisconsin
 pokemon,https://huggingface.co/datasets/valhalla/pokemon-dataset
-Aircraft,https://huggingface.co/datasets/Multimodal-Fatima/FGVC_Aircraft_train
+Aircraft,https://huggingface.co/datasets/dpdl-benchmark/fgvc_aircraft
