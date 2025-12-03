@@ -1,9 +1,12 @@
 """Evaluation script for ranking metrics based on Kendall's rank correlation.
 
 This script implements evaluation metrics from:
-Kendall, M. G. (1938). "A NEW MEASURE OF RANK CORRELATION". Biometrika, 30(1-2), 81-93.
+- Kendall, M. G. (1938). "A NEW MEASURE OF RANK CORRELATION". Biometrika, 30(1-2), 81-93.
+- Weighted Kendall's tau (τ_w) as used in Model Spider (NeurIPS 2023)
 
 Calculates rank correlation metrics between predicted and true model rankings.
+The weighted tau gives higher importance to correctly ranking top items, which is
+critical for model recommendation tasks.
 """
 
 from __future__ import annotations
@@ -27,7 +30,7 @@ class RankingMetrics:
 
     kendall_tau_a: float
     kendall_tau_b: float
-    kendall_tau_c: float
+    kendall_tau_w: float  # Weighted tau (Model Spider metric)
     spearman_rho: float
     ndcg: float
     average_precision: float
@@ -191,12 +194,13 @@ def evaluate_ranking(true_ranks: list[int], pred_ranks: list[int]) -> RankingMet
     # Tau-b (accounts for ties)
     tau_b, _ = stats.kendalltau(true_array, pred_array)
 
-    # Tau-c (for rectangular tables, same as tau-b for square tables)
-    # Using weighted tau which is similar to tau-c
+    # Weighted Tau (τ_w) - Used in Model Spider paper
+    # Gives higher importance to correctly ranking items at the top
+    # Weight for exchange between ranks r and s: 1/(r+1) + 1/(s+1)
     try:
-        tau_c, _ = stats.weightedtau(true_array, pred_array)
+        tau_w, _ = stats.weightedtau(true_array, pred_array)
     except Exception:
-        tau_c = tau_b  # Fallback to tau-b if weighted tau fails
+        tau_w = tau_b  # Fallback to tau-b if weighted tau fails
 
     # Calculate Spearman's rho for comparison
     spearman_rho, _ = stats.spearmanr(true_array, pred_array)
@@ -213,7 +217,7 @@ def evaluate_ranking(true_ranks: list[int], pred_ranks: list[int]) -> RankingMet
     return RankingMetrics(
         kendall_tau_a=tau_a,
         kendall_tau_b=tau_b,
-        kendall_tau_c=tau_c,
+        kendall_tau_w=tau_w,
         spearman_rho=spearman_rho,
         ndcg=ndcg,
         average_precision=avg_precision,
@@ -274,7 +278,7 @@ def main(results_path: str | Path = "artifacts/transformer_results.csv", output_
             'dataset_name': row['dataset_name'],
             'kendall_tau_a': metrics.kendall_tau_a,
             'kendall_tau_b': metrics.kendall_tau_b,
-            'kendall_tau_c': metrics.kendall_tau_c,
+            'kendall_tau_w': metrics.kendall_tau_w,
             'spearman_rho': metrics.spearman_rho,
             'ndcg': metrics.ndcg,
             'average_precision': metrics.average_precision,
@@ -292,7 +296,7 @@ def main(results_path: str | Path = "artifacts/transformer_results.csv", output_
     metrics_arrays = {
         'Kendall Tau-a': [m.kendall_tau_a for m in all_metrics],
         'Kendall Tau-b': [m.kendall_tau_b for m in all_metrics],
-        'Kendall Tau-c': [m.kendall_tau_c for m in all_metrics],
+        'Kendall Tau-w (Model Spider)': [m.kendall_tau_w for m in all_metrics],
         'Spearman Rho': [m.spearman_rho for m in all_metrics],
         'NDCG': [m.ndcg for m in all_metrics],
         'Average Precision': [m.average_precision for m in all_metrics],
@@ -338,7 +342,9 @@ def main(results_path: str | Path = "artifacts/transformer_results.csv", output_
     logger.info("Kendall Tau: Measures ordinal association (-1 to 1)")
     logger.info("  - Tau-a: Original Kendall (1938), no tie adjustment")
     logger.info("  - Tau-b: Adjusted for ties in both rankings")
-    logger.info("  - Tau-c: Adjusted for table size")
+    logger.info("  - Tau-w: Weighted version (Model Spider, NeurIPS 2023)")
+    logger.info("           Gives higher weight to top-ranked items")
+    logger.info("           Weight for exchange at ranks r,s: 1/(r+1) + 1/(s+1)")
     logger.info("Spearman Rho: Pearson correlation on ranks (-1 to 1)")
     logger.info("NDCG: Normalized discounted cumulative gain (0 to 1)")
     logger.info("Average Precision: Mean precision at relevant positions (0 to 1)")
