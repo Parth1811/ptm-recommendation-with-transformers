@@ -60,11 +60,11 @@ class ColorTheme:
         "arrow": "#999999",
 
         # Component colors
-        "neural_node": "#64B5F6",  # Lighter blue for dark mode
+        "neural_node": BLUE_A,  # Lighter blue for dark mode
         "neural_edge": "#42A5F5",
 
-        "token_model": "#F48FB1",  # Lighter pink
-        "token_dataset": "#4DB6AC",  # Lighter teal
+        "token_model": PURPLE_A,  # Lighter pink
+        "token_dataset": TEAL_A,  # Lighter teal
 
         "clustering": "#A5D6A7",  # Lighter green
         "sampling": "#64B5F6",  # Lighter blue
@@ -73,7 +73,7 @@ class ColorTheme:
         "encoder_image": "#4DB6AC",  # Lighter teal
         "encoder_text": "#BA68C8",  # Lighter purple
 
-        "attention_block": "#66BB6A",  # Lighter green
+        "attention_block": GREEN_A,  # Lighter green
         "fc_layer": "#64B5F6",  # Lighter blue
 
         "box_default": "#64B5F6",  # Lighter blue

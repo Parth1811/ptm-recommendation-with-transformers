@@ -1,3 +1,4 @@
+from birdseyeview import BirdsEyeView
 from color_constants import (MATERIAL_BLUE, MATERIAL_GREEN, MATERIAL_RED,
                              ColorTheme, get_text_color)
 from dataset_pipeline import DatasetPipeline
@@ -34,6 +35,9 @@ class ShowcaseAll(Scene):
 
         # # 6. Round Box
         # self.show_round_box()
+
+        # # 7. Birds-Eye View
+        self.show_birds_eye_view()
 
         # End
         end_text = Text("End of Showcase", font_size=36, color=get_text_color())
@@ -143,6 +147,29 @@ class ShowcaseAll(Scene):
         self.play(Create(boxes))
         self.wait(2)
         self.play(FadeOut(boxes), FadeOut(label))
+
+    def show_birds_eye_view(self):
+        """Display birds-eye view with attention mechanism switching."""
+        label = Text("Birds-Eye View: Attention Mechanisms", font_size=32, color=get_text_color())
+        label.to_edge(UP)
+
+        # Start with cross-attention
+        birdseyeview = BirdsEyeView(mode="self")
+        birdseyeview.scale(0.8)
+
+        self.play(Write(label))
+        self.play(Create(birdseyeview))
+        self.wait(2)
+
+        # Animate transition to self-attention
+        birdseyeview.toggle_attention_mode(self, duration=2.0)
+        self.wait(2)
+
+        # Animate back to cross-attention
+        birdseyeview.toggle_attention_mode(self, duration=2.0)
+        self.wait(2)
+
+        self.play(FadeOut(birdseyeview), FadeOut(label))
 
 
 class RecommendationPipelineBasic(Scene):

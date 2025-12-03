@@ -1,7 +1,7 @@
+from color_constants import get_attention_block_color, get_text_color
 from manim import *
 from neural_network import NeuralNetwork
 from round_box import RoundBox
-from color_constants import get_attention_block_color, get_text_color
 
 
 class CrossAttentionBlock(VGroup):
@@ -21,7 +21,6 @@ class CrossAttentionBlock(VGroup):
             width=width,
             height=height,
             fill_color=get_attention_block_color(),
-            fill_opacity=0.4,
             text_align="center",
             font_size=32,
         )

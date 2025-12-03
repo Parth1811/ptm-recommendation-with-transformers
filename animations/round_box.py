@@ -1,5 +1,5 @@
+from color_constants import get_box_default_color, get_stroke_color
 from manim import *
-from color_constants import get_stroke_color, get_box_default_color
 
 
 class RoundBox(VGroup):
@@ -12,7 +12,7 @@ class RoundBox(VGroup):
         height=1,
         corner_radius=0.1,
         fill_color=None,
-        fill_opacity=0.3,
+        fill_opacity=0.8,
         stroke_color=None,
         stroke_width=2,
         text_align="center",

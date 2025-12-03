@@ -1,6 +1,6 @@
+from color_constants import get_token_dataset_color, get_token_model_color
 from manim import *
 from round_box import RoundBox
-from color_constants import get_token_model_color, get_token_dataset_color
 
 
 class Tokens(VGroup):
@@ -31,7 +31,6 @@ class Tokens(VGroup):
                 width=box_width,
                 height=box_height,
                 fill_color=color,
-                fill_opacity=0.5,
                 stroke_color=WHITE,
             )
             box.shift(RIGHT * i * (box_width + spacing))
@@ -43,7 +42,6 @@ class Tokens(VGroup):
                 width=box_width,
                 height=box_height,
                 fill_color=color,
-                fill_opacity=0.3,
                 stroke_color=WHITE,
                 stroke_width=1,
             )

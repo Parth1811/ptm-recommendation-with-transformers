@@ -89,7 +89,6 @@ class DatasetPipeline(VGroup):
                 width=0.8,
                 height=0.8,
                 fill_color=get_sample_box_color(),
-                fill_opacity=0.6,
                 stroke_color=get_sample_box_color(),
                 stroke_width=3,
                 font_size=24,
@@ -250,7 +249,6 @@ class DatasetPipeline(VGroup):
                     width=box_width,
                     height=box_height,
                     fill_color=MATERIAL_BLUE,
-                    fill_opacity=0.2,
                     stroke_color=MATERIAL_BLUE,
                     stroke_width=2,
                     font_size=font_size,
@@ -264,7 +262,7 @@ class DatasetPipeline(VGroup):
                     corner_radius=0.05,
                     stroke_color=get_stroke_color(),
                     stroke_width=2,
-                    fill_opacity=0,
+                    fill_opacity=0.6,
                 )
 
             box.shift(RIGHT * x + UP * y)
@@ -286,7 +284,6 @@ class DatasetPipeline(VGroup):
             width=1.0,
             height=4.5,
             fill_color=get_clustering_color(),
-            fill_opacity=0.6,
             stroke_color=get_clustering_color(),
             stroke_width=3,
             font_size=28,
