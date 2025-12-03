@@ -12,3 +12,4 @@ Caltech-101,https://huggingface.co/datasets/bitmind/caltech-101
 HAM10000,https://huggingface.co/datasets/Nagabu/HAM10000
 LIDC-IDRI,https://huggingface.co/datasets/jmanuelc87/lidc-idri-segmentation
 BCW,https://huggingface.co/datasets/scikit-learn/breast-cancer-wisconsin
+pokemon, https://huggingface.co/datasets/valhalla/pokemon-dataset
