@@ -109,6 +109,17 @@ class ModelPipeline(VGroup):
         self.combining_box.shift(DOWN * 0.8)
         self.combining_box.align_to(self.clustered_params, LEFT)
 
+        # Arrow from clustered params to combining box (center, pointing down)
+        clustered_center_x = self.clustered_params.get_center()[0]
+        self.arrow_cluster_to_combine = Arrow(
+            np.array([clustered_center_x, self.clustered_params.get_bottom()[1], 0]),
+            np.array([clustered_center_x, self.combining_box.get_top()[1], 0]),
+            buff=0.1,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.15,
+            color=get_arrow_color(),
+        )
+
         # Clustered params representation (small boxes below combining)
         self.combined_boxes = VGroup()
         box_colors = [MATERIAL_PURPLE, get_stroke_color(), get_stroke_color(), MATERIAL_YELLOW]
@@ -133,7 +144,7 @@ class ModelPipeline(VGroup):
 
         self.combined_boxes.next_to(self.combining_box, DOWN, buff=0.3)
 
-        self.all_components.add(self.combining_box, self.combined_boxes)
+        self.all_components.add(self.combining_box, self.arrow_cluster_to_combine, self.combined_boxes)
 
         # ===== 5. MODEL BOX =====
         # Model box (10000 x 1) - aligned on same center line as clustering
