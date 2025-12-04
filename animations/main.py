@@ -3,6 +3,8 @@ from color_constants import (MATERIAL_BLUE, MATERIAL_GREEN, MATERIAL_RED,
                              ColorTheme, get_text_color)
 from dataset_pipeline import DatasetPipeline
 from manim import *
+from model_pipeline import ModelPipeline
+from monospace_text import MonospaceText
 from neural_network import NeuralNetwork
 from round_box import RoundBox
 from tokens import DatasetTokens, ModelTokens, Tokens
@@ -14,7 +16,7 @@ class ShowcaseAll(Scene):
 
     def construct(self):
         # Title
-        # title = Text("ML Pipeline Components", font_size=48)
+        # title = MonospaceText("ML Pipeline Components", font_size=48)
         # self.play(Write(title), run_time=2)
         # self.play(FadeOut(title))
 
@@ -37,16 +39,19 @@ class ShowcaseAll(Scene):
         # self.show_round_box()
 
         # # 7. Birds-Eye View
-        self.show_birds_eye_view()
+        # self.show_birds_eye_view()
+
+        # 8. Model Pipeline
+        self.show_model_pipeline()
 
         # End
-        end_text = Text("End of Showcase", font_size=36, color=get_text_color())
+        end_text = MonospaceText("End of Showcase", font_size=36, color=get_text_color())
         self.play(Write(end_text), run_time=2)
         self.wait(1)
 
     def show_neural_network(self):
         """Display neural network."""
-        label = Text("Neural Network", font_size=32, color=get_text_color())
+        label = MonospaceText("Neural Network", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         nn = NeuralNetwork(
@@ -67,7 +72,7 @@ class ShowcaseAll(Scene):
 
     def show_tokens(self):
         """Display different token types."""
-        label = Text("Token Visualizations", font_size=32, color=get_text_color())
+        label = MonospaceText("Token Visualizations", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         # Model tokens
@@ -85,7 +90,7 @@ class ShowcaseAll(Scene):
 
     def show_cross_attention(self):
         """Display cross-attention block."""
-        label = Text("Cross Attention Block", font_size=32, color=get_text_color())
+        label = MonospaceText("Cross Attention Block", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         attention = CrossAttentionBlock()
@@ -97,7 +102,7 @@ class ShowcaseAll(Scene):
 
     def show_transformer(self):
         """Display transformer architecture."""
-        label = Text("Transformer Architecture", font_size=32, color=get_text_color())
+        label = MonospaceText("Transformer Architecture", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         transformer = Transformer(show_fc_layer=True)
@@ -110,7 +115,7 @@ class ShowcaseAll(Scene):
 
     def show_dataset_pipeline(self):
         """Display dataset processing pipeline."""
-        label = Text("Dataset Processing Pipeline", font_size=32, color=get_text_color())
+        label = MonospaceText("Dataset Processing Pipeline", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         pipeline = DatasetPipeline()
@@ -129,7 +134,7 @@ class ShowcaseAll(Scene):
 
     def show_round_box(self):
         """Display round box utility."""
-        label = Text("Round Box Utility", font_size=32, color=get_text_color())
+        label = MonospaceText("Round Box Utility", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         boxes = VGroup()
@@ -148,9 +153,27 @@ class ShowcaseAll(Scene):
         self.wait(2)
         self.play(FadeOut(boxes), FadeOut(label))
 
+    def show_model_pipeline(self):
+        """Display model pipeline utility."""
+        label = MonospaceText("Model Pipeline Utility", font_size=32, color=get_text_color())
+        label.to_edge(UP)
+
+        model_pipeline = ModelPipeline()
+        model_pipeline.scale(0.8)
+
+        self.play(Write(label))
+        self.play(Create(model_pipeline), run_time=3)
+        self.wait(1)
+
+        # Animate the forward pass
+        model_pipeline.animate_forward(self, run_time=12)
+
+        self.wait(2)
+        self.play(FadeOut(model_pipeline), FadeOut(label))
+
     def show_birds_eye_view(self):
         """Display birds-eye view with attention mechanism switching."""
-        label = Text("Birds-Eye View: Attention Mechanisms", font_size=32, color=get_text_color())
+        label = MonospaceText("Birds-Eye View: Attention Mechanisms", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
         # Start with cross-attention
@@ -177,7 +200,7 @@ class RecommendationPipelineBasic(Scene):
 
     def construct(self):
         # Title
-        title = Text("Model Recommendation Pipeline", font_size=40, color=get_text_color())
+        title = MonospaceText("Model Recommendation Pipeline", font_size=40, color=get_text_color())
         title.to_edge(UP)
         self.play(Write(title))
         self.wait(0.5)
@@ -288,7 +311,7 @@ class RecommendationPipelineAnimated(Scene):
             stroke_width=2,
             color=MATERIAL_GREEN,
         )
-        q_label = Text("Q", font_size=16, color=MATERIAL_GREEN).next_to(
+        q_label = MonospaceText("Q", font_size=16, color=MATERIAL_GREEN).next_to(
             arrow_q, UP, buff=0.1
         )
 
@@ -300,7 +323,7 @@ class RecommendationPipelineAnimated(Scene):
             stroke_width=2,
             color=MATERIAL_RED,
         )
-        kv_label = Text("K, V", font_size=16, color=MATERIAL_RED).next_to(
+        kv_label = MonospaceText("K, V", font_size=16, color=MATERIAL_RED).next_to(
             arrow_kv, DOWN, buff=0.1
         )
 
@@ -335,6 +358,7 @@ class RecommendationPipelineAnimated(Scene):
         model_tokens_final = ModelTokens(num_models=3, abbreviated=True)
         model_tokens_final.scale(0.65)
         model_tokens_final.next_to(model_pipeline_box, RIGHT, buff=0.2)
+
 
         # Create model pipeline components
         self.play(Create(model_network), run_time=1.5)

@@ -1,5 +1,7 @@
+from color_constants import (get_neural_edge_color, get_neural_node_color,
+                             get_stroke_color)
 from manim import *
-from color_constants import get_neural_node_color, get_neural_edge_color, get_stroke_color
+from monospace_text import MonospaceText
 
 
 class NeuralNetwork(VGroup):
@@ -53,7 +55,7 @@ class NeuralNetwork(VGroup):
         for visual_idx, layer_spec in enumerate(layers_to_show):
             if layer_spec == "...":
                 # Create ellipsis indicator
-                self.ellipsis = Text("...", font_size=48, color=WHITE)
+                self.ellipsis = MonospaceText("...", font_size=48, color=WHITE)
                 self.ellipsis.move_to(RIGHT * visual_positions[visual_idx] * layer_spacing)
                 continue
 
@@ -175,7 +177,7 @@ class NeuralNetwork(VGroup):
         if show_labels:
             self.labels = VGroup()
 
-            if abbreviated_hidden and len(layers) > 4:
+            if abbreviated_hidden and len(layers) >= 4:
                 # Create labels for visible layers only
                 layer_names = [
                     "Input",
@@ -190,18 +192,18 @@ class NeuralNetwork(VGroup):
                 for visual_idx, layer_spec in enumerate(layers_to_show):
                     if layer_spec == "...":
                         # Add label for ellipsis
-                        label = Text(layer_names[visual_idx], font_size=20)
+                        label = MonospaceText(layer_names[visual_idx], font_size=20)
                         label.next_to(self.ellipsis, DOWN, buff=0.3)
                         self.labels.add(label)
                     else:
-                        label = Text(layer_names[visual_idx], font_size=20)
+                        label = MonospaceText(layer_names[visual_idx], font_size=20)
                         label.next_to(self.layer_groups[label_idx], DOWN, buff=0.3)
                         self.labels.add(label)
                         label_idx += 1
             else:
                 layer_names = ["Input"] + [f"Hidden {i}" for i in range(1, len(layers) - 1)] + ["Output"]
                 for idx, (layer_group, name) in enumerate(zip(self.layer_groups, layer_names)):
-                    label = Text(name, font_size=20)
+                    label = MonospaceText(name, font_size=20)
                     label.next_to(layer_group, DOWN, buff=0.3)
                     self.labels.add(label)
 

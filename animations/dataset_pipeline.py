@@ -4,6 +4,7 @@ from color_constants import (MATERIAL_BLUE, get_arrow_color,
                              get_sampling_color, get_stroke_color,
                              get_text_color)
 from manim import *
+from monospace_text import MonospaceText
 from neural_network import NeuralNetwork
 from round_box import RoundBox
 from tokens import DatasetTokens
@@ -124,7 +125,7 @@ class DatasetPipeline(VGroup):
         self.add(self.encoder_network)
 
         # Encoder label
-        self.encoder_label = Text("Encoder", font_size=18, color=get_text_color())
+        self.encoder_label = MonospaceText("Encoder", font_size=18, color=get_text_color())
         self.encoder_label.next_to(self.encoder_network, DOWN, buff=0.3)
         self.add(self.encoder_label)
 
@@ -140,7 +141,7 @@ class DatasetPipeline(VGroup):
         self.add(arrow5)
 
         # Label
-        self.samples_label = Text("Representative\nSamples", font_size=20, color=get_text_color())
+        self.samples_label = MonospaceText("Representative\nSamples", font_size=20, color=get_text_color())
         self.samples_label.next_to(self.samples, DOWN, buff=0.5)
         self.add(self.samples_label)
 
@@ -271,7 +272,7 @@ class DatasetPipeline(VGroup):
         # Center the grid
         grid.move_to(ORIGIN)
 
-        label_text = Text(label, font_size=20, color=get_text_color())
+        label_text = MonospaceText(label, font_size=20, color=get_text_color())
         label_text.next_to(grid, DOWN, buff=0.3)
 
         group.add(grid, label_text)

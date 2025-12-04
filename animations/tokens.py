@@ -1,5 +1,6 @@
 from color_constants import get_token_dataset_color, get_token_model_color
 from manim import *
+from monospace_text import MonospaceText
 from round_box import RoundBox
 
 
@@ -45,7 +46,7 @@ class Tokens(VGroup):
                 stroke_color=WHITE,
                 stroke_width=1,
             )
-            ellipsis_text = Text("...", font_size=32, color=WHITE)
+            ellipsis_text = MonospaceText("...", font_size=32, color=WHITE)
             ellipsis_text.move_to(ellipsis_box.get_center())
             ellipsis_box.add(ellipsis_text)
             ellipsis_box.shift(RIGHT * num_tokens * (box_width + spacing))
@@ -58,13 +59,13 @@ class Tokens(VGroup):
 
         # Add dimension label
         dim_text = f"{token_dim} × 1" if num_tokens == 1 else f"{num_tokens} x {token_dim} × 1"
-        self.dim_label = Text(dim_text, font_size=20)
+        self.dim_label = MonospaceText(dim_text, font_size=20)
         self.dim_label.next_to(self.token_boxes, UP, buff=0.2)
         self.add(self.dim_label)
 
         # Add optional custom label
         if label:
-            self.label = Text(label, font_size=24)
+            self.label = MonospaceText(label, font_size=24)
             self.label.next_to(self.token_boxes, DOWN, buff=0.3)
             self.add(self.label)
 

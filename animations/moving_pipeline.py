@@ -3,6 +3,7 @@ from color_constants import (MATERIAL_BLUE, MATERIAL_GREEN, MATERIAL_RED,
                              get_arrow_color, get_text_color)
 from dataset_pipeline import DatasetPipeline
 from manim import *
+from monospace_text import MonospaceText
 from neural_network import NeuralNetwork
 from round_box import RoundBox
 from tokens import DatasetTokens, ModelTokens
@@ -24,7 +25,7 @@ class MovingRecommendationPipeline(MovingCameraScene):
         # ===== SETUP ALL COMPONENTS (positioned for wide layout) =====
 
         # Title (stays at top during bird's eye view)
-        title = Text("Model Recommendation Pipeline", font_size=40, color=get_text_color())
+        title = MonospaceText("Model Recommendation Pipeline", font_size=40, color=get_text_color())
         title.to_edge(UP)
 
         # ===== MODEL PIPELINE (Top section) =====
@@ -98,7 +99,7 @@ class MovingRecommendationPipeline(MovingCameraScene):
             max_tip_length_to_length_ratio=0.15,
             color=MATERIAL_GREEN,
         )
-        q_label = Text("Q (Query)", font_size=16, color=MATERIAL_GREEN)
+        q_label = MonospaceText("Q (Query)", font_size=16, color=MATERIAL_GREEN)
         q_label.next_to(arrow_q.get_center(), UP, buff=0.1)
 
         # Arrow from dataset tokens to transformer (K, V - Keys, Values)
@@ -110,7 +111,7 @@ class MovingRecommendationPipeline(MovingCameraScene):
             max_tip_length_to_length_ratio=0.15,
             color=MATERIAL_RED,
         )
-        kv_label = Text("K, V (Keys, Values)", font_size=16, color=MATERIAL_RED)
+        kv_label = MonospaceText("K, V (Keys, Values)", font_size=16, color=MATERIAL_RED)
         kv_label.next_to(arrow_kv.get_center(), DOWN, buff=0.1)
 
         # ===== OUTPUT =====
@@ -178,7 +179,7 @@ class MovingRecommendationPipeline(MovingCameraScene):
         ).get_center()
 
         # Add a section title for model pipeline
-        model_section_title = Text("Model Embedding Pipeline", font_size=36, color=get_text_color())
+        model_section_title = MonospaceText("Model Embedding Pipeline", font_size=36, color=get_text_color())
         model_section_title.move_to(model_pipeline_center + UP * 2)
 
         # Pan camera to model pipeline and zoom in
@@ -212,7 +213,7 @@ class MovingRecommendationPipeline(MovingCameraScene):
         dataset_pipeline_center = dataset_pipeline.get_center()
 
         # Add a section title for dataset pipeline
-        dataset_section_title = Text("Dataset Embedding Pipeline", font_size=36, color=get_text_color())
+        dataset_section_title = MonospaceText("Dataset Embedding Pipeline", font_size=36, color=get_text_color())
         dataset_section_title.move_to(dataset_pipeline_center + UP * 3.5)
 
         # Pan camera to dataset pipeline
@@ -347,7 +348,7 @@ class FocusedPipelineView(MovingCameraScene):
             stroke_width=2,
             color=MATERIAL_GREEN,
         )
-        q_label = Text("Q", font_size=16, color=MATERIAL_GREEN).next_to(
+        q_label = MonospaceText("Q", font_size=16, color=MATERIAL_GREEN).next_to(
             arrow_q, UP, buff=0.1
         )
 
@@ -358,7 +359,7 @@ class FocusedPipelineView(MovingCameraScene):
             stroke_width=2,
             color=MATERIAL_RED,
         )
-        kv_label = Text("K, V", font_size=16, color=MATERIAL_RED).next_to(
+        kv_label = MonospaceText("K, V", font_size=16, color=MATERIAL_RED).next_to(
             arrow_kv, DOWN, buff=0.1
         )
 

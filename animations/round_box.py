@@ -1,5 +1,6 @@
 from color_constants import get_box_default_color, get_stroke_color
 from manim import *
+from monospace_text import MonospaceText
 
 
 class RoundBox(VGroup):
@@ -49,7 +50,7 @@ class RoundBox(VGroup):
                 }
                 align_point = alignment_map.get(text_align.lower(), ORIGIN)
 
-                self.content = Text(content, font_size=font_size)
+                self.content = MonospaceText(content, font_size=font_size)
                 # Align text within the box
                 if text_align.lower() == "center":
                     self.content.move_to(self.box.get_center())

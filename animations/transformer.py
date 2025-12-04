@@ -1,5 +1,6 @@
 from color_constants import get_attention_block_color, get_text_color
 from manim import *
+from monospace_text import MonospaceText
 from neural_network import NeuralNetwork
 from round_box import RoundBox
 
@@ -27,9 +28,9 @@ class CrossAttentionBlock(VGroup):
         self.add(self.block)
 
         # Q, K, V input labels
-        self.q_label = Text("Q", font_size=28, color=YELLOW)
-        self.k_label = Text("K", font_size=28, color=BLUE)
-        self.v_label = Text("V", font_size=28, color=RED)
+        self.q_label = MonospaceText("Q", font_size=28, color=YELLOW)
+        self.k_label = MonospaceText("K", font_size=28, color=BLUE)
+        self.v_label = MonospaceText("V", font_size=28, color=RED)
 
         # Position inputs on the left side
         self.q_label.next_to(self.block, LEFT, buff=0.5).shift(UP * 0.8)
@@ -89,12 +90,12 @@ class Transformer(VGroup):
             self.add(self.fc_layer, self.attention_to_fc)
 
             # FC Layer label
-            self.fc_label = Text("Fully Connected", font_size=20)
+            self.fc_label = MonospaceText("Fully Connected", font_size=20)
             self.fc_label.next_to(self.fc_layer, DOWN, buff=0.3)
             self.add(self.fc_label)
 
             # Output dimensions
-            self.output_dim = Text("N × 1", font_size=24)
+            self.output_dim = MonospaceText("N × 1", font_size=24)
             self.output_dim.next_to(self.fc_layer, UP, buff=0.5)
             self.add(self.output_dim)
 

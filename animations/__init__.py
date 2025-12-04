@@ -6,6 +6,7 @@ from animations.neural_network import NeuralNetwork
 from animations.transformer import Transformer, CrossAttentionBlock
 from animations.dataset_pipeline import DatasetPipeline
 from animations.moving_pipeline import MovingRecommendationPipeline, FocusedPipelineView
+from animations.monospace_text import MonospaceText
 
 __all__ = [
     "RoundBox",
@@ -18,4 +19,5 @@ __all__ = [
     "DatasetPipeline",
     "MovingRecommendationPipeline",
     "FocusedPipelineView",
+    "MonospaceText",
 ]
