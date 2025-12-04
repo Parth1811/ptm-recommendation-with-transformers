@@ -13,7 +13,8 @@
     "HAM10000": 0.05,
     "pokemon": 0.1,
     "Aircraft": 0.15,
-    "SUN397": 0.15
+    "SUN397": 0.15,
+    "Cars": 0.15
   },
   "SVHN": {
     "MNIST": 0.6,
@@ -29,7 +30,8 @@
     "HAM10000": 0.05,
     "pokemon": 0.15,
     "Aircraft": 0.2,
-    "SUN397": 0.2
+    "SUN397": 0.2,
+    "Cars": 0.2
   },
   "USPS Digits": {
     "MNIST": 0.85,
@@ -45,7 +47,8 @@
     "HAM10000": 0.05,
     "pokemon": 0.1,
     "Aircraft": 0.15,
-    "SUN397": 0.15
+    "SUN397": 0.15,
+    "Cars": 0.15
   },
   "Fashion-MNIST": {
     "MNIST": 0.4,
@@ -61,7 +64,8 @@
     "HAM10000": 0.2,
     "pokemon": 0.25,
     "Aircraft": 0.3,
-    "SUN397": 0.25
+    "SUN397": 0.25,
+    "Cars": 0.3
   },
   "Deepfashion Inshop": {
     "MNIST": 0.1,
@@ -77,7 +81,8 @@
     "HAM10000": 0.25,
     "pokemon": 0.35,
     "Aircraft": 0.4,
-    "SUN397": 0.35
+    "SUN397": 0.35,
+    "Cars": 0.4
   },
   "Fashion Product": {
     "MNIST": 0.1,
@@ -93,7 +98,8 @@
     "HAM10000": 0.3,
     "pokemon": 0.4,
     "Aircraft": 0.45,
-    "SUN397": 0.4
+    "SUN397": 0.4,
+    "Cars": 0.45
   },
   "ImageNet 1k": {
     "MNIST": 0.05,
@@ -109,7 +115,8 @@
     "HAM10000": 0.3,
     "pokemon": 0.7,
     "Aircraft": 0.75,
-    "SUN397": 0.75
+    "SUN397": 0.75,
+    "Cars": 0.7
   },
   "CIFAR-10": {
     "MNIST": 0.2,
@@ -125,7 +132,8 @@
     "HAM10000": 0.25,
     "pokemon": 0.65,
     "Aircraft": 0.6,
-    "SUN397": 0.55
+    "SUN397": 0.55,
+    "Cars": 0.55
   },
   "CIFAR-100": {
     "MNIST": 0.1,
@@ -141,7 +149,8 @@
     "HAM10000": 0.25,
     "pokemon": 0.7,
     "Aircraft": 0.7,
-    "SUN397": 0.65
+    "SUN397": 0.65,
+    "Cars": 0.65
   },
   "Caltech-101": {
     "MNIST": 0.15,
@@ -157,7 +166,8 @@
     "HAM10000": 0.35,
     "pokemon": 0.75,
     "Aircraft": 0.8,
-    "SUN397": 0.7
+    "SUN397": 0.7,
+    "Cars": 0.75
   },
   "HAM10000": {
     "MNIST": 0.05,
@@ -173,7 +183,8 @@
     "HAM10000": 1.0,
     "pokemon": 0.2,
     "Aircraft": 0.25,
-    "SUN397": 0.25
+    "SUN397": 0.25,
+    "Cars": 0.2
   },
   "pokemon": {
     "MNIST": 0.1,
@@ -189,7 +200,8 @@
     "HAM10000": 0.2,
     "pokemon": 1.0,
     "Aircraft": 0.75,
-    "SUN397": 0.65
+    "SUN397": 0.65,
+    "Cars": 0.7
   },
   "Aircraft": {
     "MNIST": 0.15,
@@ -205,7 +217,8 @@
     "HAM10000": 0.25,
     "pokemon": 0.75,
     "Aircraft": 1.0,
-    "SUN397": 0.65
+    "SUN397": 0.65,
+    "Cars": 0.8
   },
   "SUN397": {
     "MNIST": 0.15,
@@ -221,6 +234,24 @@
     "HAM10000": 0.25,
     "pokemon": 0.65,
     "Aircraft": 0.65,
-    "SUN397": 1.0
+    "SUN397": 1.0,
+    "Cars": 0.6
+  },
+  "Cars": {
+    "MNIST": 0.15,
+    "SVHN": 0.2,
+    "USPS Digits": 0.15,
+    "Fashion-MNIST": 0.3,
+    "Deepfashion Inshop": 0.4,
+    "Fashion Product": 0.45,
+    "ImageNet 1k": 0.7,
+    "CIFAR-10": 0.55,
+    "CIFAR-100": 0.65,
+    "Caltech-101": 0.75,
+    "HAM10000": 0.2,
+    "pokemon": 0.7,
+    "Aircraft": 0.8,
+    "SUN397": 0.6,
+    "Cars": 1.0
   }
 }
