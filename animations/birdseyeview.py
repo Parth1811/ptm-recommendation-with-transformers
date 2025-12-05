@@ -1,6 +1,5 @@
 """Birds-eye view of transformer attention mechanisms (cross-attention and self-attention)."""
-from color_constants import (get_arrow_color, get_attention_block_color,
-                             get_text_color)
+from color_constants import *
 from manim import *
 from tokens import DatasetTokens, ModelTokens
 from transformer import Transformer
@@ -12,16 +11,25 @@ class CrossAttentionView(VGroup):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Model tokens on top left
-        self.model_tokens = ModelTokens(num_models=2, abbreviated=True)
+        # Model tokens on top left with custom colors
+        self.model_tokens = ModelTokens(
+            num_models=2,
+            colors=[MATERIAL_PURPLE, MATERIAL_PINK],
+            stroke_colors=[MATERIAL_PURPLE_STROKE, MATERIAL_PINK_STROKE],
+            abbreviated=True
+        )
         self.model_tokens.scale(0.9)
         self.model_tokens.move_to(UP * 1.5 + LEFT * 2.5)
 
-        # Dataset tokens below
-        self.dataset_tokens = DatasetTokens(num_samples=2, abbreviated=True)
+        # Dataset tokens below with custom colors (Yellow, Mint, Blue pattern)
+        self.dataset_tokens = DatasetTokens(
+            num_samples=2,
+            colors=[MATERIAL_YELLOW, MATERIAL_MINT],
+            stroke_colors=[MATERIAL_YELLOW_STROKE, MATERIAL_MINT_STROKE],
+            abbreviated=True
+        )
         self.dataset_tokens.next_to(self.model_tokens, DOWN, buff=1.0)
         self.dataset_tokens.scale(0.9)
-        # self.dataset_tokens.move_to(DOWN * 1.5 + LEFT * 2.5)
 
         # Transformer on the right
         self.transformer = Transformer(show_fc_layer=True)
@@ -56,16 +64,25 @@ class SelfAttentionView(VGroup):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Model tokens on the left
-        self.model_tokens = ModelTokens(num_models=2, abbreviated=True)
+        # Model tokens on the left with custom colors
+        self.model_tokens = ModelTokens(
+            num_models=2,
+            colors=[MATERIAL_PURPLE, MATERIAL_PINK],
+            stroke_colors=[MATERIAL_PURPLE_STROKE, MATERIAL_PINK_STROKE],
+            abbreviated=True
+        )
         self.model_tokens.scale(0.9)
         self.model_tokens.move_to(LEFT * 4)
 
-        # Dataset tokens next to model tokens
-        self.dataset_tokens = DatasetTokens(num_samples=2, abbreviated=True)
+        # Dataset tokens next to model tokens with custom colors (Yellow, Mint pattern)
+        self.dataset_tokens = DatasetTokens(
+            num_samples=2,
+            colors=[MATERIAL_YELLOW, MATERIAL_MINT],
+            stroke_colors=[MATERIAL_YELLOW_STROKE, MATERIAL_MINT_STROKE],
+            abbreviated=True
+        )
         self.dataset_tokens.next_to(self.model_tokens, RIGHT, buff=0.5)
         self.dataset_tokens.scale(0.9)
-        # self.dataset_tokens.move_to(LEFT * 0.8)
 
         # Transformer on the right
         self.transformer = Transformer(show_fc_layer=True)

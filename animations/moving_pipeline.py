@@ -1,4 +1,5 @@
 """Moving camera scene showing the complete recommendation pipeline with dynamic camera movements."""
+from birdseyeview import BirdsEyeView
 from color_constants import (MATERIAL_BLUE, MATERIAL_GREEN, MATERIAL_RED,
                              get_arrow_color, get_text_color)
 from dataset_pipeline import DatasetPipeline
@@ -474,51 +475,33 @@ class ExpandingPipelineView(MovingCameraScene):
         # Initial camera: wide view
         self.camera.frame.set(width=20)
 
-        # Create simple tokens (reuse FocusedPipelineView layout)
-        model_tokens = ModelTokens(num_models=3, abbreviated=True)
-        model_tokens.scale(0.9)
-        model_tokens.move_to(LEFT * 4 + UP * 1.5)
-
-        dataset_tokens = DatasetTokens(num_samples=3, abbreviated=True)
-        dataset_tokens.scale(0.9)
-        dataset_tokens.move_to(LEFT * 4 + DOWN * 1.5)
-        transformer = Transformer(show_fc_layer=True)
-        transformer.scale(0.55)
-        transformer.move_to(RIGHT * 3)
-
-        # Arrows (store as self for later updates)
-        self.arrow_q = Arrow(
-            model_tokens.get_right() + RIGHT * 0.2,
-            transformer.get_left() + UP * 0.8,
-            buff=0.2,
-            stroke_width=2,
-            color=MATERIAL_GREEN,
-        )
-        q_label = MonospaceText("Q", font_size=16, color=MATERIAL_GREEN)
-        q_label.next_to(self.arrow_q, UP, buff=0.1)
-
-        self.arrow_kv = Arrow(
-            dataset_tokens.get_right() + RIGHT * 0.2,
-            transformer.get_left() + DOWN * 0.8,
-            buff=0.2,
-            stroke_width=2,
-            color=MATERIAL_RED,
-        )
-        kv_label = MonospaceText("K, V", font_size=16, color=MATERIAL_RED)
-        kv_label.next_to(self.arrow_kv, DOWN, buff=0.1)
+        # Create birds-eye view with cross-attention layout
+        birds_eye_view = BirdsEyeView(mode="self")
+        birds_eye_view.scale(1.2)
+        birds_eye_view.move_to(ORIGIN)
 
         # Create all components
         self.play(
-            Create(model_tokens),
-            Create(dataset_tokens),
-            Create(transformer),
-            Create(self.arrow_q),
-            Create(q_label),
-            Create(self.arrow_kv),
-            Create(kv_label),
+            Create(birds_eye_view),
             run_time=2,
         )
         self.wait(1)
+
+        birds_eye_view.toggle_attention_mode(self, duration=3)
+
+        # Extract components for easier reference from current_view
+        model_tokens = birds_eye_view.current_view.model_tokens
+        dataset_tokens = birds_eye_view.current_view.dataset_tokens
+        transformer = birds_eye_view.current_view.transformer
+        self.arrow_q = birds_eye_view.current_view.model_arrow
+        self.arrow_kv = birds_eye_view.current_view.dataset_arrow
+
+        # Add labels for arrows
+        q_label = MonospaceText("Q", font_size=16, color=MATERIAL_GREEN)
+        q_label.next_to(self.arrow_q, UP, buff=0.1)
+
+        kv_label = MonospaceText("K, V", font_size=16, color=MATERIAL_RED)
+        kv_label.next_to(self.arrow_kv, DOWN, buff=0.1)
 
         # ===== PHASE 2: MODEL TOKEN → MODELPIPELINE =====
         # Store original position for alignment
@@ -534,7 +517,6 @@ class ExpandingPipelineView(MovingCameraScene):
         # Create ModelPipeline (initially invisible)
         model_pipeline = ModelPipeline()
         model_pipeline.scale(1)
-        model_pipeline.set_opacity(0)
 
         # Position so final token aligns with original token position
         offset = model_tokens.get_right() - model_pipeline.model_token.get_right()
@@ -545,7 +527,6 @@ class ExpandingPipelineView(MovingCameraScene):
         # Fade transition: dim token → show pipeline
         self.play(
             model_tokens.animate.set_opacity(0),
-            model_pipeline.animate.set_opacity(1),
             GrowFromEdge(model_pipeline, RIGHT),
             dataset_tokens.animate.shift(DOWN * 1.0),  # Adjust dataset tokens down
             self.arrow_kv.animate.put_start_and_end_on(
@@ -604,7 +585,7 @@ class ExpandingPipelineView(MovingCameraScene):
         # Fade transition
         self.play(
             dataset_tokens.animate.set_opacity(0),
-            dataset_pipeline.animate.set_opacity(1),
+            GrowFromPoint(dataset_pipeline, dataset_tokens.get_right()),
             self.camera.frame.animate.move_to(dataset_pipeline.get_center()).set(width=dataset_pipeline.width * 1.2),
             run_time=1.5
         )

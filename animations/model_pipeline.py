@@ -550,3 +550,26 @@ class ModelPipeline(VGroup):
             run_time=time_unit * 1.0
         )
         scene.remove(token_creator)
+
+        model_tokens = ModelTokens(
+            num_models=2,
+            colors=[MATERIAL_PURPLE, MATERIAL_PURPLE],
+            stroke_colors=[MATERIAL_PURPLE_STROKE, MATERIAL_PURPLE_STROKE],
+            abbreviated=True
+        )
+        model_tokens.scale(0.65)
+        model_tokens.align_to(self.model_token, LEFT)
+        model_tokens.shift(UP * (self.model_token.get_center()[1] - model_tokens.get_center()[1]))
+        self.add(model_tokens)
+        scene.add(model_tokens)
+
+        scene.play(
+            FadeOut(self.model_token, shift=RIGHT),
+            FadeOut(self.model_token_label, shift=DOWN),
+            FadeOut(self.token_dim_label, shift=UP),
+            GrowFromEdge(model_tokens, LEFT),
+            self.animate.shift(LEFT * (model_tokens.get_right()[0] - self.model_token.get_right()[0])),
+            run_time=time_unit * 1.5
+        )
+
+        self.model_token = model_tokens
