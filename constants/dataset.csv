@@ -17,3 +17,4 @@ Aircraft,https://huggingface.co/datasets/dpdl-benchmark/fgvc_aircraft
 SUN397,https://huggingface.co/datasets/tanganke/sun397
 Cars,https://huggingface.co/datasets/tanganke/stanford_cars
 DTD,https://huggingface.co/datasets/tanganke/dtd
+Pets,https://huggingface.co/datasets/jonathancui/oxford-pets
