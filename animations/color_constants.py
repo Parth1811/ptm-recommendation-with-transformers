@@ -2,7 +2,7 @@
 from manim import *
 
 # Theme mode: "light" or "dark"
-THEME_MODE = "dark"
+THEME_MODE = "light"
 
 
 class ColorTheme:

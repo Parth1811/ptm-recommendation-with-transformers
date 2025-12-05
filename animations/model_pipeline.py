@@ -122,7 +122,7 @@ class ModelPipeline(VGroup):
 
         # Clustered params representation (small boxes below combining)
         self.combined_boxes = VGroup()
-        box_colors = [MATERIAL_PURPLE, get_stroke_color(), get_stroke_color(), MATERIAL_YELLOW]
+        box_colors = [MATERIAL_PURPLE, get_text_color(), GRAY_A, MATERIAL_YELLOW]
         for i, color in enumerate(box_colors):
             if i == 1:
                 # Add ".." in the middle
@@ -247,7 +247,7 @@ class ModelPipeline(VGroup):
         params = VGroup()
 
         # Define colors for each layer
-        colors = [MATERIAL_YELLOW, get_stroke_color(), MATERIAL_PURPLE]
+        colors = [MATERIAL_YELLOW, GRAY_A, MATERIAL_PURPLE]
         labels = ["Input\nLayer", "Hidden\nLayers", "Output\nLayer"]
 
         # Positions aligned with network layers (considering abbreviated view)
@@ -284,8 +284,8 @@ class ModelPipeline(VGroup):
         # Define cluster specs: (content, dimension, color)
         cluster_specs = [
             ("w'1\nw'2\n..\n..\nw'20", "20x1", MATERIAL_YELLOW),
-            ("w'1\nw'2\n..\n..\nw'10", "10x1", get_stroke_color()),
-            ("w'1\nw'2\n..\n..\nw'10", "10x1", get_stroke_color()),
+            ("w'1\nw'2\n..\n..\nw'10", "10x1", GRAY_A),
+            ("w'1\nw'2\n..\n..\nw'10", "10x1", GRAY_A),
             ("w'1\nw'2\n..\n..\nw'20", "20x1", MATERIAL_PURPLE),
         ]
 

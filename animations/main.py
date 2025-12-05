@@ -32,8 +32,8 @@ class ShowcaseAll(Scene):
         # # 4. Transformer
         # self.show_transformer()
 
-        # # 5. Dataset Pipeline
-        # self.show_dataset_pipeline()
+        # 5. Dataset Pipeline
+        self.show_dataset_pipeline()
 
         # # 6. Round Box
         # self.show_round_box()
