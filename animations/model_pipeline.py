@@ -1,11 +1,12 @@
 import numpy as np
 from color_constants import (MATERIAL_BLUE, MATERIAL_BLUE_STROKE,
-                             MATERIAL_GRAY, MATERIAL_GRAY_STROKE,
-                             MATERIAL_MINT, MATERIAL_MINT_STROKE,
-                             MATERIAL_ORANGE, MATERIAL_ORANGE_STROKE,
-                             MATERIAL_PURPLE, MATERIAL_PURPLE_STROKE,
-                             MATERIAL_YELLOW, MATERIAL_YELLOW_STROKE,
-                             get_arrow_color, get_stroke_color, get_text_color,
+                             MATERIAL_DARK_GRAY_STROKE, MATERIAL_GRAY,
+                             MATERIAL_GRAY_STROKE, MATERIAL_MINT,
+                             MATERIAL_MINT_STROKE, MATERIAL_ORANGE,
+                             MATERIAL_ORANGE_STROKE, MATERIAL_PURPLE,
+                             MATERIAL_PURPLE_STROKE, MATERIAL_YELLOW,
+                             MATERIAL_YELLOW_STROKE, get_arrow_color,
+                             get_stroke_color, get_text_color,
                              get_token_model_color)
 from manim import *
 from monospace_text import MonospaceText
@@ -30,9 +31,6 @@ class ModelPipeline(VGroup):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Track all components for animation
-        self.all_components = VGroup()
-
         # ===== 1. NEURAL NETWORK WITH PARAMETERS =====
         self.model_network = NeuralNetwork(
             layers=[4, 3, 3, 4],
@@ -52,7 +50,7 @@ class ModelPipeline(VGroup):
         self.param_boxes.align_to(self.model_network, LEFT)
         self.center_line = (self.model_network.get_center() + self.param_boxes.get_center()) * 0.5
 
-        self.all_components.add(self.model_network, self.param_boxes)
+        self.add(self.model_network, self.param_boxes)
 
         # ===== 2. CLUSTERING BOX =====
         self.clustering_box = RoundBox(
@@ -78,7 +76,7 @@ class ModelPipeline(VGroup):
             color=get_arrow_color(),
         )
 
-        self.all_components.add(self.clustering_box, self.arrow1)
+        self.add(self.clustering_box, self.arrow1)
 
         # ===== 3. CLUSTERED PARAMETERS =====
         self.clustered_params = self._create_clustered_params()
@@ -95,7 +93,7 @@ class ModelPipeline(VGroup):
             color=get_arrow_color(),
         )
 
-        self.all_components.add(self.clustered_params, self.arrow2)
+        self.add(self.clustered_params, self.arrow2)
 
         # ===== 4. COMBINING OPERATION =====
         # Create the combining box
@@ -149,7 +147,7 @@ class ModelPipeline(VGroup):
 
         self.combined_boxes.next_to(self.combining_box, DOWN, buff=0.3)
 
-        self.all_components.add(self.combining_box, self.arrow_cluster_to_combine, self.combined_boxes)
+        self.add(self.combining_box, self.arrow_cluster_to_combine, self.combined_boxes)
 
         # ===== 5. MODEL BOX =====
         # Model box (10000 x 1) - aligned on same center line as clustering
@@ -183,7 +181,7 @@ class ModelPipeline(VGroup):
             color=get_arrow_color(),
         )
 
-        self.all_components.add(self.model_box, self.model_box_label, self.model_dim_label, self.arrow3)
+        self.add(self.model_box, self.model_box_label, self.model_dim_label, self.arrow3)
 
         # ===== 6. MODEL ENCODER (Triangular) =====
         self.model_encoder = self._create_encoder()
@@ -205,7 +203,7 @@ class ModelPipeline(VGroup):
             color=get_arrow_color(),
         )
 
-        self.all_components.add(self.model_encoder, self.encoder_label, self.arrow4)
+        self.add(self.model_encoder, self.encoder_label, self.arrow4)
 
         # ===== 7. MODEL TOKEN =====
         self.model_token = RoundBox(
@@ -239,10 +237,7 @@ class ModelPipeline(VGroup):
             color=get_arrow_color(),
         )
 
-        self.all_components.add(self.model_token, self.model_token_label, self.token_dim_label, self.arrow5)
-
-        # Add all components to self
-        self.add(self.all_components)
+        self.add(self.model_token, self.model_token_label, self.token_dim_label, self.arrow5)
 
         # Center the entire pipeline
         self.move_to(ORIGIN)
@@ -418,6 +413,8 @@ class ModelPipeline(VGroup):
 
         scene.play(
             *move_anims,
+            GrowArrow(self.arrow2),
+            GrowArrow(self.arrow1),
             Circumscribe(self.clustering_box, stroke_width=3, buff=0.1),
             run_time=time_unit * 1.5
         )
@@ -463,6 +460,7 @@ class ModelPipeline(VGroup):
 
         scene.play(
             *move_down_anims,
+            GrowArrow(self.arrow_cluster_to_combine),
             Circumscribe(self.combining_box, color=MATERIAL_YELLOW_STROKE, stroke_width=3, buff=0.1),
             run_time=time_unit * 1.5
         )
@@ -486,6 +484,8 @@ class ModelPipeline(VGroup):
             combined_copy.animate.move_to(self.model_box.get_center()).scale(0.5).set_opacity(0.5),
             self.model_box.animate.set_opacity(1),
             self.model_dim_label.animate.set_opacity(1),
+            GrowArrow(self.arrow3),
+            # Circumscribe(self.model_box, color=MATERIAL_DARK_GRAY_STROKE, stroke_width=3, buff=0.1),
             Indicate(self.model_box, color=MATERIAL_GRAY_STROKE, scale_factor=1.1),
             run_time=time_unit * 1.5
         )
@@ -497,31 +497,8 @@ class ModelPipeline(VGroup):
         )
         scene.remove(combined_copy)
 
-        # Pulse model box
-        # scene.play(
-        #     self.model_box.animate.scale(1.1),
-        #     run_time=time_unit * 0.5
-        # )
-        # scene.play(
-        #     self.model_box.animate.scale(1/1.1),
-        #     run_time=time_unit * 0.5
-        # )
-
-        # Step 7: Highlight encoder and create token
-        # scene.play(
-        #     self.model_encoder.animate.scale(1.15).set_opacity(1),
-        #     self.encoder_label.animate.scale(1.15).set_opacity(1),
-        #     run_time=time_unit * 0.8
-        # )
-        # scene.play(
-        #     self.model_encoder.animate.scale(1/1.15),
-        #     self.encoder_label.animate.scale(1/1.15),
-        #     run_time=time_unit * 0.5
-        # )
-        scene.play(
-            Indicate(self.model_encoder, color=MATERIAL_MINT_STROKE, scale_factor=1.1),
-            run_time=time_unit * 0.8
-        )
+        model_box_copy = self.model_box.copy()
+        scene.add(model_box_copy)
 
         # Create a small box that moves from encoder to token
         token_creator = Rectangle(
@@ -533,6 +510,16 @@ class ModelPipeline(VGroup):
             stroke_width=2
         )
         token_creator.move_to(self.model_encoder.get_center())
+        token_creator.set_opacity(0)
+        # scene.add(token_creator)
+
+        scene.play(
+            TransformMatchingShapes(model_box_copy, token_creator),
+            run_time=time_unit * 1.2
+        )
+
+        token_creator.set_opacity(1)
+        scene.remove(model_box_copy)
         scene.add(token_creator)
 
         # Move to token position
@@ -558,18 +545,30 @@ class ModelPipeline(VGroup):
             abbreviated=True
         )
         model_tokens.scale(0.65)
+
+        # Align to keep the RIGHT edge constant (not the left)
         model_tokens.align_to(self.model_token, LEFT)
         model_tokens.shift(UP * (self.model_token.get_center()[1] - model_tokens.get_center()[1]))
-        self.add(model_tokens)
-        scene.add(model_tokens)
 
+        # Calculate shift amount to keep right edge constant
+        shift_amount = model_tokens.get_right()[0] - self.model_token.get_right()[0]
+
+        # Remove labels from self before animating
+        self.remove(self.model_token_label, self.token_dim_label)
+
+        # Transform single token to multiple tokens while keeping right edge constant
         scene.play(
-            FadeOut(self.model_token, shift=RIGHT),
-            FadeOut(self.model_token_label, shift=DOWN),
-            FadeOut(self.token_dim_label, shift=UP),
-            GrowFromEdge(model_tokens, LEFT),
-            self.animate.shift(LEFT * (model_tokens.get_right()[0] - self.model_token.get_right()[0])),
-            run_time=time_unit * 1.5
+            self.model_token_label.animate.set_opacity(0).shift(DOWN * 0.2),
+            self.token_dim_label.animate.set_opacity(0).shift(UP * 0.2),
+            Transform(self.model_token, model_tokens),
+            run_time=time_unit * 1.0
         )
 
-        self.model_token = model_tokens
+        # Clean up labels from scene
+        scene.remove(self.model_token_label, self.token_dim_label)
+
+        scene.play(
+            self.animate.shift(LEFT * shift_amount),
+            run_time=time_unit * 0.5
+        )
+
