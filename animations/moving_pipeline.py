@@ -546,6 +546,7 @@ class ExpandingPipelineView(MovingCameraScene):
         self.play(
             model_tokens.animate.set_opacity(0),
             model_pipeline.animate.set_opacity(1),
+            GrowFromEdge(model_pipeline, RIGHT),
             dataset_tokens.animate.shift(DOWN * 1.0),  # Adjust dataset tokens down
             self.arrow_kv.animate.put_start_and_end_on(
                 self.arrow_kv.get_start() + DOWN * 1.0,
@@ -628,11 +629,11 @@ class ExpandingPipelineView(MovingCameraScene):
         # Final wide view showing complete system
         width = abs(min(dataset_pipeline.get_left()[0], model_pipeline.get_left()[0]) - transformer.get_right()[0])
         midpoint_x = (min(dataset_pipeline.get_left()[0], model_pipeline.get_left()[0]) + transformer.get_right()[0]) / 2
-        midpoint = np.array([midpoint_x, 0, 0])
-
+        midpoint_y = (min(dataset_pipeline.get_left()[1], model_pipeline.get_left()[1]) + transformer.get_right()[1]) / 2
+        midpoint = np.array([midpoint_x, midpoint_y, 0])
 
         self.play(
-            self.camera.frame.animate.move_to(midpoint).set(width=width * 1.2),
+            self.camera.frame.animate.move_to(midpoint).set(width=width * 1.1),
             run_time=2
         )
         self.wait(2)

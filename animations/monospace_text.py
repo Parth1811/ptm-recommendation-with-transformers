@@ -1,4 +1,5 @@
 """Monospace text wrapper for consistent font styling across animations."""
+from color_constants import get_text_color
 from manim import Text as ManimText
 
 
@@ -22,6 +23,9 @@ class MonospaceText(ManimText):
             **kwargs: Additional arguments passed to Manim's Text class
         """
         # Try PT Mono first
+        if 'color' not in kwargs:
+            kwargs['color'] = get_text_color()
+
         try:
             super().__init__(text, font=font, font_size=font_size, **kwargs)
         except Exception:

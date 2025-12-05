@@ -124,8 +124,10 @@ def get_background_color():
     return ColorTheme.get_color("background")
 
 
-def get_text_color():
+def get_text_color(reverse=False):
     """Get primary text color for current theme."""
+    if reverse:
+        return ColorTheme.get_color("background")
     return ColorTheme.get_color("text")
 
 

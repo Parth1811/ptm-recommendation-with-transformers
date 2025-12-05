@@ -1,4 +1,5 @@
-from color_constants import get_attention_block_color, get_text_color
+from color_constants import (MATERIAL_GREEN, MATERIAL_GREEN_STROKE,
+                             get_attention_block_color, get_text_color)
 from manim import *
 from monospace_text import MonospaceText
 from neural_network import NeuralNetwork
@@ -21,7 +22,10 @@ class CrossAttentionBlock(VGroup):
             content="Cross\nAttention\nBlock",
             width=width,
             height=height,
-            fill_color=get_attention_block_color(),
+            fill_color=MATERIAL_GREEN,
+            stroke_color=MATERIAL_GREEN_STROKE,
+            fill_with_stroke=True,
+            fill_opacity=0.6,
             text_align="center",
             font_size=32,
         )
@@ -90,12 +94,12 @@ class Transformer(VGroup):
             self.add(self.fc_layer, self.attention_to_fc)
 
             # FC Layer label
-            self.fc_label = MonospaceText("Fully Connected", font_size=20)
+            self.fc_label = MonospaceText("Fully Connected", font_size=20, color=get_text_color())
             self.fc_label.next_to(self.fc_layer, DOWN, buff=0.3)
             self.add(self.fc_label)
 
             # Output dimensions
-            self.output_dim = MonospaceText("N × 1", font_size=24)
+            self.output_dim = MonospaceText("N × 1", font_size=24, color=get_text_color())
             self.output_dim.next_to(self.fc_layer, UP, buff=0.5)
             self.add(self.output_dim)
 
