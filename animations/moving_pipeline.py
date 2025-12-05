@@ -575,7 +575,6 @@ class ExpandingPipelineView(MovingCameraScene):
         # Create DatasetPipeline (initially invisible)
         dataset_pipeline = DatasetPipeline()
         dataset_pipeline.scale(0.9)
-        dataset_pipeline.set_opacity(0)
 
         # Position so final tokens align with original position
         # Use rightmost token from dataset_tokens for alignment
@@ -585,7 +584,7 @@ class ExpandingPipelineView(MovingCameraScene):
         # Fade transition
         self.play(
             dataset_tokens.animate.set_opacity(0),
-            GrowFromPoint(dataset_pipeline, dataset_tokens.get_right()),
+            GrowFromEdge(dataset_pipeline, RIGHT),
             self.camera.frame.animate.move_to(dataset_pipeline.get_center()).set(width=dataset_pipeline.width * 1.2),
             run_time=1.5
         )

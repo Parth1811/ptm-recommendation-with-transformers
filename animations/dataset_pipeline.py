@@ -403,7 +403,7 @@ class DatasetPipeline(VGroup):
                 move_anims.append(box.animate.move_to(target_pos))
 
         # Fade out other boxes
-        fade_anims = [box.animate.set_opacity(0.1) for box in other_boxes]
+        fade_anims = [box.animate.set_opacity(0.5) for box in other_boxes]
 
         # Execute all movements simultaneously
         scene.play(
