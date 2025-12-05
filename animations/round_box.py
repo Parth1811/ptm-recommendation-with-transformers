@@ -16,6 +16,7 @@ class RoundBox(VGroup):
         fill_opacity=0.8,
         stroke_color=None,
         stroke_width=2,
+        fill_with_stroke=False,
         text_align="center",
         font_size=24,
         **kwargs
@@ -27,6 +28,10 @@ class RoundBox(VGroup):
             fill_color = get_box_default_color()
         if stroke_color is None:
             stroke_color = get_stroke_color()
+
+        # If fill_with_stroke is True, use stroke color for fill
+        if fill_with_stroke:
+            fill_color = stroke_color
 
         self.box = RoundedRectangle(
             width=width,

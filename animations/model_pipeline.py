@@ -1,7 +1,11 @@
 import numpy as np
-from color_constants import (MATERIAL_BLUE, MATERIAL_ORANGE, MATERIAL_PURPLE,
-                             MATERIAL_TEAL, MATERIAL_YELLOW, get_arrow_color,
-                             get_stroke_color, get_text_color,
+from color_constants import (MATERIAL_BLUE, MATERIAL_BLUE_STROKE,
+                             MATERIAL_GRAY, MATERIAL_GRAY_STROKE,
+                             MATERIAL_MINT, MATERIAL_MINT_STROKE,
+                             MATERIAL_ORANGE, MATERIAL_ORANGE_STROKE,
+                             MATERIAL_PURPLE, MATERIAL_PURPLE_STROKE,
+                             MATERIAL_YELLOW, MATERIAL_YELLOW_STROKE,
+                             get_arrow_color, get_stroke_color, get_text_color,
                              get_token_model_color)
 from manim import *
 from monospace_text import MonospaceText
@@ -55,8 +59,8 @@ class ModelPipeline(VGroup):
             "C\nL\nU\nS\nT\nE\nR\nI\nN\nG",
             width=1.0,
             height=3.5,
-            fill_color=MATERIAL_TEAL,
-            stroke_color=MATERIAL_TEAL,
+            fill_color=MATERIAL_MINT,
+            stroke_color=MATERIAL_MINT_STROKE,
             stroke_width=3,
             font_size=22,
             text_align="center",
@@ -100,7 +104,7 @@ class ModelPipeline(VGroup):
             width=3.0,
             height=0.7,
             fill_color=MATERIAL_BLUE,
-            stroke_color=MATERIAL_BLUE,
+            stroke_color=MATERIAL_BLUE_STROKE,
             stroke_width=2,
             font_size=18,
             text_align="center",
@@ -130,12 +134,13 @@ class ModelPipeline(VGroup):
                 ellipsis.shift(RIGHT * (i - 1.5) * 0.4)
                 self.combined_boxes.add(ellipsis)
             else:
+                stroke_color = self._get_stroke_color(color)
                 box = Rectangle(
                     width=0.4,
                     height=0.4,
                     fill_color=color,
                     fill_opacity=0.8,
-                    stroke_color=color,
+                    stroke_color=stroke_color,
                     stroke_width=2,
                 )
                 offset = i if i <= 1 else i + 1  # Skip position 2 for ellipsis
@@ -152,8 +157,8 @@ class ModelPipeline(VGroup):
             "",
             width=0.7,
             height=3.5,
-            fill_color=GRAY_B,
-            stroke_color=WHITE,
+            fill_color=MATERIAL_GRAY,
+            stroke_color=MATERIAL_GRAY_STROKE,
             stroke_width=2,
             font_size=20,
             text_align="center",
@@ -187,7 +192,7 @@ class ModelPipeline(VGroup):
 
         # Encoder label
         self.encoder_label = MonospaceText("Model\nEncoder", font_size=18,
-                                           color=WHITE, line_spacing=0.8)
+                                           color=get_text_color(), line_spacing=0.8)
         self.encoder_label.move_to(self.model_encoder.get_center())
 
         # Arrow to encoder (on center line)
@@ -207,8 +212,8 @@ class ModelPipeline(VGroup):
             "",
             width=0.6,
             height=1.8,
-            fill_color=get_token_model_color(),
-            stroke_color=WHITE,
+            fill_color=MATERIAL_PURPLE,
+            stroke_color=MATERIAL_PURPLE_STROKE,
             stroke_width=2,
             font_size=16,
             text_align="center",
@@ -217,7 +222,7 @@ class ModelPipeline(VGroup):
         self.model_token.shift(UP * (self.center_line[1] - self.model_token.get_center()[1]))
 
         self.model_token_label = MonospaceText("Model\nToken", font_size=18,
-                                               color=WHITE, line_spacing=0.8)
+                                               color=get_text_color(), line_spacing=0.8)
         self.model_token_label.next_to(self.model_token, UP, buff=0.2)
 
         # Token dimension label
@@ -242,6 +247,15 @@ class ModelPipeline(VGroup):
         # Center the entire pipeline
         self.move_to(ORIGIN)
 
+    def _get_stroke_color(self, fill_color):
+        """Map fill color to corresponding stroke color."""
+        color_map = {
+            MATERIAL_YELLOW: MATERIAL_YELLOW_STROKE,
+            MATERIAL_PURPLE: MATERIAL_PURPLE_STROKE,
+            GRAY_A: get_stroke_color(),  # Default stroke for neutral colors
+        }
+        return color_map.get(fill_color, get_stroke_color())
+
     def _create_parameter_boxes(self):
         """Create parameter representation boxes below the network."""
         params = VGroup()
@@ -256,12 +270,13 @@ class ModelPipeline(VGroup):
         for i, (pos, color, label) in enumerate(zip([0, 1.5, 3], colors[:3], labels)):
             # Create parameter box
             param_content = "w1\nw2\n..\n..\nb1\nb2\n.."
+            stroke_color = self._get_stroke_color(color)
             param_box = RoundBox(
                 param_content,
                 width=0.6,
                 height=1.8,
                 fill_color=color,
-                stroke_color=color,
+                stroke_color=stroke_color,
                 stroke_width=2,
                 font_size=12,
                 text_align="center",
@@ -269,7 +284,7 @@ class ModelPipeline(VGroup):
             param_box.shift(RIGHT * pos * 0.6)
 
             # Add layer label below
-            layer_label = MonospaceText(label, font_size=14, color=color, line_spacing=0.7)
+            layer_label = MonospaceText(label, font_size=14, color=get_text_color(), line_spacing=0.7)
             layer_label.next_to(param_box, DOWN, buff=0.15)
 
             param_group = VGroup(param_box, layer_label)
@@ -291,12 +306,13 @@ class ModelPipeline(VGroup):
 
         for i, (content, dim, color) in enumerate(cluster_specs):
             # Create parameter box
+            stroke_color = self._get_stroke_color(color)
             box = RoundBox(
                 content,
                 width=0.6,
                 height=1.5,
                 fill_color=color,
-                stroke_color=color,
+                stroke_color=stroke_color,
                 stroke_width=2,
                 font_size=10,
                 text_align="center",
@@ -325,9 +341,9 @@ class ModelPipeline(VGroup):
 
         encoder = Polygon(
             *vertices,
-            fill_color=MATERIAL_TEAL,
+            fill_color=MATERIAL_MINT,
             fill_opacity=0.8,
-            stroke_color=MATERIAL_TEAL,
+            stroke_color=MATERIAL_MINT_STROKE,
             stroke_width=3,
         )
 
@@ -367,7 +383,7 @@ class ModelPipeline(VGroup):
             *[edge_highlights[i].animate.move_to(self.param_boxes[i // (len(edge_highlights) // len(self.param_boxes))].get_center()).set_opacity(0)
               for i in range(len(edge_highlights))],
             *[param_group.animate.set_opacity(1) for param_group in self.param_boxes],
-            *[Indicate(param_group, color=YELLOW, scale_factor=1.15) for param_group in self.param_boxes],
+            *[Indicate(param_group, color=MATERIAL_YELLOW, scale_factor=1.15) for param_group in self.param_boxes],
             run_time=time_unit * 1.5
         )
         scene.remove(edge_highlights)
@@ -402,7 +418,7 @@ class ModelPipeline(VGroup):
 
         scene.play(
             *move_anims,
-            Circumscribe(self.clustering_box, color=YELLOW, stroke_width=3, buff=0.1),
+            Circumscribe(self.clustering_box, stroke_width=3, buff=0.1),
             run_time=time_unit * 1.5
         )
 
@@ -410,7 +426,7 @@ class ModelPipeline(VGroup):
         scene.play(
             *[param_copy.animate.set_opacity(0) for param_copy in param_copies],
             *[cluster.animate.set_opacity(1) for cluster in self.clustered_params],
-            *[Indicate(cluster, color=YELLOW, scale_factor=1.1) for cluster in self.clustered_params],
+            *[Indicate(cluster, color=MATERIAL_YELLOW, scale_factor=1.1) for cluster in self.clustered_params],
             run_time=time_unit * 1.0
         )
         scene.remove(*param_copies)
@@ -447,7 +463,7 @@ class ModelPipeline(VGroup):
 
         scene.play(
             *move_down_anims,
-            Circumscribe(self.combining_box, color=YELLOW, stroke_width=3, buff=0.1),
+            Circumscribe(self.combining_box, color=MATERIAL_YELLOW_STROKE, stroke_width=3, buff=0.1),
             run_time=time_unit * 1.5
         )
 
@@ -470,7 +486,7 @@ class ModelPipeline(VGroup):
             combined_copy.animate.move_to(self.model_box.get_center()).scale(0.5).set_opacity(0.5),
             self.model_box.animate.set_opacity(1),
             self.model_dim_label.animate.set_opacity(1),
-            Indicate(self.model_box, color=YELLOW, scale_factor=1.1),
+            Indicate(self.model_box, color=MATERIAL_GRAY_STROKE, scale_factor=1.1),
             run_time=time_unit * 1.5
         )
 
@@ -503,7 +519,7 @@ class ModelPipeline(VGroup):
         #     run_time=time_unit * 0.5
         # )
         scene.play(
-            Indicate(self.model_encoder, color=YELLOW, scale_factor=1.1),
+            Indicate(self.model_encoder, color=MATERIAL_MINT_STROKE, scale_factor=1.1),
             run_time=time_unit * 0.8
         )
 
@@ -511,9 +527,9 @@ class ModelPipeline(VGroup):
         token_creator = Rectangle(
             width=0.2,
             height=0.6,
-            fill_color=get_token_model_color(),
+            fill_color=MATERIAL_PURPLE,
             fill_opacity=0.8,
-            stroke_color=WHITE,
+            stroke_color=MATERIAL_PURPLE_STROKE,
             stroke_width=2
         )
         token_creator.move_to(self.model_encoder.get_center())
@@ -530,7 +546,7 @@ class ModelPipeline(VGroup):
             token_creator.animate.set_opacity(0),
             self.model_token.animate.set_opacity(1),
             self.token_dim_label.animate.set_opacity(1),
-            Indicate(self.model_token, color=YELLOW, scale_factor=1.2),
+            Indicate(self.model_token, color=MATERIAL_PURPLE_STROKE, scale_factor=1.2),
             run_time=time_unit * 1.0
         )
         scene.remove(token_creator)

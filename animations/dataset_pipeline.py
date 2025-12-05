@@ -1,8 +1,12 @@
-from color_constants import (MATERIAL_BLUE, get_arrow_color,
-                             get_clustering_color, get_encoder_image_color,
-                             get_encoder_text_color, get_sample_box_color,
-                             get_sampling_color, get_stroke_color,
-                             get_text_color)
+from color_constants import (MATERIAL_BLUE, MATERIAL_BLUE_STROKE,
+                             MATERIAL_DARK_GRAY, MATERIAL_DARK_GRAY_STROKE,
+                             MATERIAL_GRAY, MATERIAL_GRAY_STROKE,
+                             MATERIAL_MINT, MATERIAL_MINT_STROKE,
+                             MATERIAL_YELLOW, MATERIAL_YELLOW_STROKE,
+                             get_arrow_color, get_clustering_color,
+                             get_encoder_image_color, get_encoder_text_color,
+                             get_sample_box_color, get_sampling_color,
+                             get_stroke_color, get_text_color)
 from manim import *
 from monospace_text import MonospaceText
 from neural_network import NeuralNetwork
@@ -21,7 +25,9 @@ class DatasetPipeline(VGroup):
         self.add(self.unstructured)
 
         # Clustering box
-        self.clustering1 = self._create_vertical_box("C\nL\nU\nS\nT\nE\nR\nI\nN\nG")
+        self.clustering1 = self._create_vertical_box("C\nL\nU\nS\nT\nE\nR\nI\nN\nG",
+                                                      fill_color=MATERIAL_MINT,
+                                                      stroke_color=MATERIAL_MINT_STROKE)
         self.clustering1.next_to(self.unstructured, RIGHT, buff=0.5)
         self.add(self.clustering1)
 
@@ -65,7 +71,9 @@ class DatasetPipeline(VGroup):
         self.add(arrow2)
 
         # Sampling box
-        self.sampling = self._create_vertical_box("S\nA\nM\nP\nL\nI\nN\nG")
+        self.sampling = self._create_vertical_box("S\nA\nM\nP\nL\nI\nN\nG",
+                                                   fill_color=MATERIAL_BLUE,
+                                                   stroke_color=MATERIAL_BLUE_STROKE)
         self.sampling.next_to(self.structured2, RIGHT, buff=0.5)
         self.sampling.shift(UP * (center_y - self.sampling.get_center()[1]))
         self.add(self.sampling)
@@ -85,12 +93,19 @@ class DatasetPipeline(VGroup):
         self.samples = VGroup()
         sample_labels = ["A", "B", "C", "..."]
         for i, label in enumerate(sample_labels):
+            # Use label-based color, or teal for ellipsis
+            if label == "...":
+                sample_fill = MATERIAL_DARK_GRAY
+                sample_stroke = MATERIAL_DARK_GRAY_STROKE
+            else:
+                sample_fill, sample_stroke = self._get_color_for_label(label)
+
             sample = RoundBox(
                 content=label,
                 width=0.8,
                 height=0.8,
-                fill_color=get_sample_box_color(),
-                stroke_color=get_sample_box_color(),
+                fill_color=sample_fill,
+                stroke_color=sample_stroke,
                 stroke_width=3,
                 font_size=24,
             )
@@ -146,7 +161,12 @@ class DatasetPipeline(VGroup):
         self.add(self.samples_label)
 
         # Dataset tokens output as actual tokens
-        self.dataset_tokens = DatasetTokens(num_samples=3, abbreviated=True)
+        self.dataset_tokens = DatasetTokens(
+            num_samples=3,
+            colors=[MATERIAL_YELLOW, MATERIAL_MINT, MATERIAL_BLUE],
+            stroke_colors=[MATERIAL_YELLOW_STROKE, MATERIAL_MINT_STROKE, MATERIAL_BLUE_STROKE],
+            abbreviated=True
+        )
         self.dataset_tokens.scale(0.6)
         self.dataset_tokens.next_to(self.encoder_network, RIGHT, buff=1.2)
         self.dataset_tokens.shift(LEFT * 0.2)
@@ -165,6 +185,15 @@ class DatasetPipeline(VGroup):
 
         # Center the entire pipeline
         self.move_to(ORIGIN)
+
+    def _get_color_for_label(self, label):
+        """Return (fill_color, stroke_color) tuple based on dataset label."""
+        color_map = {
+            "A": (MATERIAL_YELLOW, MATERIAL_YELLOW_STROKE),     # Yellow/gold for A (Q3)
+            "B": (MATERIAL_MINT, MATERIAL_MINT_STROKE),         # Green/teal for B
+            "C": (MATERIAL_BLUE, MATERIAL_BLUE_STROKE),         # Blue for C (Q1, Q2)
+        }
+        return color_map.get(label, (MATERIAL_BLUE, MATERIAL_BLUE_STROKE))  # Default to blue
 
     def _create_data_grid(self, label, rows, cols, seed=42, labels=None):
         """Create a scattered grid of small rounded boxes representing data.
@@ -245,25 +274,38 @@ class DatasetPipeline(VGroup):
                 font_size = 14
 
             if content:
+                # Determine box color based on grid label
+                if label in ["A", "B", "C"]:
+                    box_fill, box_stroke = self._get_color_for_label(label)
+                elif content in ["A", "B", "C"]:
+                    box_fill, box_stroke = self._get_color_for_label(content)
+                else:
+                    box_fill, box_stroke = MATERIAL_BLUE, MATERIAL_BLUE_STROKE
+
                 box = RoundBox(
                     content=content,
                     width=box_width,
                     height=box_height,
-                    fill_color=MATERIAL_BLUE,
-                    stroke_color=MATERIAL_BLUE,
+                    fill_color=box_fill,
+                    stroke_color=box_stroke,
                     stroke_width=2,
                     font_size=font_size,
                     corner_radius=0.05,
                 )
             else:
-                # Empty box
-                box = RoundedRectangle(
+                if label in ["A", "B", "C"]:
+                    box_fill, box_stroke = self._get_color_for_label(label)
+                else:
+                    box_fill, box_stroke = MATERIAL_GRAY, MATERIAL_GRAY_STROKE
+
+                box = RoundBox(
+                    content="",
                     width=box_width,
                     height=box_height,
+                    fill_color=box_fill,
+                    stroke_color=box_stroke,
                     corner_radius=0.05,
-                    stroke_color=get_stroke_color(),
                     stroke_width=2,
-                    fill_opacity=0.6,
                 )
 
             box.shift(RIGHT * x + UP * y)
@@ -278,14 +320,19 @@ class DatasetPipeline(VGroup):
         group.add(grid, label_text)
         return group
 
-    def _create_vertical_box(self, text):
+    def _create_vertical_box(self, text, fill_color=None, stroke_color=None):
         """Create a vertical colored box with text."""
+        if fill_color is None:
+            fill_color = MATERIAL_MINT  # Default to teal
+        if stroke_color is None:
+            stroke_color = fill_color  # Default stroke to match fill
+
         return RoundBox(
             content=text,
             width=1.0,
             height=4.5,
-            fill_color=get_clustering_color(),
-            stroke_color=get_clustering_color(),
+            fill_color=fill_color,
+            stroke_color=stroke_color,
             stroke_width=3,
             font_size=28,
             text_align="center",

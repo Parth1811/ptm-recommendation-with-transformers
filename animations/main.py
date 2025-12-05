@@ -33,7 +33,7 @@ class ShowcaseAll(Scene):
         # self.show_transformer()
 
         # 5. Dataset Pipeline
-        self.show_dataset_pipeline()
+        # self.show_dataset_pipeline()
 
         # # 6. Round Box
         # self.show_round_box()
@@ -127,7 +127,7 @@ class ShowcaseAll(Scene):
         self.wait(1)
 
         # Animate the forward pass (extended time for 3 samples)
-        pipeline.animate_forward(self, run_time=12)
+        pipeline.animate_forward(self, run_time=8)
 
         self.wait(2)
         self.play(FadeOut(pipeline), FadeOut(label))

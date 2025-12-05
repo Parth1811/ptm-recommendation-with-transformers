@@ -9,17 +9,41 @@ class ColorTheme:
     """Color theme manager for light and dark modes."""
 
     # Material Design Colors
-    MATERIAL_GREEN = "#91DE93"
-    MATERIAL_TEAL = "#009688"
-    MATERIAL_BLUE = "#2196F3"
-    MATERIAL_PURPLE = "#9C27B0"
-    MATERIAL_ORANGE = "#FF9800"
-    MATERIAL_RED = "#F44336"
-    MATERIAL_YELLOW = "#FFEB3B"
-    MATERIAL_PINK = "#E91E63"
-    MATERIAL_CYAN = "#00BCD4"
-    MATERIAL_LIME = "#CDDC39"
-    MATERIAL_INDIGO = "#3F51B5"
+    MATERIAL_WHITE = "#FFFFFF"
+    MATERIAL_WHITE_STROKE = "#C3CFD9"
+
+    MATERIAL_GRAY = "#F2F5F7"
+    MATERIAL_GRAY_STROKE = "#C3CFD9"
+
+    MATERIAL_DARK_GRAY = "#E1E5EC"
+    MATERIAL_DARK_GRAY_STROKE = "#9EADBA"
+
+    MATERIAL_GREEN = "#D2E4E1"
+    MATERIAL_GREEN_STROKE = "#207868"
+
+    MATERIAL_MINT = "#D1EFEC"
+    MATERIAL_MINT_STROKE = "#1AAE9F"
+
+    MATERIAL_BLUE = "#D5E7F7"
+    MATERIAL_BLUE_STROKE = "#2C88D9"
+
+    MATERIAL_PURPLE = "#F2D6F6"
+    MATERIAL_PURPLE_STROKE = "#BD34D1"
+
+    MATERIAL_ORANGE = "#FAE6D8"
+    MATERIAL_ORANGE_STROKE = "#E8833A"
+
+    MATERIAL_RED = "#F6DADE"
+    MATERIAL_RED_STROKE = "#D3455B"
+
+    MATERIAL_YELLOW = "#FDF3D3"
+    MATERIAL_YELLOW_STROKE = "#F7C325"
+
+    MATERIAL_PINK = "#F2D6F6"
+    MATERIAL_PINK_STROKE = "#BD34D1"
+
+    MATERIAL_INDIGO = "#E0DEFD"
+    MATERIAL_INDIGO_STROKE = "#6558F5"
 
     # Light Mode Colors
     LIGHT_THEME = {
@@ -35,13 +59,13 @@ class ColorTheme:
         "neural_edge": "#2196F3",
 
         "token_model": MATERIAL_PINK,
-        "token_dataset": MATERIAL_TEAL,
+        "token_dataset": MATERIAL_MINT,
 
         "clustering": MATERIAL_GREEN,
         "sampling": MATERIAL_BLUE,
         "sample_box": MATERIAL_ORANGE,
 
-        "encoder_image": MATERIAL_TEAL,
+        "encoder_image": MATERIAL_MINT,
         "encoder_text": MATERIAL_PURPLE,
 
         "attention_block": "#4CAF50",  # LOGO_GREEN equivalent
@@ -189,15 +213,85 @@ def get_box_default_color():
     return ColorTheme.get_color("box_default")
 
 
+# Stroke color getters
+def get_green_stroke():
+    """Get green stroke color."""
+    return ColorTheme.MATERIAL_GREEN_STROKE
+
+
+def get_mint_stroke():
+    """Get mint/teal stroke color."""
+    return ColorTheme.MATERIAL_MINT_STROKE
+
+
+def get_blue_stroke():
+    """Get blue stroke color."""
+    return ColorTheme.MATERIAL_BLUE_STROKE
+
+
+def get_purple_stroke():
+    """Get purple stroke color."""
+    return ColorTheme.MATERIAL_PURPLE_STROKE
+
+
+def get_orange_stroke():
+    """Get orange stroke color."""
+    return ColorTheme.MATERIAL_ORANGE_STROKE
+
+
+def get_red_stroke():
+    """Get red stroke color."""
+    return ColorTheme.MATERIAL_RED_STROKE
+
+
+def get_yellow_stroke():
+    """Get yellow stroke color."""
+    return ColorTheme.MATERIAL_YELLOW_STROKE
+
+
+def get_pink_stroke():
+    """Get pink stroke color."""
+    return ColorTheme.MATERIAL_PINK_STROKE
+
+
+def get_indigo_stroke():
+    """Get indigo stroke color."""
+    return ColorTheme.MATERIAL_INDIGO_STROKE
+
+
 # Direct color access (for backward compatibility)
+MATERIAL_WHITE = ColorTheme.MATERIAL_WHITE
+MATERIAL_WHITE_STROKE = ColorTheme.MATERIAL_WHITE_STROKE
+
+MATERIAL_GRAY = ColorTheme.MATERIAL_GRAY
+MATERIAL_GRAY_STROKE = ColorTheme.MATERIAL_GRAY_STROKE
+
+MATERIAL_DARK_GRAY = ColorTheme.MATERIAL_DARK_GRAY
+MATERIAL_DARK_GRAY_STROKE = ColorTheme.MATERIAL_DARK_GRAY_STROKE
+
 MATERIAL_GREEN = ColorTheme.MATERIAL_GREEN
-MATERIAL_TEAL = ColorTheme.MATERIAL_TEAL
+MATERIAL_GREEN_STROKE = ColorTheme.MATERIAL_GREEN_STROKE
+
+MATERIAL_MINT = ColorTheme.MATERIAL_MINT
+MATERIAL_MINT_STROKE = ColorTheme.MATERIAL_MINT_STROKE
+
 MATERIAL_BLUE = ColorTheme.MATERIAL_BLUE
+MATERIAL_BLUE_STROKE = ColorTheme.MATERIAL_BLUE_STROKE
+
 MATERIAL_PURPLE = ColorTheme.MATERIAL_PURPLE
+MATERIAL_PURPLE_STROKE = ColorTheme.MATERIAL_PURPLE_STROKE
+
 MATERIAL_ORANGE = ColorTheme.MATERIAL_ORANGE
+MATERIAL_ORANGE_STROKE = ColorTheme.MATERIAL_ORANGE_STROKE
+
 MATERIAL_RED = ColorTheme.MATERIAL_RED
+MATERIAL_RED_STROKE = ColorTheme.MATERIAL_RED_STROKE
+
 MATERIAL_YELLOW = ColorTheme.MATERIAL_YELLOW
+MATERIAL_YELLOW_STROKE = ColorTheme.MATERIAL_YELLOW_STROKE
+
 MATERIAL_PINK = ColorTheme.MATERIAL_PINK
-MATERIAL_CYAN = ColorTheme.MATERIAL_CYAN
-MATERIAL_LIME = ColorTheme.MATERIAL_LIME
+MATERIAL_PINK_STROKE = ColorTheme.MATERIAL_PINK_STROKE
+
 MATERIAL_INDIGO = ColorTheme.MATERIAL_INDIGO
+MATERIAL_INDIGO_STROKE = ColorTheme.MATERIAL_INDIGO_STROKE
