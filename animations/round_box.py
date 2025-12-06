@@ -18,6 +18,7 @@ class RoundBox(VGroup):
         stroke_color=None,
         stroke_width=2,
         fill_with_stroke=False,
+        invert_text_color_if_filled=True,
         text_align="center",
         font_size=24,
         **kwargs
@@ -47,6 +48,7 @@ class RoundBox(VGroup):
         self.add(self.box)
 
         if content is not None:
+
             if isinstance(content, str):
                 # Map text_align to Manim's alignment parameter
                 alignment_map = {
@@ -56,7 +58,7 @@ class RoundBox(VGroup):
                 }
                 align_point = alignment_map.get(text_align.lower(), ORIGIN)
 
-                self.content = MonospaceText(content, font_size=font_size, color=get_text_color(reverse=fill_with_stroke))
+                self.content = MonospaceText(content, font_size=font_size, color=get_text_color(reverse=fill_with_stroke and invert_text_color_if_filled))
                 # Align text within the box
                 if text_align.lower() == "center":
                     self.content.move_to(self.box.get_center())

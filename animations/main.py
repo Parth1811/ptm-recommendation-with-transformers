@@ -8,7 +8,7 @@ from monospace_text import MonospaceText
 from neural_network import NeuralNetwork
 from round_box import RoundBox
 from tokens import DatasetTokens, ModelTokens, Tokens
-from transformer import CrossAttentionBlock, Transformer
+from transformer import AttentionBlock, Transformer
 
 
 class ShowcaseAll(Scene):
@@ -30,7 +30,7 @@ class ShowcaseAll(Scene):
         # self.show_cross_attention()
 
         # # 4. Transformer
-        # self.show_transformer()
+        self.show_transformer()
 
         # 5. Dataset Pipeline
         # self.show_dataset_pipeline()
@@ -39,7 +39,7 @@ class ShowcaseAll(Scene):
         # self.show_round_box()
 
         # # 7. Birds-Eye View
-        self.show_birds_eye_view()
+        # self.show_birds_eye_view()
 
         # 8. Model Pipeline
         # self.show_model_pipeline()
@@ -93,7 +93,7 @@ class ShowcaseAll(Scene):
         label = MonospaceText("Cross Attention Block", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
-        attention = CrossAttentionBlock()
+        attention = AttentionBlock()
 
         self.play(Write(label))
         self.play(Create(attention))

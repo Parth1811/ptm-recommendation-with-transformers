@@ -33,7 +33,7 @@ class CrossAttentionView(VGroup):
         self.dataset_tokens.scale(0.9)
 
         # Transformer on the right
-        self.transformer = Transformer(show_fc_layer=True)
+        self.transformer = Transformer(show_fc_layer=True, mode="cross")
         self.transformer.scale(0.7)
         self.transformer.move_to(RIGHT * 3)
 
@@ -92,7 +92,7 @@ class SelfAttentionView(VGroup):
             self.dataset_tokens.scale(0.9)
 
             # Transformer on the right
-            self.transformer = Transformer(show_fc_layer=True)
+            self.transformer = Transformer(show_fc_layer=True, mode="self")
             self.transformer.next_to(self.dataset_tokens, RIGHT, buff=1.0)
             self.transformer.scale(0.7)
 

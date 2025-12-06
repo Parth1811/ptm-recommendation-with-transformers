@@ -1,12 +1,13 @@
 """Manim animations for ML recommendation pipeline."""
 
-from animations.round_box import RoundBox
-from animations.tokens import Tokens, ModelTokens, DatasetTokens
-from animations.neural_network import NeuralNetwork
-from animations.transformer import Transformer, CrossAttentionBlock
 from animations.dataset_pipeline import DatasetPipeline
-from animations.moving_pipeline import MovingRecommendationPipeline, FocusedPipelineView
 from animations.monospace_text import MonospaceText
+from animations.moving_pipeline import (FocusedPipelineView,
+                                        MovingRecommendationPipeline)
+from animations.neural_network import NeuralNetwork
+from animations.round_box import RoundBox
+from animations.tokens import DatasetTokens, ModelTokens, Tokens
+from animations.transformer import AttentionBlock, Transformer
 
 __all__ = [
     "RoundBox",
@@ -15,7 +16,7 @@ __all__ = [
     "DatasetTokens",
     "NeuralNetwork",
     "Transformer",
-    "CrossAttentionBlock",
+    "AttentionBlock",
     "DatasetPipeline",
     "MovingRecommendationPipeline",
     "FocusedPipelineView",
