@@ -17,58 +17,78 @@ from tokens import DatasetTokens
 class DatasetPipeline(VGroup):
     """Complete dataset processing pipeline visualization."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, include_unstructured=True, **kwargs):
         super().__init__(**kwargs)
 
-        # Unstructured dataset
-        self.unstructured = self._create_data_grid("Unstructured\nDataset", 4, 4, seed=42, labels=["A", "B", "C"])
-        self.add(self.unstructured)
+        self.include_unstructured = include_unstructured
 
-        # Clustering box
-        self.clustering1 = self._create_vertical_box("C\nL\nU\nS\nT\nE\nR\nI\nN\nG",
-                                                      fill_color=MATERIAL_MINT,
-                                                      stroke_color=MATERIAL_MINT_STROKE)
-        self.clustering1.next_to(self.unstructured, RIGHT, buff=0.5)
-        self.add(self.clustering1)
+        if include_unstructured:
+            # Unstructured dataset
+            self.unstructured = self._create_data_grid("Unstructured\nDataset", 4, 4, seed=42, labels=["A", "B", "C"])
+            self.add(self.unstructured)
 
-        # Arrow
-        arrow1 = Arrow(
-            self.unstructured.get_right(),
-            self.clustering1.get_left(),
-            buff=0.1,
-            stroke_width=3,
-            max_tip_length_to_length_ratio=0.15,
-            color=get_arrow_color()
-        )
-        self.add(arrow1)
+            # Clustering box
+            self.clustering1 = self._create_vertical_box("C\nL\nU\nS\nT\nE\nR\nI\nN\nG",
+                                                          fill_color=MATERIAL_MINT,
+                                                          stroke_color=MATERIAL_MINT_STROKE)
+            self.clustering1.next_to(self.unstructured, RIGHT, buff=0.5)
+            self.add(self.clustering1)
 
-        # Structured dataset
-        self.structured1 = self._create_data_grid("A", 2, 2, seed=100, labels=["A"])
-        self.structured1.next_to(self.clustering1, RIGHT, buff=0.5)
-        self.structured1.shift(UP * 0.9)
-        self.add(self.structured1)
+            # Arrow
+            arrow1 = Arrow(
+                self.unstructured.get_right(),
+                self.clustering1.get_left(),
+                buff=0.1,
+                stroke_width=3,
+                max_tip_length_to_length_ratio=0.15,
+                color=get_arrow_color()
+            )
+            self.add(arrow1)
+
+            # Structured dataset
+            self.structured1 = self._create_data_grid("A", 2, 2, seed=100, labels=["A"])
+            self.structured1.next_to(self.clustering1, RIGHT, buff=0.5)
+            self.structured1.shift(UP * 0.9)
+            self.add(self.structured1)
+        else:
+            # Start directly with structured datasets
+            self.unstructured = None
+            self.clustering1 = None
+
+            # Structured dataset A (positioned at origin as starting point)
+            self.structured1 = self._create_data_grid("A", 2, 2, seed=100, labels=["A"])
+            self.structured1.shift(UP * 0.9)
+            self.add(self.structured1)
 
         self.structured2 = self._create_data_grid("B", 2, 2, seed=101, labels=["B"])
         self.structured2.next_to(self.structured1, RIGHT, buff=0.5)
         self.add(self.structured2)
 
         self.structured3 = self._create_data_grid("C", 2, 2, seed=102, labels=["C"])
-        self.structured3.next_to(self.clustering1, RIGHT, buff=0.5)
-        self.structured3.shift(RIGHT + DOWN * 0.9)
+        if include_unstructured:
+            self.structured3.next_to(self.clustering1, RIGHT, buff=0.5)
+            self.structured3.shift(RIGHT + DOWN * 0.9)
+        else:
+            self.structured3.next_to(self.structured1, RIGHT, buff=0.5)
+            self.structured3.shift(DOWN * 1.8)
         self.add(self.structured3)
 
-        center_y = self.clustering1.get_center()[1]
+        if include_unstructured:
+            center_y = self.clustering1.get_center()[1]
 
-        # Arrow
-        arrow2 = Arrow(
-            self.clustering1.get_right(),
-            np.array([self.structured1.get_left()[0] + 0.4, center_y, 0]),
-            buff=0.1,
-            stroke_width=3,
-            max_tip_length_to_length_ratio=0.15,
-            color=get_arrow_color()
-        )
-        self.add(arrow2)
+            # Arrow
+            arrow2 = Arrow(
+                self.clustering1.get_right(),
+                np.array([self.structured1.get_left()[0] + 0.4, center_y, 0]),
+                buff=0.1,
+                stroke_width=3,
+                max_tip_length_to_length_ratio=0.15,
+                color=get_arrow_color()
+            )
+            self.add(arrow2)
+        else:
+            # Calculate center_y from structured datasets
+            center_y = (self.structured1.get_center()[1] + self.structured3.get_center()[1]) / 2
 
         # Sampling box
         self.sampling = self._create_vertical_box("S\nA\nM\nP\nL\nI\nN\nG",
@@ -342,84 +362,93 @@ class DatasetPipeline(VGroup):
         """Animate the forward pass through the dataset pipeline.
 
         Shows:
-        1. Unstructured data boxes rearranging into structured clusters
+        1. Unstructured data boxes rearranging into structured clusters (if include_unstructured=True)
         2. Representative samples being extracted from each cluster
         3. Samples passing through the encoder to become dataset tokens
         """
-        # Step 1: Highlight and pulse clustering box
-        scene.play(
-            self.clustering1.animate.set_opacity(1),
-            run_time=run_time * 0.1
-        )
+        if self.include_unstructured:
+            # Step 1: Highlight and pulse clustering box
+            scene.play(
+                self.clustering1.animate.set_opacity(1),
+                run_time=run_time * 0.1
+            )
 
-        # Step 2: Animate unstructured boxes rearranging into structured groups
-        # Get all boxes from unstructured grid (first child is the grid VGroup)
-        unstructured_boxes = self.unstructured[0]
+            # Step 2: Animate unstructured boxes rearranging into structured groups
+            # Get all boxes from unstructured grid (first child is the grid VGroup)
+            unstructured_boxes = self.unstructured[0]
 
-        # Separate boxes by their labels
-        boxes_with_A = []
-        boxes_with_B = []
-        boxes_with_C = []
-        other_boxes = []
+            # Separate boxes by their labels
+            boxes_with_A = []
+            boxes_with_B = []
+            boxes_with_C = []
+            other_boxes = []
 
-        for box in unstructured_boxes:
-            if hasattr(box, 'content'):
-                content = box.content.text if hasattr(box.content, 'text') else str(box.content)
-                if content == "A":
-                    boxes_with_A.append(box)
-                elif content == "B":
-                    boxes_with_B.append(box)
-                elif content == "C":
-                    boxes_with_C.append(box)
+            for box in unstructured_boxes:
+                if hasattr(box, 'content'):
+                    content = box.content.text if hasattr(box.content, 'text') else str(box.content)
+                    if content == "A":
+                        boxes_with_A.append(box)
+                    elif content == "B":
+                        boxes_with_B.append(box)
+                    elif content == "C":
+                        boxes_with_C.append(box)
+                    else:
+                        other_boxes.append(box)
                 else:
                     other_boxes.append(box)
-            else:
-                other_boxes.append(box)
 
-        # Get target positions from structured grids
-        structured1_boxes = self.structured1[0]
-        structured2_boxes = self.structured2[0]
-        structured3_boxes = self.structured3[0]
+            # Get target positions from structured grids
+            structured1_boxes = self.structured1[0]
+            structured2_boxes = self.structured2[0]
+            structured3_boxes = self.structured3[0]
 
-        # Create movement animations
-        move_anims = []
+            # Create movement animations
+            move_anims = []
 
-        # Move A boxes to structured1
-        for idx, box in enumerate(boxes_with_A[:len(structured1_boxes)]):
-            if idx < len(structured1_boxes):
-                target_pos = structured1_boxes[idx].get_center()
-                move_anims.append(box.animate.move_to(target_pos))
+            # Move A boxes to structured1
+            for idx, box in enumerate(boxes_with_A[:len(structured1_boxes)]):
+                if idx < len(structured1_boxes):
+                    target_pos = structured1_boxes[idx].get_center()
+                    move_anims.append(box.animate.move_to(target_pos))
 
-        # Move B boxes to structured2
-        for idx, box in enumerate(boxes_with_B[:len(structured2_boxes)]):
-            if idx < len(structured2_boxes):
-                target_pos = structured2_boxes[idx].get_center()
-                move_anims.append(box.animate.move_to(target_pos))
+            # Move B boxes to structured2
+            for idx, box in enumerate(boxes_with_B[:len(structured2_boxes)]):
+                if idx < len(structured2_boxes):
+                    target_pos = structured2_boxes[idx].get_center()
+                    move_anims.append(box.animate.move_to(target_pos))
 
-        # Move C boxes to structured3
-        for idx, box in enumerate(boxes_with_C[:len(structured3_boxes)]):
-            if idx < len(structured3_boxes):
-                target_pos = structured3_boxes[idx].get_center()
-                move_anims.append(box.animate.move_to(target_pos))
+            # Move C boxes to structured3
+            for idx, box in enumerate(boxes_with_C[:len(structured3_boxes)]):
+                if idx < len(structured3_boxes):
+                    target_pos = structured3_boxes[idx].get_center()
+                    move_anims.append(box.animate.move_to(target_pos))
 
-        # Fade out other boxes
-        fade_anims = [box.animate.set_opacity(0.5) for box in other_boxes]
+            # Fade out other boxes
+            fade_anims = [box.animate.set_opacity(0.5) for box in other_boxes]
 
-        # Execute all movements simultaneously
-        scene.play(
-            *move_anims,
-            *fade_anims,
-            run_time=run_time * 0.3
-        )
+            # Execute all movements simultaneously
+            scene.play(
+                *move_anims,
+                *fade_anims,
+                run_time=run_time * 0.3
+            )
 
-        # Fade out moved boxes and fade in structured grids
-        scene.play(
-            *[box.animate.set_opacity(0) for box in boxes_with_A + boxes_with_B + boxes_with_C],
-            self.structured1[0].animate.set_opacity(1),
-            self.structured2[0].animate.set_opacity(1),
-            self.structured3[0].animate.set_opacity(1),
-            run_time=run_time * 0.1
-        )
+            # Fade out moved boxes and fade in structured grids
+            scene.play(
+                *[box.animate.set_opacity(0) for box in boxes_with_A + boxes_with_B + boxes_with_C],
+                self.structured1[0].animate.set_opacity(1),
+                self.structured2[0].animate.set_opacity(1),
+                self.structured3[0].animate.set_opacity(1),
+                run_time=run_time * 0.1
+            )
+        else:
+            # Skip unstructured/clustering animation, just fade in structured grids
+            scene.play(
+                self.structured1[0].animate.set_opacity(1),
+                self.structured2[0].animate.set_opacity(1),
+                self.structured3[0].animate.set_opacity(1),
+                run_time=run_time * 0.1
+            )
 
         # Step 3: Highlight sampling box
         scene.play(
@@ -477,65 +506,68 @@ class DatasetPipeline(VGroup):
             sample_copies.append(sample_copy)
             scene.add(sample_copy)
 
-        # Process each sample one by one
-        for idx, sample_copy in enumerate(sample_copies):
-            # Highlight the sample
-            scene.play(
-                sample_copy.animate.scale(1.2).set_opacity(1),
-                run_time=run_time * 0.03
-            )
-            scene.play(
-                sample_copy.animate.scale(1/1.2),
-                run_time=run_time * 0.03
-            )
+        # Process all samples simultaneously
+        # Highlight all samples
+        scene.play(
+            *[sample_copy.animate.scale(1.2).set_opacity(1) for sample_copy in sample_copies],
+            run_time=run_time * 0.03
+        )
+        scene.play(
+            *[sample_copy.animate.scale(1/1.2) for sample_copy in sample_copies],
+            run_time=run_time * 0.03
+        )
 
-            # Move sample into the encoder network (to first layer)
-            encoder_input_pos = self.encoder_network.layer_groups[0].get_center()
-            scene.play(
-                sample_copy.animate.move_to(encoder_input_pos).scale(0.3),
-                run_time=run_time * 0.08
-            )
+        # Move all samples into the encoder network (to first layer)
+        encoder_input_pos = self.encoder_network.layer_groups[0].get_center()
+        scene.play(
+            *[sample_copy.animate.move_to(encoder_input_pos).scale(0.3) for sample_copy in sample_copies],
+            run_time=run_time * 0.08
+        )
 
-            # Fade out the sample box as it enters the network
-            scene.play(
-                sample_copy.animate.set_opacity(0),
-                run_time=run_time * 0.03
-            )
+        # Fade out all sample boxes as they enter the network
+        scene.play(
+            *[sample_copy.animate.set_opacity(0) for sample_copy in sample_copies],
+            run_time=run_time * 0.03
+        )
 
-            # Step 7: Animate forward pass through the encoder network
-            self.encoder_network.animate_forward_pass(scene, run_time=run_time * 0.12, flow_color=YELLOW)
+        # Step 7: Animate forward pass through the encoder network
+        self.encoder_network.animate_forward_pass(scene, run_time=run_time * 0.12, flow_color=YELLOW)
 
-            # Step 8: Show corresponding dataset token appearing
-            # Get the corresponding token (first 3 are actual tokens, 4th is "...")
-            token_idx = idx
-            token = self.dataset_tokens.token_boxes[token_idx]
-
-            # Create a small version at encoder output
+        # Step 8: Show all dataset tokens appearing simultaneously
+        # Create token copies at encoder output
+        token_copies = []
+        for idx in range(3):
+            token = self.dataset_tokens.token_boxes[idx]
             token_copy = token.copy()
             token_copy.scale(0.5)
             token_copy.move_to(self.encoder_network.layer_groups[-1].get_center())
             token_copy.set_opacity(0)
             scene.add(token_copy)
+            token_copies.append((token_copy, token))
 
-            # Fade in at encoder output and move to final position
-            scene.play(
-                token_copy.animate.set_opacity(1),
-                run_time=run_time * 0.03
-            )
+        # Fade in all tokens at encoder output
+        scene.play(
+            *[token_copy.animate.set_opacity(1) for token_copy, _ in token_copies],
+            run_time=run_time * 0.03
+        )
 
-            scene.play(
-                token_copy.animate.move_to(token.get_center()).scale(2),
-                run_time=run_time * 0.08
-            )
+        # Move all tokens to final positions
+        scene.play(
+            *[token_copy.animate.move_to(token.get_center()).scale(2) for token_copy, token in token_copies],
+            run_time=run_time * 0.08
+        )
 
-            # Fade out copy and fade in actual token
-            scene.play(
-                token_copy.animate.set_opacity(0),
-                token.animate.set_opacity(1),
-                run_time=run_time * 0.03
-            )
+        # Fade out copies and fade in actual tokens
+        scene.play(
+            *[token_copy.animate.set_opacity(0) for token_copy, _ in token_copies],
+            *[token.animate.set_opacity(1) for _, token in token_copies],
+            run_time=run_time * 0.03
+        )
 
+        # Clean up
+        for token_copy, _ in token_copies:
             scene.remove(token_copy)
+        for sample_copy in sample_copies:
             scene.remove(sample_copy)
 
         # Show the abbreviated "..." token and labels

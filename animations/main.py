@@ -39,10 +39,10 @@ class ShowcaseAll(Scene):
         # self.show_round_box()
 
         # # 7. Birds-Eye View
-        # self.show_birds_eye_view()
+        self.show_birds_eye_view()
 
         # 8. Model Pipeline
-        self.show_model_pipeline()
+        # self.show_model_pipeline()
 
         # End
         end_text = MonospaceText("End of Showcase", font_size=36, color=get_text_color())

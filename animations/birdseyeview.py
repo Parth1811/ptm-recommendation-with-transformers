@@ -1,6 +1,7 @@
 """Birds-eye view of transformer attention mechanisms (cross-attention and self-attention)."""
 from color_constants import *
 from manim import *
+from monospace_text import MonospaceText
 from tokens import DatasetTokens, ModelTokens
 from transformer import Transformer
 
@@ -13,9 +14,9 @@ class CrossAttentionView(VGroup):
 
         # Model tokens on top left with custom colors
         self.model_tokens = ModelTokens(
-            num_models=2,
-            colors=[MATERIAL_PURPLE, MATERIAL_PINK],
-            stroke_colors=[MATERIAL_PURPLE_STROKE, MATERIAL_PINK_STROKE],
+            num_models=3,
+            colors=[MATERIAL_PURPLE, MATERIAL_PINK, MATERIAL_ORANGE],
+            stroke_colors=[MATERIAL_PURPLE_STROKE, MATERIAL_PINK_STROKE, MATERIAL_ORANGE_STROKE],
             abbreviated=True
         )
         self.model_tokens.scale(0.9)
@@ -23,9 +24,9 @@ class CrossAttentionView(VGroup):
 
         # Dataset tokens below with custom colors (Yellow, Mint, Blue pattern)
         self.dataset_tokens = DatasetTokens(
-            num_samples=2,
-            colors=[MATERIAL_YELLOW, MATERIAL_MINT],
-            stroke_colors=[MATERIAL_YELLOW_STROKE, MATERIAL_MINT_STROKE],
+            num_samples=3,
+            colors=[MATERIAL_YELLOW, MATERIAL_MINT, MATERIAL_BLUE],
+            stroke_colors=[MATERIAL_YELLOW_STROKE, MATERIAL_MINT_STROKE, MATERIAL_BLUE_STROKE],
             abbreviated=True
         )
         self.dataset_tokens.next_to(self.model_tokens, DOWN, buff=1.0)
@@ -54,67 +55,110 @@ class CrossAttentionView(VGroup):
             buff=0
         )
 
+        self.label_q = MonospaceText("Q", font_size=28, color=get_text_color())
+        self.label_q.next_to(self.model_arrow, UP, buff=0.1)
+        self.label_kv = MonospaceText("K, V", font_size=28, color=get_text_color())
+        self.label_kv.next_to(self.dataset_arrow, DOWN, buff=0.1)
+
         self.add(self.model_tokens, self.dataset_tokens, self.transformer)
-        self.add(self.model_arrow, self.dataset_arrow)
+        self.add(self.model_arrow, self.dataset_arrow, self.label_q, self.label_kv)
 
 
 class SelfAttentionView(VGroup):
     """Self-attention layout: Model and dataset tokens side by side horizontally."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, switch_tokens=False, **kwargs):
         super().__init__(**kwargs)
 
         # Model tokens on the left with custom colors
-        self.model_tokens = ModelTokens(
-            num_models=2,
-            colors=[MATERIAL_PURPLE, MATERIAL_PINK],
-            stroke_colors=[MATERIAL_PURPLE_STROKE, MATERIAL_PINK_STROKE],
-            abbreviated=True
-        )
-        self.model_tokens.scale(0.9)
-        self.model_tokens.move_to(LEFT * 4)
+        if not switch_tokens:
+            self.model_tokens = ModelTokens(
+                num_models=3,
+                colors=[MATERIAL_PURPLE, MATERIAL_PINK, MATERIAL_ORANGE],
+                stroke_colors=[MATERIAL_PURPLE_STROKE, MATERIAL_PINK_STROKE, MATERIAL_ORANGE_STROKE],
+                abbreviated=True
+            )
+            self.model_tokens.scale(0.9)
+            self.model_tokens.move_to(LEFT * 4)
 
-        # Dataset tokens next to model tokens with custom colors (Yellow, Mint pattern)
-        self.dataset_tokens = DatasetTokens(
-            num_samples=2,
-            colors=[MATERIAL_YELLOW, MATERIAL_MINT],
-            stroke_colors=[MATERIAL_YELLOW_STROKE, MATERIAL_MINT_STROKE],
-            abbreviated=True
-        )
-        self.dataset_tokens.next_to(self.model_tokens, RIGHT, buff=0.5)
-        self.dataset_tokens.scale(0.9)
+            # Dataset tokens next to model tokens with custom colors (Yellow, Mint pattern)
+            self.dataset_tokens = DatasetTokens(
+                num_samples=3,
+                colors=[MATERIAL_YELLOW, MATERIAL_MINT, MATERIAL_BLUE],
+                stroke_colors=[MATERIAL_YELLOW_STROKE, MATERIAL_MINT_STROKE, MATERIAL_BLUE_STROKE],
+                abbreviated=True
+            )
+            self.dataset_tokens.next_to(self.model_tokens, RIGHT, buff=0.5)
+            self.dataset_tokens.scale(0.9)
 
-        # Transformer on the right
-        self.transformer = Transformer(show_fc_layer=True)
-        self.transformer.next_to(self.dataset_tokens, RIGHT, buff=1.0)
-        self.transformer.scale(0.7)
-        # self.transformer.move_to(RIGHT * 2.5)
+            # Transformer on the right
+            self.transformer = Transformer(show_fc_layer=True)
+            self.transformer.next_to(self.dataset_tokens, RIGHT, buff=1.0)
+            self.transformer.scale(0.7)
 
-        # Single arrow from dataset tokens (representing combined input)
-        self.dataset_arrow = Arrow(
-            self.dataset_tokens.get_right() + RIGHT * 0.1,
-            self.transformer.get_left() + LEFT * 0.1,
-            color=get_arrow_color(),
-            stroke_width=4,
-            max_tip_length_to_length_ratio=0.25,
-            buff=0
-        )
+            # Single arrow from dataset tokens (representing combined input)
+            self.dataset_arrow = Arrow(
+                self.dataset_tokens.get_right() + RIGHT * 0.1,
+                self.transformer.get_left() + LEFT * 0.1,
+                color=get_arrow_color(),
+                stroke_width=4,
+                max_tip_length_to_length_ratio=0.25,
+                buff=0
+            )
+        else:
+            # Dataset tokens on the left with custom colors (Yellow, Mint pattern)
+            self.dataset_tokens = DatasetTokens(
+                num_samples=3,
+                colors=[MATERIAL_YELLOW, MATERIAL_MINT, MATERIAL_BLUE],
+                stroke_colors=[MATERIAL_YELLOW_STROKE, MATERIAL_MINT_STROKE, MATERIAL_BLUE_STROKE],
+                abbreviated=True
+            )
+            self.dataset_tokens.scale(0.9)
+            self.dataset_tokens.move_to(LEFT * 4)
+
+            # Model tokens next to dataset tokens with custom colors
+            self.model_tokens = ModelTokens(
+                num_models=3,
+                colors=[MATERIAL_PURPLE, MATERIAL_PINK, MATERIAL_ORANGE],
+                stroke_colors=[MATERIAL_PURPLE_STROKE, MATERIAL_PINK_STROKE, MATERIAL_ORANGE_STROKE],
+                abbreviated=True
+            )
+            self.model_tokens.next_to(self.dataset_tokens, RIGHT, buff=0.5)
+            self.model_tokens.scale(0.9)
+
+            # Transformer on the right
+            self.transformer = Transformer(show_fc_layer=True)
+            self.transformer.next_to(self.model_tokens, RIGHT, buff=1.0)
+            self.transformer.scale(0.7)
+
+            # Single arrow from model tokens (representing combined input)
+            self.dataset_arrow = Arrow(
+                self.model_tokens.get_right() + RIGHT * 0.1,
+                self.transformer.get_left() + LEFT * 0.1,
+                color=get_arrow_color(),
+                stroke_width=4,
+                max_tip_length_to_length_ratio=0.25,
+                buff=0
+            )
+
+        self.label_qkv = MonospaceText("Q, K, V", font_size=28, color=get_text_color())
+        self.label_qkv.next_to(self.dataset_arrow, UP, buff=0.1)
 
         self.add(self.model_tokens, self.dataset_tokens, self.transformer)
-        self.add(self.dataset_arrow)
+        self.add(self.dataset_arrow, self.label_qkv)
 
 
 class BirdsEyeView(VGroup):
     """Birds-eye view of transformer with switchable attention modes."""
 
-    def __init__(self, mode="cross", **kwargs):
+    def __init__(self, mode="cross", switch_tokens=False, **kwargs):
         super().__init__(**kwargs)
 
         self.mode = mode
 
         # Create both views
         self.cross_view = CrossAttentionView()
-        self.self_view = SelfAttentionView()
+        self.self_view = SelfAttentionView(switch_tokens=switch_tokens)
 
         # Add the initial view based on mode
         if mode == "cross":
@@ -142,19 +186,30 @@ class BirdsEyeView(VGroup):
             buff=0
         )
 
+        new_model_arrow_label = MonospaceText("Q", font_size=28, color=get_text_color())
+        new_model_arrow_label.next_to(new_model_arrow, UP, buff=0.1)
+
         # Transform from self view to cross view
         scene.play(
             Transform(self.current_view.model_tokens, self.cross_view.model_tokens),
             Transform(self.current_view.dataset_tokens, self.cross_view.dataset_tokens),
             Transform(self.current_view.transformer, self.cross_view.transformer),
             Transform(self.current_view.dataset_arrow, self.cross_view.dataset_arrow),
+            Transform(self.current_view.label_qkv, self.cross_view.label_kv),
             FadeIn(new_model_arrow),
+            FadeIn(new_model_arrow_label),
             run_time=duration
         )
 
         # Add the new model arrow to current_view
         self.current_view.model_arrow = new_model_arrow
+        self.current_view.label_q = new_model_arrow_label
+        self.current_view.label_kv = self.cross_view.label_kv.copy()
+        self.current_view.remove(self.current_view.label_qkv)
+        self.current_view.label_qkv = None
         self.current_view.add(new_model_arrow)
+        self.current_view.add(new_model_arrow_label)
+        self.current_view.add(self.current_view.label_kv)
 
         self.mode = "cross"
 
@@ -163,19 +218,28 @@ class BirdsEyeView(VGroup):
         if self.mode == "self":
             return  # Already in self-attention mode
 
+        self.current_view.remove(self.current_view.model_arrow)
+        self.current_view.remove(self.current_view.label_q)
+
         # Transform from cross view to self view
         scene.play(
             Transform(self.current_view.model_tokens, self.self_view.model_tokens),
             Transform(self.current_view.dataset_tokens, self.self_view.dataset_tokens),
             Transform(self.current_view.transformer, self.self_view.transformer),
             Transform(self.current_view.dataset_arrow, self.self_view.dataset_arrow),
+            Transform(self.current_view.label_kv, self.self_view.label_qkv),
             FadeOut(self.current_view.model_arrow),
+            FadeOut(self.current_view.label_q),
             run_time=duration
         )
 
         # Remove the model arrow from current_view
-        self.current_view.remove(self.current_view.model_arrow)
+        self.current_view.remove(self.current_view.label_kv)
         self.current_view.model_arrow = None
+        self.current_view.label_q = None
+        self.current_view.label_kv = None
+        self.current_view.label_qkv = self.self_view.label_qkv.copy()
+        self.current_view.add(self.current_view.label_qkv)
 
         self.mode = "self"
 
