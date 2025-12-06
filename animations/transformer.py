@@ -1,8 +1,246 @@
+import random
+
 from color_constants import *
 from manim import *
 from monospace_text import MonospaceText
 from neural_network import NeuralNetwork
 from round_box import RoundBox
+from tokens import Tokens
+
+
+class ProbabilityDistribution(VGroup):
+    """Probability distribution visualization with stacked boxes and PDF curve."""
+
+    def __init__(self, num_visible=4, total_items=10, attention_height=3.0, seed=42, **kwargs):
+        super().__init__(**kwargs)
+
+        self.num_visible = num_visible
+        self.total_items = total_items
+
+        random.seed(seed)
+
+        # Generate random probabilities that sum to 1
+        raw_probs = [random.random() for _ in range(total_items)]
+        total = sum(raw_probs)
+        self.probabilities = [p / total for p in raw_probs]
+
+        # Box dimensions - height matches attention block, no spacing (connected boxes)
+        box_width = 1.0
+        total_height = attention_height
+        # Calculate box height to fit num_visible + 1 (for ellipsis) boxes in total_height
+        box_height = total_height / (num_visible + 1)
+
+        # Create boxes for visible items (connected, no spacing)
+        self.boxes = VGroup()
+
+        # Show first few boxes
+        for i in range(num_visible // 2):
+            self._create_box(i, box_width, box_height)
+
+        # Add ellipsis box
+        ellipsis_box = RoundBox(
+            content="...",
+            width=box_width,
+            height=box_height,
+            fill_color=MATERIAL_DARK_GRAY,
+            stroke_color=MATERIAL_DARK_GRAY_STROKE,
+            stroke_width=2,
+            font_size=20,
+            corner_radius=0.0,  # No rounding for connected boxes
+        )
+        ellipsis_y = -(num_visible // 2) * box_height
+        ellipsis_box.shift(UP * ellipsis_y)
+        self.boxes.add(ellipsis_box)
+
+        # Show last few boxes
+        for i in range(num_visible // 2):
+            idx = total_items - (num_visible // 2) + i
+            offset = (num_visible // 2) + 1 + i
+            self._create_box(idx, box_width, box_height, offset)
+
+        self.add(self.boxes)
+
+        # Create PDF curve on the right
+        self.pdf_curve = self._create_pdf_curve(box_width, box_height, num_visible, total_items)
+        if self.pdf_curve:
+            self.add(self.pdf_curve)
+
+        # Always add "Output PDF" label
+        self.label = MonospaceText("Output PDF", font_size=20, color=get_text_color())
+        self.label.next_to(self.boxes, DOWN, buff=0.3)
+        self.add(self.label)
+
+    def _create_box(self, idx, box_width, box_height, offset=None):
+        """Create a box with probability value."""
+        if offset is None:
+            offset = idx
+
+        prob = self.probabilities[idx]
+        prob_text = f"{prob:.2f}"
+
+        box = RoundBox(
+            content=prob_text,
+            width=box_width,
+            height=box_height,
+            fill_color=MATERIAL_BLUE,
+            stroke_color=MATERIAL_BLUE_STROKE,
+            stroke_width=2,
+            font_size=18,
+            corner_radius=0.0,  # No rounding for connected boxes
+        )
+
+        # Position box vertically (no spacing between boxes)
+        y_pos = -offset * box_height
+        box.shift(UP * y_pos)
+        self.boxes.add(box)
+
+    def _create_pdf_curve(self, box_width, box_height, num_visible, total_items):
+        """Create smooth PDF curve on the right side in blue.
+
+        Returns a VGroup containing the curve that can be positioned independently.
+        """
+        # Calculate positions for the curve (relative to origin)
+        points = []
+
+        # Add points for first visible boxes (at their center y position)
+        for i in range(num_visible // 2):
+            y_pos = -i * box_height - box_height / 2
+            x_pos = self.probabilities[i] * 2.0 / max(self.probabilities)
+            points.append([box_width / 2 + x_pos + 0.5, y_pos, 0])
+
+        # Add point for middle (ellipsis)
+        middle_y = -(num_visible // 2) * box_height - box_height / 2
+        middle_idx = total_items // 2
+        middle_x = self.probabilities[middle_idx] * 2.0 / max(self.probabilities)
+        points.append([box_width / 2 + middle_x + 0.5, middle_y, 0])
+
+        # Add points for last visible boxes
+        for i in range(num_visible // 2):
+            idx = total_items - (num_visible // 2) + i
+            offset = (num_visible // 2) + 1 + i
+            y_pos = -offset * box_height - box_height / 2
+            x_pos = self.probabilities[idx] * 2.0 / max(self.probabilities)
+            points.append([box_width / 2 + x_pos + 0.5, y_pos, 0])
+
+        # Create smooth curve through points
+        if len(points) >= 2:
+            curve = VMobject()
+            curve.set_points_smoothly([np.array(p) for p in points])
+            curve.set_color(MATERIAL_BLUE_STROKE)  # Blue color
+            curve.set_stroke(width=5)
+
+            # Wrap in VGroup for positioning flexibility
+            curve_group = VGroup(curve)
+            return curve_group
+
+        return None
+
+    def animate_sort_descending(self, scene, duration=2.0):
+        """Animate rearranging box content in descending probability order.
+
+        Boxes stay in their positions, but content is swapped to show
+        descending order from top to bottom.
+        """
+        # Sort probabilities descending
+        sorted_probs = sorted(self.probabilities, reverse=True)
+
+        box_transform_animations = []
+        # Create transform animations for boxes
+        for i in range(len(self.boxes)):
+            if i == len(self.boxes) // 2:
+                box_transform_animations.append(Indicate(self.boxes[i], color=MATERIAL_DARK_GRAY))
+                continue
+            old_box = self.boxes[len(self.boxes) - 1 - i]
+            old_box_reverse = self.boxes[i]
+
+            new_box = RoundBox(
+                content=f"{sorted_probs[i]:.2f}",
+                width=old_box.width,
+                height=old_box.height,
+                fill_color=MATERIAL_BLUE,
+                stroke_color=MATERIAL_BLUE_STROKE,
+                stroke_width=2,
+                font_size=18,
+                corner_radius=0.0,  # No rounding for connected boxes
+            )
+            new_box.move_to(old_box_reverse.get_center())
+            new_box.set_opacity(1.0)
+
+            box_transform_animations.append(
+                Transform(old_box, new_box)
+            )
+
+        # Update probabilities to sorted order
+        self.probabilities = sorted_probs
+
+        # Create new PDF curve with sorted probabilities
+        new_pdf_curve = self._create_pdf_curve(
+            box_width=self.boxes[0].width,
+            box_height=self.boxes[0].height,
+            num_visible=self.num_visible,
+            total_items=len(self.probabilities)
+        )
+
+        # Position new curve at same location as old curve
+        if new_pdf_curve and self.pdf_curve:
+            new_pdf_curve.move_to(self.pdf_curve.get_center())
+
+        # Animate transformations in parallel
+        curve_anim = Transform(self.pdf_curve, new_pdf_curve) if new_pdf_curve else []
+
+        new_label = MonospaceText("Rankings", font_size=20, color=get_text_color())
+        new_label.move_to(self.label.get_center())
+
+        scene.play(
+            *box_transform_animations,
+            curve_anim,
+            Transform(self.label, new_label),
+            run_time=duration
+        )
+
+        rank_transform_animations = []
+        for i in range(len(self.boxes)):
+            if i == len(self.boxes) // 2:
+                old_box = self.boxes[i]
+                new_box = ellipsis_box = RoundBox(
+                    content="...",
+                    width=old_box.width,
+                    height=old_box.height,
+                    fill_color=MATERIAL_YELLOW,
+                    stroke_color=MATERIAL_YELLOW_STROKE,
+                    stroke_width=2,
+                    font_size=20,
+                    corner_radius=0.0,  # No rounding for connected boxes
+                )
+                new_box.move_to(old_box.get_center())
+                rank_transform_animations.append(
+                    Transform(old_box, new_box)
+                )
+                continue
+            old_box = self.boxes[i]
+
+            new_box = RoundBox(
+                content=f"{len(self.boxes) - i}",
+                width=old_box.width,
+                height=old_box.height,
+                fill_color=MATERIAL_YELLOW,
+                stroke_color=MATERIAL_YELLOW_STROKE,
+                stroke_width=2,
+                font_size=18,
+                corner_radius=0.0,  # No rounding for connected boxes
+            )
+            new_box.move_to(old_box.get_center())
+
+            rank_transform_animations.append(
+                Transform(old_box, new_box)
+            )
+
+        scene.play(
+            *rank_transform_animations,
+            run_time=duration
+        )
+
+
 
 
 class AttentionBlock(VGroup):
@@ -73,6 +311,8 @@ class Transformer(VGroup):
     def __init__(
         self,
         show_fc_layer=True,
+        show_pdf=False,
+        show_probability_distribution=False,
         mode="cross",
         **kwargs
     ):
@@ -114,6 +354,52 @@ class Transformer(VGroup):
             self.output_dim.next_to(self.fc_layer, UP, buff=0.5)
             self.add(self.output_dim)
 
+            if show_pdf:
+                # Simple token output to the right of FC
+                self.pdf_token = Tokens(
+                    num_tokens=1,
+                    token_dim=1,
+                    box_width=0.8,
+                    box_height=2.0,
+                    colors=[MATERIAL_BLUE],
+                    stroke_colors=[MATERIAL_BLUE_STROKE],
+                    label="Output PDF"
+                )
+                self.pdf_token.scale(0.7)
+                self.pdf_token.next_to(self.fc_layer, RIGHT, buff=1.5)
+
+                # Arrow from FC to PDF token
+                self.fc_to_pdf_arrow = Arrow(
+                    self.fc_layer.get_right() + RIGHT * 0.2,
+                    self.pdf_token.get_left() + LEFT * 0.2,
+                    color=get_arrow_color(),
+                    buff=0.1
+                )
+
+                self.add(self.fc_to_pdf_arrow, self.pdf_token)
+
+            elif show_probability_distribution:
+                # Full probability distribution visualization - match attention block height
+                attention_height = self.attention.block.height
+                self.prob_dist = ProbabilityDistribution(
+                    num_visible=4,
+                    total_items=10,
+                    attention_height=attention_height
+                )
+                self.prob_dist.next_to(self.fc_layer, RIGHT, buff=1.5)
+                # Align vertically with attention block
+                self.prob_dist.align_to(self.attention, UP)
+
+                # Arrow from FC to probability distribution
+                self.fc_to_prob_arrow = Arrow(
+                    self.fc_layer.get_right() + RIGHT * 0.2,
+                    [self.prob_dist.get_left()[0] - 0.2, self.fc_layer.get_right()[1], 0],
+                    color=get_arrow_color(),
+                    buff=0.1
+                )
+
+                self.add(self.fc_to_prob_arrow, self.prob_dist)
+
         # Add positional encoding label
         # self.pos_encoding = Text("Positional Encoding", font_size=18, color=GRAY)
         # self.pos_encoding.next_to(self.attention, DOWN, buff=0.5)
@@ -121,3 +407,43 @@ class Transformer(VGroup):
 
         # Center the entire transformer
         self.move_to(ORIGIN)
+
+    def animate_show_pdf(self, scene, duration=1.5):
+        """Animate transformation from simple PDF token to full probability distribution.
+
+        This method should be called when show_pdf=True to transform the simple token
+        into the full probability distribution visualization.
+        """
+        if not hasattr(self, 'pdf_token'):
+            raise ValueError("animate_show_pdf requires show_pdf=True when creating Transformer")
+
+        # Create the full probability distribution at the same position
+        attention_height = self.attention.block.height
+        prob_dist = ProbabilityDistribution(
+            num_visible=4,
+            total_items=10,
+            attention_height=attention_height
+        )
+        prob_dist.next_to(self.fc_layer, RIGHT, buff=1.5)
+        prob_dist.align_to(self.attention, UP)
+
+        # Animate the transformation
+        scene.play(
+            Transform(self.pdf_token, prob_dist),
+            run_time=duration
+        )
+
+        # Remove old token and arrow from scene and self
+        scene.remove(self.pdf_token)
+        self.remove(self.pdf_token)
+
+        # Store the new components
+        self.prob_dist = prob_dist
+        scene.add(self.prob_dist)
+        self.add(self.prob_dist)
+
+        # Animate sorting the probability distribution
+        scene.wait(2)
+        self.prob_dist.animate_sort_descending(scene, duration=duration)
+
+        scene.wait(2)

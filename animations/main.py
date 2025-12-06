@@ -105,12 +105,20 @@ class ShowcaseAll(Scene):
         label = MonospaceText("Transformer Architecture", font_size=32, color=get_text_color())
         label.to_edge(UP)
 
-        transformer = Transformer(show_fc_layer=True)
+        transformer = Transformer(
+            show_fc_layer=True,
+            show_probability_distribution=False,
+            show_pdf=True,
+            mode="cross"
+        )
         transformer.scale(0.7)
 
         self.play(Write(label))
         self.play(Create(transformer))
         self.wait(2)
+
+        transformer.animate_show_pdf(self, duration=2)
+
         self.play(FadeOut(transformer), FadeOut(label))
 
     def show_dataset_pipeline(self):
@@ -193,224 +201,3 @@ class ShowcaseAll(Scene):
         self.wait(2)
 
         self.play(FadeOut(birdseyeview), FadeOut(label))
-
-
-class RecommendationPipelineBasic(Scene):
-    """Show the complete recommendation pipeline with model pipeline, dataset pipeline, and transformer (static layout)."""
-
-    def construct(self):
-        # Title
-        title = MonospaceText("Model Recommendation Pipeline", font_size=40, color=get_text_color())
-        title.to_edge(UP)
-        self.play(Write(title))
-        self.wait(0.5)
-
-        # ===== MODEL PIPELINE (Top Left) =====
-        model_network = NeuralNetwork(
-            layers=[4, 3, 3, 4],
-            node_radius=0.15,
-            node_opacity=1,
-            layer_spacing=0.8,
-        )
-        model_network.scale(0.8)
-        model_network.shift(LEFT * 5 + UP * 1.5)
-
-        model_pipeline_label = RoundBox(
-            "Model\nPipeline",
-            width=1.5,
-            height=1.2,
-            fill_color=MATERIAL_BLUE,
-            text_align="center",
-            font_size=18,
-        )
-        model_pipeline_label.next_to(model_network, RIGHT, buff=0.3)
-
-        model_tokens = ModelTokens(num_models=3, abbreviated=True)
-        model_tokens.scale(0.8)
-        model_tokens.next_to(model_pipeline_label, RIGHT, buff=0.3)
-
-        # ===== DATASET PIPELINE (Bottom Left) =====
-        dataset_pipeline = DatasetPipeline()
-        dataset_pipeline.next_to(model_network, DOWN, buff=0.5)
-        dataset_pipeline.scale(0.6)
-        dataset_pipeline.shift(RIGHT * 4 + UP * 0.5)
-
-
-        # ===== TRANSFORMER (Right) =====
-        transformer = Transformer(show_fc_layer=True)
-        transformer.next_to(model_tokens, RIGHT)
-        transformer.scale(0.6)
-        transformer.shift(DOWN * 1.5 + LEFT * 1)
-
-        # Create all components
-        self.play(Create(model_network), run_time=2)
-        self.play(Create(model_pipeline_label), run_time=1)
-        self.play(Create(model_tokens), run_time=1)
-
-        self.play(Create(dataset_pipeline), run_time=2)
-
-        self.play(Create(transformer), run_time=2)
-        self.wait(1)
-
-        # Animate model pipeline forward pass
-        model_network.animate_forward_pass(self, run_time=3)
-        self.wait(1)
-
-        # Animate dataset pipeline forward pass
-        dataset_pipeline.animate_forward(self, run_time=8)
-        self.wait(1)
-
-        # Fade out all components
-        self.play(
-            FadeOut(title),
-            FadeOut(model_network),
-            FadeOut(model_pipeline_label),
-            FadeOut(model_tokens),
-            FadeOut(dataset_pipeline),
-            FadeOut(transformer),
-        )
-        self.wait(1)
-
-
-class RecommendationPipelineAnimated(Scene):
-    """Animated recommendation pipeline showing token flow and transformations."""
-
-    def construct(self):
-        # ===== INITIAL SETUP =====
-        # Model tokens (top left)
-        model_tokens_initial = ModelTokens(num_models=3, abbreviated=True)
-        model_tokens_initial.scale(0.7)
-        model_tokens_initial.shift(LEFT * 4 + UP * 1.5)
-
-        # Dataset tokens (below model tokens)
-        dataset_tokens_initial = DatasetTokens(num_samples=3, abbreviated=True)
-        dataset_tokens_initial.scale(0.7)
-        dataset_tokens_initial.shift(LEFT * 4 + DOWN * 0.5)
-
-        # Transformer (right center)
-        transformer = Transformer(show_fc_layer=True)
-        transformer.scale(0.55)
-        transformer.shift(RIGHT * 2 + UP * 0.3)
-
-        # Create initial components
-        self.play(Create(model_tokens_initial), run_time=1)
-        self.play(Create(dataset_tokens_initial), run_time=1)
-        self.play(Create(transformer), run_time=1.5)
-        self.wait(1)
-
-        # ===== DRAW ARROWS =====
-        # Get positions for arrow endpoints
-        model_tokens_pos = model_tokens_initial.get_right()
-        dataset_tokens_pos = dataset_tokens_initial.get_right()
-
-        # Arrows to Q (query) - from model tokens to top of transformer
-        arrow_q = Arrow(
-            model_tokens_pos + RIGHT * 0.5,
-            transformer.get_left() + UP * 0.8,
-            buff=0.2,
-            stroke_width=2,
-            color=MATERIAL_GREEN,
-        )
-        q_label = MonospaceText("Q", font_size=16, color=MATERIAL_GREEN).next_to(
-            arrow_q, UP, buff=0.1
-        )
-
-        # Arrows to K,V (keys, values) - from dataset tokens to middle of transformer
-        arrow_kv = Arrow(
-            dataset_tokens_pos + RIGHT * 0.5,
-            transformer.get_left() + DOWN * 0.3,
-            buff=0.2,
-            stroke_width=2,
-            color=MATERIAL_RED,
-        )
-        kv_label = MonospaceText("K, V", font_size=16, color=MATERIAL_RED).next_to(
-            arrow_kv, DOWN, buff=0.1
-        )
-
-        self.play(Create(arrow_q), Create(q_label), run_time=1)
-        self.play(Create(arrow_kv), Create(kv_label), run_time=1)
-        self.wait(1)
-
-        # ===== MODEL PIPELINE EXPANSION =====
-        # Hide initial model tokens
-        self.play(FadeOut(model_tokens_initial), run_time=0.5)
-
-        # Create model pipeline components
-        model_network = NeuralNetwork(
-            layers=[4, 3, 3, 4],
-            node_radius=0.12,
-            node_opacity=1,
-            layer_spacing=0.7,
-        )
-        model_network.scale(0.65)
-        model_network.shift(LEFT * 5 + UP * 1.5)
-
-        model_pipeline_box = RoundBox(
-            "Model\nPipeline",
-            width=1.3,
-            height=1.0,
-            fill_color=MATERIAL_BLUE,
-            text_align="center",
-            font_size=16,
-        )
-        model_pipeline_box.next_to(model_network, RIGHT, buff=0.2)
-
-        model_tokens_final = ModelTokens(num_models=3, abbreviated=True)
-        model_tokens_final.scale(0.65)
-        model_tokens_final.next_to(model_pipeline_box, RIGHT, buff=0.2)
-
-
-        # Create model pipeline components
-        self.play(Create(model_network), run_time=1.5)
-        self.play(Create(model_pipeline_box), run_time=0.8)
-        self.play(Create(model_tokens_final), run_time=0.8)
-        self.wait(0.5)
-
-        # Animate model network forward pass
-        model_network.animate_forward_pass(self, run_time=3)
-        self.wait(1)
-
-        # ===== ZOOM OUT AND TRANSITION TO DATASET =====
-        # Fade out model components
-        self.play(
-            FadeOut(model_network),
-            FadeOut(model_pipeline_box),
-            FadeOut(model_tokens_final),
-            run_time=1,
-        )
-        self.wait(0.5)
-
-        # Show model tokens again
-        self.play(Create(model_tokens_initial), run_time=0.8)
-        self.wait(1)
-
-        # ===== DATASET PIPELINE EXPANSION =====
-        # Hide initial dataset tokens
-        self.play(FadeOut(dataset_tokens_initial), run_time=0.5)
-
-        # Create and display dataset pipeline
-        dataset_pipeline = DatasetPipeline()
-        dataset_pipeline.scale(0.5)
-        dataset_pipeline.shift(LEFT * 4.5 + DOWN * 2)
-
-        self.play(Create(dataset_pipeline), run_time=2)
-        self.wait(0.5)
-
-        # Animate dataset pipeline forward pass
-        dataset_pipeline.animate_forward(self, run_time=10)
-        self.wait(1)
-
-        # ===== CONCLUSION =====
-        # Fade out all components
-        self.play(
-            FadeOut(model_tokens_initial),
-            FadeOut(transformer),
-            FadeOut(arrow_q),
-            FadeOut(q_label),
-            FadeOut(arrow_kv),
-            FadeOut(kv_label),
-            FadeOut(dataset_pipeline),
-            run_time=2,
-        )
-        self.wait(1)
-
