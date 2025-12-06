@@ -143,9 +143,9 @@ class ExpandingPipelineView(MovingCameraScene):
         # Initial camera: wide view
         self.camera.frame.set(width=20)
 
-        self.title = MonospaceText("Model Spider Architecture", font_size=64, color=get_text_color())
-        self.title.to_edge(UP)
-        self.play(Write(self.title), run_time=2)
+        title = MonospaceText("Model Spider Architecture", font_size=64, color=get_text_color())
+        title.to_edge(UP)
+        self.play(Write(title), run_time=2)
         self.wait(1)
 
         # Create birds-eye view with cross-attention layout
@@ -162,10 +162,10 @@ class ExpandingPipelineView(MovingCameraScene):
 
         new_title = MonospaceText("Cross-Sight Architecture", font_size=64, color=get_text_color())
         new_title.to_edge(UP)
-        new_title.shift(UP * 2)
+        new_title.shift(UP * 1.7)
 
         self.play(
-            Transform(self.title, new_title),
+            Transform(title, new_title),
             run_time=1
         )
         birds_eye_view.toggle_attention_mode(self, duration=3)
@@ -174,15 +174,10 @@ class ExpandingPipelineView(MovingCameraScene):
         model_tokens = birds_eye_view.current_view.model_tokens
         dataset_tokens = birds_eye_view.current_view.dataset_tokens
         transformer = birds_eye_view.current_view.transformer
-        self.arrow_q = birds_eye_view.current_view.model_arrow
-        self.arrow_kv = birds_eye_view.current_view.dataset_arrow
-
-        # Add labels for arrows
-        q_label = MonospaceText("Q", font_size=16, color=MATERIAL_GREEN)
-        q_label.next_to(self.arrow_q, UP, buff=0.1)
-
-        kv_label = MonospaceText("K, V", font_size=16, color=MATERIAL_RED)
-        kv_label.next_to(self.arrow_kv, DOWN, buff=0.1)
+        arrow_q = birds_eye_view.current_view.model_arrow
+        arrow_kv = birds_eye_view.current_view.dataset_arrow
+        q_label = birds_eye_view.current_view.label_q
+        kv_label = birds_eye_view.current_view.label_kv
 
         # ===== PHASE 2: MODEL TOKEN → MODELPIPELINE =====
         # Store original position for alignment
@@ -210,11 +205,11 @@ class ExpandingPipelineView(MovingCameraScene):
             model_tokens.animate.set_opacity(0),
             GrowFromEdge(model_pipeline, RIGHT),
             dataset_tokens.animate.shift(DOWN * 1.0),  # Adjust dataset tokens down
-            self.arrow_kv.animate.put_start_and_end_on(
-                self.arrow_kv.get_start() + DOWN * 1.0,
-                self.arrow_kv.get_end()
+            arrow_kv.animate.put_start_and_end_on(
+                arrow_kv.get_start() + DOWN * 1.0,
+                arrow_kv.get_end()
             ),
-            kv_label.animate.next_to(self.arrow_kv, DOWN, buff=0.1),
+            kv_label.animate.next_to(arrow_kv, DOWN, buff=0.1),
             self.camera.frame.animate.move_to(model_pipeline.get_center()).set(width=model_pipeline.width * 1.2),
             run_time=1.5
         )
@@ -223,9 +218,9 @@ class ExpandingPipelineView(MovingCameraScene):
         # Update arrow to point from pipeline's final token
         new_arrow_start = model_pipeline.model_token.get_right() + RIGHT * 0.2
         self.play(
-            self.arrow_q.animate.put_start_and_end_on(
+            arrow_q.animate.put_start_and_end_on(
                 new_arrow_start,
-                self.arrow_q.get_end()
+                arrow_q.get_end()
             ),
             run_time=1
         )
@@ -274,11 +269,11 @@ class ExpandingPipelineView(MovingCameraScene):
         # Update arrow to point from pipeline's final tokens
         new_arrow_start = dataset_pipeline.dataset_tokens.get_right() + RIGHT * 0.2
         self.play(
-            self.arrow_kv.animate.put_start_and_end_on(
+            arrow_kv.animate.put_start_and_end_on(
                 new_arrow_start,
-                self.arrow_kv.get_end()
+                arrow_kv.get_end()
             ),
-            kv_label.animate.next_to(self.arrow_kv, DOWN, buff=0.1),
+            kv_label.animate.next_to(arrow_kv, DOWN, buff=0.1),
             run_time=1
         )
 
@@ -293,28 +288,27 @@ class ExpandingPipelineView(MovingCameraScene):
         midpoint_y = (min(dataset_pipeline.get_left()[1], model_pipeline.get_left()[1]) + transformer.get_right()[1]) / 2
         midpoint = np.array([midpoint_x, midpoint_y, 0])
 
+        new_title = MonospaceText("Cross-Sight Architecture", font_size=64, color=get_text_color())
+        new_title.move_to(midpoint + UP * 7.5)
+
         self.play(
-            self.camera.frame.animate.move_to(midpoint).set(width=width * 1.1),
+            Transform(title, new_title),
+            self.camera.frame.animate.move_to(midpoint + UP * 1.5).set(width=width * 1.15),
             run_time=2
         )
         self.wait(2)
 
         # Highlight the flow
         self.play(
-            self.arrow_q.animate.set_stroke(width=4),
-            run_time=0.5
+            GrowArrow(arrow_q),
+            GrowArrow(arrow_kv),
+            run_time=3
         )
+        self.wait(1)
+
         self.play(
-            self.arrow_q.animate.set_stroke(width=2),
-            run_time=0.5
-        )
-        self.play(
-            self.arrow_kv.animate.set_stroke(width=4),
-            run_time=0.5
-        )
-        self.play(
-            self.arrow_kv.animate.set_stroke(width=2),
-            run_time=0.5
+            GrowArrow(transformer.attention_to_fc_arrow),
+            run_time=3
         )
 
         self.wait(2)
@@ -322,7 +316,7 @@ class ExpandingPipelineView(MovingCameraScene):
         # Fade out
         self.play(
             FadeOut(VGroup(model_pipeline, dataset_pipeline, transformer,
-                          self.arrow_q, q_label, self.arrow_kv, kv_label)),
+                          arrow_q, q_label, arrow_kv, kv_label, title)),
             run_time=2
         )
         self.wait(1)

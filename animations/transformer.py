@@ -85,13 +85,13 @@ class Transformer(VGroup):
             self.fc_layer.next_to(self.attention, RIGHT, buff=1.5)
 
             # Arrow from attention to FC
-            self.attention_to_fc = Arrow(
+            self.attention_to_fc_arrow = Arrow(
                 self.attention.get_right() + RIGHT * 0.2,
                 self.fc_layer.get_left() + LEFT * 0.2,
                 buff=0.1
             )
 
-            self.add(self.fc_layer, self.attention_to_fc)
+            self.add(self.fc_layer, self.attention_to_fc_arrow)
 
             # FC Layer label
             self.fc_label = MonospaceText("Fully Connected", font_size=20, color=get_text_color())
