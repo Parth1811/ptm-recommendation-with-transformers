@@ -168,7 +168,7 @@ class ModelPipeline(VGroup):
         self.model_box_label.next_to(self.model_box, UP, buff=0.2)
 
         # Dimension label for model box
-        self.model_dim_label = MonospaceText("10000 × 1", font_size=16, color=get_text_color())
+        self.model_dim_label = MonospaceText("8192", font_size=16, color=get_text_color())
         self.model_dim_label.next_to(self.model_box, DOWN, buff=0.2)
 
         # Arrow from clustered params area to model box (on center line)
@@ -224,7 +224,7 @@ class ModelPipeline(VGroup):
         self.model_token_label.next_to(self.model_token, UP, buff=0.2)
 
         # Token dimension label
-        self.token_dim_label = MonospaceText("512 × 1", font_size=16, color=get_text_color())
+        self.token_dim_label = MonospaceText("d", font_size=16, color=get_text_color())
         self.token_dim_label.next_to(self.model_token, DOWN, buff=0.2)
 
         # Arrow to token (on center line)
@@ -293,10 +293,10 @@ class ModelPipeline(VGroup):
 
         # Define cluster specs: (content, dimension, color)
         cluster_specs = [
-            ("w'1\nw'2\n..\n..\nw'20", "20x1", MATERIAL_YELLOW),
+            ("w'1\nw'2\n..\n..\nw'10", "10x1", MATERIAL_YELLOW),
             ("w'1\nw'2\n..\n..\nw'10", "10x1", GRAY_A),
             ("w'1\nw'2\n..\n..\nw'10", "10x1", GRAY_A),
-            ("w'1\nw'2\n..\n..\nw'20", "20x1", MATERIAL_PURPLE),
+            ("w'1\nw'2\n..\n..\nw'10", "10x1", MATERIAL_PURPLE),
         ]
 
         for i, (content, dim, color) in enumerate(cluster_specs):

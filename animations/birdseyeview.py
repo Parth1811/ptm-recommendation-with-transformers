@@ -9,7 +9,7 @@ from transformer import Transformer
 class CrossAttentionView(VGroup):
     """Cross-attention layout: Model and dataset tokens stacked vertically."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, show_pdf=False, **kwargs):
         super().__init__(**kwargs)
 
         # Model tokens on top left with custom colors
@@ -21,6 +21,8 @@ class CrossAttentionView(VGroup):
         )
         self.model_tokens.scale(0.9)
         self.model_tokens.move_to(UP * 1.5 + LEFT * 2.5)
+        if show_pdf:
+            self.model_tokens.shift(LEFT * 2)
 
         # Dataset tokens below with custom colors (Yellow, Mint, Blue pattern)
         self.dataset_tokens = DatasetTokens(
@@ -33,7 +35,7 @@ class CrossAttentionView(VGroup):
         self.dataset_tokens.scale(0.9)
 
         # Transformer on the right
-        self.transformer = Transformer(show_fc_layer=True, mode="cross")
+        self.transformer = Transformer(show_fc_layer=True, show_pdf=show_pdf, mode="cross")
         self.transformer.scale(0.7)
         self.transformer.move_to(RIGHT * 3)
 
@@ -67,7 +69,7 @@ class CrossAttentionView(VGroup):
 class SelfAttentionView(VGroup):
     """Self-attention layout: Model and dataset tokens side by side horizontally."""
 
-    def __init__(self, switch_tokens=False, **kwargs):
+    def __init__(self, switch_tokens=False, show_pdf=False, **kwargs):
         super().__init__(**kwargs)
 
         # Model tokens on the left with custom colors
@@ -92,7 +94,7 @@ class SelfAttentionView(VGroup):
             self.dataset_tokens.scale(0.9)
 
             # Transformer on the right
-            self.transformer = Transformer(show_fc_layer=True, mode="self")
+            self.transformer = Transformer(show_fc_layer=True, show_pdf=show_pdf, mode="self")
             self.transformer.next_to(self.dataset_tokens, RIGHT, buff=1.0)
             self.transformer.scale(0.7)
 
@@ -127,7 +129,7 @@ class SelfAttentionView(VGroup):
             self.model_tokens.scale(0.9)
 
             # Transformer on the right
-            self.transformer = Transformer(show_fc_layer=True)
+            self.transformer = Transformer(show_fc_layer=True, show_pdf=show_pdf, mode="self")
             self.transformer.next_to(self.model_tokens, RIGHT, buff=1.0)
             self.transformer.scale(0.7)
 
@@ -151,14 +153,14 @@ class SelfAttentionView(VGroup):
 class BirdsEyeView(VGroup):
     """Birds-eye view of transformer with switchable attention modes."""
 
-    def __init__(self, mode="cross", switch_tokens=False, **kwargs):
+    def __init__(self, mode="cross", switch_tokens=False, show_pdf=False, **kwargs):
         super().__init__(**kwargs)
 
         self.mode = mode
 
         # Create both views
-        self.cross_view = CrossAttentionView()
-        self.self_view = SelfAttentionView(switch_tokens=switch_tokens)
+        self.cross_view = CrossAttentionView(show_pdf=show_pdf)
+        self.self_view = SelfAttentionView(switch_tokens=switch_tokens, show_pdf=show_pdf)
 
         # Add the initial view based on mode
         if mode == "cross":

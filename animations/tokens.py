@@ -22,6 +22,8 @@ class Tokens(VGroup):
         stroke_colors=[MATERIAL_BLUE_STROKE],
         label=None,
         abbreviated=False,
+        abbreviated_label="N",
+        dim_label="d",
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -63,7 +65,10 @@ class Tokens(VGroup):
         self.add(self.token_boxes)
 
         # Add dimension label
-        dim_text = f"{token_dim} × 1" if num_tokens == 1 else f"{num_tokens} x {token_dim} × 1"
+        if abbreviated:
+            dim_text = f"{abbreviated_label} x {dim_label}"
+        else:
+            dim_text = f"{dim_label}" if num_tokens == 1 else f"{num_tokens} x {dim_label}"
         self.dim_label = MonospaceText(dim_text, font_size=20, color=get_text_color())
         self.dim_label.next_to(self.token_boxes, UP, buff=0.2)
         self.add(self.dim_label)
@@ -88,6 +93,8 @@ class ModelTokens(Tokens):
             num_tokens=num_models,
             token_dim=512,
             label="Model Tokens",
+            abbreviated_label="N",
+            dim_label="d",
             **kwargs
         )
 
@@ -105,5 +112,7 @@ class DatasetTokens(Tokens):
             num_tokens=num_samples,
             token_dim=512,
             label="Dataset Tokens",
+            abbreviated_label="M",
+            dim_label="d",
             **kwargs
         )

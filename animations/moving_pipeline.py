@@ -27,7 +27,7 @@ class ModelSpiderView(MovingCameraScene):
     def construct(self):
         # ===== PHASE 1: INITIAL SETUP =====
         # Initial camera: wide view
-        self.camera.frame.set(width=20)
+        self.camera.frame.set(width=24)
 
         title = MonospaceText("Model Spider Architecture", font_size=64, color=get_text_color())
         title.to_edge(UP)
@@ -36,7 +36,7 @@ class ModelSpiderView(MovingCameraScene):
         self.wait(1)
 
         # Create birds-eye view with cross-attention layout
-        birds_eye_view = BirdsEyeView(mode="self", switch_tokens=True)
+        birds_eye_view = BirdsEyeView(mode="self", switch_tokens=True, show_pdf=True)
         birds_eye_view.scale(1.2)
         birds_eye_view.move_to(ORIGIN)
 
@@ -100,6 +100,17 @@ class ModelSpiderView(MovingCameraScene):
         dataset_pipeline.animate_forward(self, run_time=10)
         self.wait(1)
 
+
+        # ===== PHASE 5: Transformer animations =====
+        self.play(
+            self.camera.frame.animate.move_to(transformer.get_center()).set(width=transformer.width * 2),
+            run_time=2
+        )
+        self.wait(1)
+
+        transformer.animate_show_pdf(self, duration=2)
+        self.wait(1)
+
         # ===== PHASE 5: FINAL ZOOM OUT =====
         # Final wide view showing complete system
         width = abs(min(dataset_pipeline.get_left()[0], model_tokens.get_left()[0]) - transformer.get_right()[0])
@@ -141,7 +152,7 @@ class ExpandingPipelineView(MovingCameraScene):
     def construct(self):
         # ===== PHASE 1: INITIAL SETUP =====
         # Initial camera: wide view
-        self.camera.frame.set(width=20)
+        self.camera.frame.set(width=24)
 
         title = MonospaceText("Model Spider Architecture", font_size=64, color=get_text_color())
         title.to_edge(UP)
@@ -149,7 +160,7 @@ class ExpandingPipelineView(MovingCameraScene):
         self.wait(1)
 
         # Create birds-eye view with cross-attention layout
-        birds_eye_view = BirdsEyeView(mode="self")
+        birds_eye_view = BirdsEyeView(mode="self", show_pdf=True)
         birds_eye_view.scale(1.2)
         birds_eye_view.move_to(ORIGIN)
 
@@ -306,12 +317,12 @@ class ExpandingPipelineView(MovingCameraScene):
         )
         self.wait(1)
 
-        self.play(
-            GrowArrow(transformer.attention_to_fc_arrow),
-            run_time=3
-        )
+        # self.play(
+        #     GrowArrow(transformer.attention_to_fc_arrow),
+        #     run_time=3
+        # )
 
-        self.wait(2)
+        # self.wait(2)
 
         # Fade out
         self.play(

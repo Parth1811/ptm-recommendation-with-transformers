@@ -350,9 +350,9 @@ class Transformer(VGroup):
             self.add(self.fc_label)
 
             # Output dimensions
-            self.output_dim = MonospaceText("N × 1", font_size=24, color=get_text_color())
-            self.output_dim.next_to(self.fc_layer, UP, buff=0.5)
-            self.add(self.output_dim)
+            # self.output_dim = MonospaceText("N × 1", font_size=24, color=get_text_color())
+            # self.output_dim.next_to(self.fc_layer, UP, buff=0.5)
+            # self.add(self.output_dim)
 
             if show_pdf:
                 # Simple token output to the right of FC
@@ -363,7 +363,8 @@ class Transformer(VGroup):
                     box_height=2.0,
                     colors=[MATERIAL_BLUE],
                     stroke_colors=[MATERIAL_BLUE_STROKE],
-                    label="Output PDF"
+                    label="Output PDF",
+                    dim_label="N × 1",
                 )
                 self.pdf_token.scale(0.7)
                 self.pdf_token.next_to(self.fc_layer, RIGHT, buff=1.5)
