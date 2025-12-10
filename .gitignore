@@ -6,6 +6,13 @@ __pycache__/
 # Extracted Data
 extracted/**
 **/media/**
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.flv
+*.wmv
+*.webm
 
 # C extensions
 *.so

@@ -1,7 +1,8 @@
 import random
 
-from color_constants import *
 from manim import *
+
+from color_constants import *
 from monospace_text import MonospaceText
 from neural_network import NeuralNetwork
 from round_box import RoundBox
@@ -257,11 +258,11 @@ class AttentionBlock(VGroup):
 
         # Main attention block
         if mode == "cross":
-            content = "Cross\nAttention\nBlock"
+            content = "Cross\nAttention\nTransformer"
             fill_color = MATERIAL_GREEN
             stroke_color = MATERIAL_GREEN_STROKE
         else:
-            content = "Self\nAttention\nBlock"
+            content = "Self\nAttention\nTransformer"
             fill_color = MATERIAL_RED
             stroke_color = MATERIAL_RED_STROKE
 
@@ -447,4 +448,5 @@ class Transformer(VGroup):
         scene.wait(2)
         self.prob_dist.animate_sort_descending(scene, duration=duration)
 
+        scene.wait(2)
         scene.wait(2)
