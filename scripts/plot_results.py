@@ -32,15 +32,17 @@ set_theme(style="whitegrid")
 #     "Mean": [0.860, -0.029],
 # }
 
-metrics = ["Blind Datasets", "Double Blind"]
+metrics = ["Model Spider\n(Both Known)", "Blind Datasets", "Double Blind"]
 data = {
-    "Aircraft": [0.085, -0.006],
-    "Cars": [0.232, 0.140],
-    "Pets": [0.006, -0.033],
-    "DTD": [0.923, 0.059],
-    "SUN397": [0.734, 0.096],
-    "Mean": [0.396, 0.051],
+    "Aircraft": [0.382, 0.085, -0.006],
+    "Cars": [0.727, 0.232, 0.140],
+    "Pets": [0.717, 0.006, -0.033],
+    "DTD": [0.686, 0.923, 0.059],
+    "SUN397": [0.933, 0.734, 0.096],
+    "Mean": [0.689, 0.396, 0.051],
 }
+
+
 
 df = pd.DataFrame(data, index=metrics)
 
@@ -57,7 +59,7 @@ palette = [
     # ("#D2E4E1", "#207868"),   # green
     # ("#D1EFEC", "#1AAE9F"),   # mint
     # ("#F2D6F6", "#BD34D1"),   # purple
-    # ("#F7C325", "#F7C325"),   # yellow solid ModelSpider
+    ("#FDF3D3", "#F7C325"),   # yellow solid ModelSpider
     ("#1AAE9F", "#1AAE9F"),    # mint solid Cross-sight
     ("#D3455B", "#D3455B")    # red solid
 ]
