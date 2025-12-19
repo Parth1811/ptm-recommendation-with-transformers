@@ -8,13 +8,13 @@ set_theme(style="whitegrid")
 # ==========================
 # Data
 # ==========================
-# metrics = ["H-Score","NCE","LEEP","N-LEEP","LogME","PACTran","OTCE","LFC","ModelSpider","Cross-sight"]
-# data = {
-#     "Mean": [0.16, 0.426, 0.304, 0.429, 0.574, 0.385, 0.123, -0.064, 0.75, 0.86],
-#     # "Cifar10": [0.018, 0.267, 0.53, 0.515, 0.718, 0.631, 0.515, 0.33, 0.87, 0.994],
-#     # "Cifar100":[0.005, 0.232, 0.471, 0.707, 0.698, 0.614, 0.505, 0.271, 0.977, 0.705],
-#     # "Caltech 101":[0.078, 0.534, -0.038, 0.476, 0.453, 0.262, -0.05, -0.226, 0.711, 0.713]
-# }
+# metrics = ["H-Score","NCE","LEEP","N-LEEP","LogME","PACTran","OTCE","LFC","Model Spider","Cross-Select"]
+data = {
+    # "Mean": [0.16, 0.426, 0.304, 0.429, 0.574, 0.385, 0.123, -0.064, 0.75, 0.86],
+    # "Cifar10": [0.018, 0.267, 0.53, 0.515, 0.718, 0.631, 0.515, 0.33, 0.87, 0.994],
+    # "Cifar100":[0.005, 0.232, 0.471, 0.707, 0.698, 0.614, 0.505, 0.271, 0.977, 0.705],
+    # "Caltech 101":[0.078, 0.534, -0.038, 0.476, 0.453, 0.262, -0.05, -0.226, 0.711, 0.713]
+}
 
 # metrics = ["Known Models", "Blind Models"]
 # data = {
@@ -32,7 +32,17 @@ set_theme(style="whitegrid")
 #     "Mean": [0.860, -0.029],
 # }
 
-metrics = ["Model Spider\n(Both Known)", "Blind Datasets", "Double Blind"]
+# metrics = ["Model Spider\n(Both Known)", "Blind Datasets", "Double Blind"]
+# data = {
+#     "Aircraft": [0.382, 0.085, -0.006],
+#     "Cars": [0.727, 0.232, 0.140],
+#     "Pets": [0.717, 0.006, -0.033],
+#     "DTD": [0.686, 0.923, 0.059],
+#     "SUN397": [0.933, 0.734, 0.096],
+#     "Mean": [0.689, 0.396, 0.051],
+# }
+
+metrics = ["Model Spider\n(Both Known)", "Cross-Select \n Unknown Datasets", "Cross-Select \n Both Unknown"]
 data = {
     "Aircraft": [0.382, 0.085, -0.006],
     "Cars": [0.727, 0.232, 0.140],
@@ -64,6 +74,20 @@ palette = [
     ("#D3455B", "#D3455B")    # red solid
 ]
 
+# palette = {
+#     "H-Score": ("#D5E7F7", "#2C88D9"),   # blue
+#     "NCE": ("#F6DADE", "#D3455B"),   # red
+#     "LEEP": ("#FDF3D3", "#F7C325"),   # yellow
+#     "N-LEEP": ("#E1E5EC", "#9EADBA"),   # dark gray
+#     "LogME": ("#FAE6D8", "#E8833A"),   # orange
+#     "PACTran": ("#D2E4E1", "#207868"),   # green
+#     "OTCE": ("#D1EFEC", "#1AAE9F"),   # mint
+#     "LFC": ("#F2D6F6", "#BD34D1"),   # purple
+#     "Model Spider": ("#FDF3D3", "#F7C325"),   # yellow solid ModelSpider
+#     "Cross-Select": ("#1AAE9F", "#1AAE9F"),    # mint solid Cross-sight
+#     # "Double Blind": ("#D3455B", "#D3455B")    # red solid
+# }
+
 # ==========================
 # Assign colors
 # ==========================
@@ -74,7 +98,7 @@ for i, m in enumerate(metrics):
     muted, stroke = palette[i % len(palette)]
 
     # ModelSpider + Cross-sight get SOLID stroke color
-    if m in ["ModelSpider", "Cross-sight"]:
+    if m in ["Model Spider", "Cross-Select"]:
         colors.append(stroke)
         edges.append("black")
     else:
@@ -113,12 +137,13 @@ ax.set_xticklabels(df.columns, fontsize=14, rotation=45, ha='right')
 ax.axhline(0, color="black", linewidth=0.8)
 # ax.set_ylim(-0.3, 1.05)
 ax.set_ylim(-0.25, 1.05)
+ax.set_ylabel(r'$\tau_w$', fontsize=14)
 # ax.set_title("Mean Performance Across Methods", fontsize=18, pad=10)
-ax.set_title("Blind Dataset Comparison", fontsize=18, pad=10)
+ax.set_title("Comparison of Performance with Model Spider for Unknown Datasets", fontsize=18, pad=10)
 
 ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), fontsize=9)
 plt.tight_layout()
 
 # Save
-plt.savefig("double_blind.png", dpi=150, bbox_inches='tight')
+plt.savefig("comparison_performance_model_spider_unknown_datasets_v2.png", dpi=150, bbox_inches='tight')
 plt.show()
