@@ -178,6 +178,70 @@ def compute_loss(self, batch: dict) -> torch.Tensor:
 - **Key capabilities**: Analyzes dataset composition, recommends batch specs, optimizes throughput
 - **Trigger examples**: "Optimize dataloader performance", "Training is I/O bound"
 
+## Thesis Writing (December 2025)
+
+### Section 1.2 Motivation - Recent Refinement
+
+**Status**: Refined with professor feedback, ready for figure exports
+
+**Key Files**:
+- `thesis/section-1-2-refined.tex` - Complete refined motivation section (~650 words)
+- `thesis/SECTION_1-2_SETUP_GUIDE.md` - Comprehensive setup and integration guide
+- `thesis/figures/` - Directory created for PowerPoint figure exports (lowercase to match LaTeX paths)
+- `thesis/references-motivation.bib` - 9 citations supporting motivation section
+- `thesis.pptx` - Defense presentation (source for figures on slides 5-6, 8)
+
+**What's Included**:
+- Two figure placeholders with proper captions (waiting for PowerPoint exports)
+- Formal "Problem Formulation" subsection with mathematical notation
+- Input: Model zoo M, dataset D, hardware constraints H
+- Output: Ranked list π with performance inequality
+- Four explicit assumptions
+- SOTA limitations: Model Spider (learnable tokens), EMMS (metadata-based), PTMPicker (no hardware awareness)
+- 11 citations (9 verified, 2 missing - see below)
+
+**Verified Citations** (in .bib files):
+- `wolf2020transformers` - HuggingFace Transformers library
+- `hfcommunity2024dataset` - HFCommunity dataset on Zenodo
+- `jiang2024peatmoss` - PeaTMOSS: Mining PTMs in OSS
+- `ding2024ptmtorrent` - PTMTorrent cross-hub aggregation
+- `schwartz2020green` - Green AI
+- `wu2022sustainable` - Sustainable AI
+- `zhang2023modelspider` - Model Spider (NeurIPS 2023 baseline)
+- `meng2023foundation` - EMMS foundation model selector
+- `liu2025ptmpicker` - PTMPicker tool
+
+**Missing Citations** (need to add or remove):
+- `jajal2024interoperability` - Line 13 (model repository scale)
+- `jiang_empirical_2023` - Line 64 (large-scale PTM usage)
+
+**Action Items Remaining**:
+1. Export Figure 1: `thesis/figures/ptm_recommendation_problem_overview.png` from slides 5-6
+2. Export Figure 2: `thesis/figures/huggingface_kaggle_growth.png` from slide 8
+3. Handle missing citations (add to .bib or remove from .tex)
+4. Compile and verify
+
+### Acknowledgments Section
+
+**Status**: Refined December 2025
+
+**File**: `thesis/acknowledgments-refined.tex`
+
+**Key Features**:
+- Informal but polished tone
+- Personal acknowledgments (self, family, advisor, collaborators)
+- Memorable touches ("Pika pika!" for Huiyun Peng)
+- Institutional support line included
+
+**Advisor**: Professor James Davis (verify name if incorrect)
+
+### Thesis Structure Notes
+
+- All LaTeX includes use lowercase `figures/` paths
+- Bibliography files are modular by section (references-motivation.bib, references-2-1.bib, etc.)
+- Chapter labels referenced in Section 1.2: `\label{sec:motivation}`, `\label{subsec:problem-formulation}`
+- System name: Cross-Sight / Cross-Select (working title)
+
 ## Important Files
 
 - **CLAUDE.md**: Main project documentation (updated with new sections)
@@ -187,6 +251,9 @@ def compute_loss(self, batch: dict) -> torch.Tensor:
 - **.claude/agents/trainer-expert.md**: Generates production-ready trainers
 - **.claude/agents/model-expert.md**: Analyzes architectures
 - **.claude/agents/dataloader-expert.md**: Optimizes data pipelines
+- **thesis/section-1-2-refined.tex**: Refined motivation section (Dec 2025)
+- **thesis/SECTION_1-2_SETUP_GUIDE.md**: Complete integration guide
+- **thesis/acknowledgments-refined.tex**: Refined acknowledgments (Dec 2025)
 
 ## DO NOT
 
