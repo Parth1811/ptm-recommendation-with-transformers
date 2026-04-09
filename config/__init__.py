@@ -6,7 +6,8 @@ from .data import (DatasetLoaderDefaultsConfig, DatasetRegistryConfig,
                    DatasetTokenLoaderConfig, ModelEmbeddingLoaderConfig)
 from .eval import ClipEvaluationConfig, TestTransformerConfig
 from .extractor import ExtractorConfig
-from .model import (ModelAutoEncoderConfig, ModelAutoEncoderEvalConfig,
+from .model import (CustomSimilarityTransformerConfig, ModelAutoEncoderConfig,
+                    ModelAutoEncoderEvalConfig,
                     RankingCrossAttentionTransformerConfig)
 from .parser import ConfigParser
 from .train import (BaseTrainerConfig, TrainModelAutoEncoderConfig,

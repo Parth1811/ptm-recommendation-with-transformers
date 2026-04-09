@@ -12,7 +12,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from config import ConfigParser, TransformerTrainerConfig
 from dataloader import build_combined_similarity_loader
 from loss import TemperatureScheduler, pairwise_ranking_loss, ranking_loss
-from model import RankingCrossAttentionTransformer
+from model import CustomSimilarityTransformer
 
 from .base_trainer import BaseTrainer, TrainingMetrics
 
@@ -27,8 +27,9 @@ class TransformerTrainer(BaseTrainer):
         # 1. Load config FIRST
         self.config = ConfigParser.get(TransformerTrainerConfig)
 
-        # 2. Initialize model
-        self.model = RankingCrossAttentionTransformer()
+        # 2. Initialize model (CustomSimilarityTransformer uses correct cross-attention,
+        #    no causal masking, with input projections for embedding space alignment)
+        self.model = CustomSimilarityTransformer()
 
         # 3. Setup dataloaders
         self.dataloader = build_combined_similarity_loader(split="train")
@@ -94,11 +95,12 @@ class TransformerTrainer(BaseTrainer):
         self.best_val_loss = float('inf')
         self.epochs_without_improvement = 0
 
-    def _forward_batch(self, batch: dict[str, torch.Tensor]) -> torch.Tensor:
+    def _forward_batch(self, batch: dict[str, torch.Tensor], is_training: bool = True) -> torch.Tensor:
         """Handle multi-tensor batch with custom preprocessing.
 
         Args:
             batch: Dict with keys 'dataset_tokens', 'model_tokens', 'true_ranks'
+            is_training: If True, advance temperature scheduler. Set False for validation.
 
         Returns:
             loss: Scalar loss tensor
@@ -109,40 +111,32 @@ class TransformerTrainer(BaseTrainer):
         true_ranks = batch["true_ranks"].to(self.device)          # (B, num_models)
 
         # Handle batch dimension properly
-        # The dataloader returns batch_size=1, so squeeze if needed
         if dataset_tokens.dim() == 4:  # (1, batches, num_classes, dim)
-            dataset_tokens = dataset_tokens.squeeze(0)  # (batches, num_classes, dim)
+            dataset_tokens = dataset_tokens.squeeze(0)
 
-        # Forward pass through transformer
-        # logits shape: (batch_size, num_models)
-        logits = self.model(dataset_tokens, model_tokens)
+        # Forward pass through cross-attention transformer
+        # CustomSimilarityTransformer: forward(model_tokens, dataset_tokens) -> (B, N)
+        logits = self.model(model_tokens, dataset_tokens)
 
-        # Get current temperature from scheduler
-        if self.temp_scheduler is not None:
+        # Get current temperature (only advance scheduler during training)
+        if self.temp_scheduler is not None and is_training:
             temperature = self.temp_scheduler.step()
+        elif self.temp_scheduler is not None:
+            temperature = self.temp_scheduler.get_temperature(
+                self.temp_scheduler.current_step  # Read without advancing
+            )
         else:
             temperature = 1.0
 
-        # Compute combined loss
-        # 1. Ranking loss (listwise) with temperature scaling
+        # Compute ranking loss with temperature scaling
         rank_loss = ranking_loss(logits, true_ranks, reverse_order=True, temperature=temperature)
-        # rank_loss = pairwise_ranking_loss(logits, true_ranks, reverse_order=True, temperature=temperature)
 
-        # 2. Smooth L1 loss for stability (optional regularization)
-        # Convert ranks to target scores (inverse of rank for regression)
-        # target_scores = self.config.num_models - true_ranks.float()
-        # smooth_l1_loss = nn.SmoothL1Loss()(logits, target_scores)
+        # Normalize by batch size for stable gradients
+        batch_size = logits.shape[0]
+        rank_loss = rank_loss / batch_size
 
-        # Combined loss
-        # total_loss = (
-        #     self.config.ranking_loss_weight * rank_loss +
-        #     self.config.smooth_l1_weight * smooth_l1_loss
-        # )
-
-        # Note: L2 regularization is handled by optimizer weight_decay parameter
-        # No need for manual regularization loss
-
-        logger.batch(f"Rank Loss: {rank_loss.item():.6f}, Temp: {temperature:.3f}")
+        if is_training:
+            logger.batch(f"Rank Loss: {rank_loss.item():.6f}, Temp: {temperature:.3f}")
         return rank_loss
 
     def loss_fn(self, batch: dict[str, torch.Tensor]) -> torch.Tensor:
@@ -230,7 +224,7 @@ class TransformerTrainer(BaseTrainer):
 
         with torch.no_grad():
             for batch in self.val_dataloader:
-                loss = self._forward_batch(batch)
+                loss = self._forward_batch(batch, is_training=False)
                 val_loss += loss.item()
 
         avg_loss = val_loss / len(self.val_dataloader)

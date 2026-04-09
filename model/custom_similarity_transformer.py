@@ -90,6 +90,13 @@ class CustomSimilarityTransformer(nn.Module):
         # Optional dropout for regularization
         self.dropout_layer = nn.Dropout(self.dropout)
 
+        # Input projections to align different embedding spaces
+        # (e.g., CLIP dataset tokens vs autoencoder model tokens)
+        self.dataset_projection = nn.Linear(self.embed_dim, self.embed_dim)
+        self.model_projection = nn.Linear(self.embed_dim, self.embed_dim)
+        self.dataset_input_norm = nn.LayerNorm(self.embed_dim)
+        self.model_input_norm = nn.LayerNorm(self.embed_dim)
+
         # Initialize parameters with standard initialization
         self._reset_parameters()
 
@@ -205,6 +212,10 @@ class CustomSimilarityTransformer(nn.Module):
                 f"Got model_tokens batch_size={batch_size_model}, "
                 f"dataset_tokens batch_size={batch_size_dataset}"
             )
+
+        # Project and normalize inputs to align embedding spaces
+        dataset_tokens = self.dataset_input_norm(self.dataset_projection(dataset_tokens))
+        model_tokens = self.model_input_norm(self.model_projection(model_tokens))
 
         # Apply stacked cross-attention layers
         x = dataset_tokens  # (B, M, D) - queries
