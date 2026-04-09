@@ -91,3 +91,26 @@ class TransformerTrainerConfig(BaseTrainerConfig):
     load_from_checkpoint: bool = False
     checkpoint_path: Path | None = None
     only_load_model_weights: bool = False
+
+
+@dataclass
+class SelfAttentionBaselineTrainerConfig(BaseTrainerConfig):
+    """Configuration for training the SelfAttentionBaseline (Model Spider proxy)."""
+
+    SECTION: ClassVar[str] = "self_attention_baseline_trainer"
+
+    shuffle: bool = True
+    validate_every_n_epochs: int = 1
+    model_save_directory: Path = Path("artifacts/models/self_attention_baseline")
+
+    # Temperature scheduling
+    use_temperature_scheduler: bool = True
+    initial_temperature: float = 3.0
+    final_temperature: float = 1.0
+    temperature_schedule: str = "cosine"
+    temperature_warmup_steps: int = 0
+
+    # Load from checkpoint
+    load_from_checkpoint: bool = False
+    checkpoint_path: Path | None = None
+    only_load_model_weights: bool = False

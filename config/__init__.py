@@ -8,7 +8,8 @@ from .eval import ClipEvaluationConfig, TestTransformerConfig
 from .extractor import ExtractorConfig
 from .model import (CustomSimilarityTransformerConfig, ModelAutoEncoderConfig,
                     ModelAutoEncoderEvalConfig,
-                    RankingCrossAttentionTransformerConfig)
+                    RankingCrossAttentionTransformerConfig,
+                    SelfAttentionBaselineConfig)
 from .parser import ConfigParser
-from .train import (BaseTrainerConfig, TrainModelAutoEncoderConfig,
-                    TransformerTrainerConfig)
+from .train import (BaseTrainerConfig, SelfAttentionBaselineTrainerConfig,
+                    TrainModelAutoEncoderConfig, TransformerTrainerConfig)
