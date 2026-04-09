@@ -519,6 +519,158 @@ def main(
     save_results_csv(results, output_path)
 
 
+# ---------------------------------------------------------------------------
+# Run baseline transferability methods from pre-extracted features
+# ---------------------------------------------------------------------------
+
+def run_baseline_from_features(
+    method_name: str,
+    features_dir: str | Path,
+    labels_dir: str | Path | None = None,
+    datasets: list[str] | None = None,
+) -> dict[str, float]:
+    """Load pre-extracted features and compute a transferability metric.
+
+    Scans features_dir for per-model feature files, loads them, and
+    runs the specified baseline method to produce a transferability score
+    per (model, dataset) pair.
+
+    Expected directory structure:
+        features_dir/
+            {model_name}/
+                {dataset_name}/
+                    features.npz  (keys: 'features' shape (N, D), 'labels' shape (N,))
+        OR
+        features_dir/
+            {dataset_name}/
+                {split}/
+                    shard_0.npz  (keys: 'features', 'labels')
+
+    Args:
+        method_name: One of the 9 baseline method names (e.g., "LogME", "H-Score")
+        features_dir: Root directory containing extracted feature files
+        labels_dir: Optional separate directory for labels (if not in features_dir)
+        datasets: List of dataset names to evaluate (default: all found)
+
+    Returns:
+        {dataset_name: transferability_score} mapping
+    """
+    from baselines import compute_transferability
+
+    features_dir = Path(features_dir)
+    results: dict[str, float] = {}
+
+    if not features_dir.exists():
+        print(f"  Warning: features directory not found: {features_dir}")
+        return results
+
+    # Strategy 1: features_dir/{dataset_name}/{split}/*.npz
+    dataset_dirs = [d for d in features_dir.iterdir() if d.is_dir()]
+
+    for dataset_dir in sorted(dataset_dirs):
+        dataset_name = dataset_dir.name
+
+        if datasets is not None and dataset_name not in datasets:
+            continue
+
+        # Find npz files (check splits or direct files)
+        npz_files = []
+        for split in ["test", "validation", "train", ""]:
+            split_dir = dataset_dir / split if split else dataset_dir
+            if split_dir.exists():
+                found = sorted(split_dir.glob("*.npz"))
+                if found:
+                    npz_files = found
+                    break
+
+        if not npz_files:
+            continue
+
+        # Load and concatenate features from all shards
+        all_features = []
+        all_labels = []
+        for npz_path in npz_files:
+            with np.load(npz_path, allow_pickle=True) as archive:
+                if "features" in archive:
+                    feats = archive["features"]
+                    # Handle 3D shard format: (batches, classes, dim)
+                    if feats.ndim == 3:
+                        feats = feats.reshape(-1, feats.shape[-1])
+                    all_features.append(feats)
+
+                if "labels" in archive:
+                    labs = archive["labels"]
+                    if labs.ndim == 2:
+                        labs = labs.reshape(-1)
+                    all_labels.append(labs)
+
+        if not all_features:
+            continue
+
+        features = np.concatenate(all_features, axis=0)
+
+        if all_labels:
+            labels = np.concatenate(all_labels, axis=0)
+        elif labels_dir is not None:
+            # Try loading labels from separate directory
+            label_path = Path(labels_dir) / dataset_name / "labels.npy"
+            if label_path.exists():
+                labels = np.load(label_path)
+            else:
+                print(f"  Warning: no labels found for {dataset_name}, skipping")
+                continue
+        else:
+            print(f"  Warning: no labels found for {dataset_name}, skipping")
+            continue
+
+        # Ensure labels and features match
+        min_n = min(len(features), len(labels))
+        features = features[:min_n]
+        labels = labels[:min_n].astype(int)
+
+        # Compute transferability
+        try:
+            score = compute_transferability(method_name, features, labels)
+            results[dataset_name] = score
+            print(f"  {dataset_name}: {method_name} = {score:.6f}")
+        except Exception as e:
+            print(f"  {dataset_name}: {method_name} FAILED ({e})")
+
+    return results
+
+
+def run_all_baselines_from_features(
+    features_dir: str | Path,
+    labels_dir: str | Path | None = None,
+    datasets: list[str] | None = None,
+    methods: list[str] | None = None,
+) -> dict[str, dict[str, float]]:
+    """Run all (or selected) baseline methods on pre-extracted features.
+
+    Args:
+        features_dir: Root directory containing extracted feature files
+        labels_dir: Optional separate directory for labels
+        datasets: List of dataset names (default: all found)
+        methods: List of method names (default: all 9)
+
+    Returns:
+        {method_name: {dataset_name: score}} nested mapping
+    """
+    from baselines import ALL_METHOD_NAMES
+
+    if methods is None:
+        methods = ALL_METHOD_NAMES
+
+    all_results: dict[str, dict[str, float]] = {}
+    for method_name in methods:
+        print(f"\n--- {method_name} ---")
+        all_results[method_name] = run_baseline_from_features(
+            method_name, features_dir, labels_dir, datasets
+        )
+
+    return all_results
+
+
 if __name__ == "__main__":
     import sys
 
