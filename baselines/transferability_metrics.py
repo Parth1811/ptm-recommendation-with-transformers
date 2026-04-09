@@ -26,7 +26,7 @@ import warnings
 from typing import Optional
 
 import numpy as np
-from scipy import linalg, optimize, special, stats
+from scipy import linalg, special
 
 logger = logging.getLogger(__name__)
 
@@ -74,26 +74,27 @@ def h_score(
         return 0.0
 
     # Total feature covariance: Σ_total = Cov(f)
-    # Use shrinkage for numerical stability when D > N
+    # Use regularisation for numerical stability when D > N
     total_mean = features.mean(axis=0)
     centered = features - total_mean
     cov_total = (centered.T @ centered) / (N - 1) + _REG * np.eye(D)
 
-    # Class-conditional means
-    class_means = np.zeros((C, D))
+    # Between-class scatter (frequency-weighted, Bao et al. eq. 3):
+    # S_B = Σ_c  n_c * (μ_c − μ)(μ_c − μ)^T  / N
+    cov_between = np.zeros((D, D))
     for i, c in enumerate(classes):
-        class_means[i] = features[labels == c].mean(axis=0)
+        mask = labels == c
+        n_c = mask.sum()
+        mu_c = features[mask].mean(axis=0)
+        diff = (mu_c - total_mean).reshape(-1, 1)
+        cov_between += n_c * (diff @ diff.T)
+    cov_between /= N
 
-    # Between-class covariance: Cov(E[f|y])
-    class_means_centered = class_means - total_mean
-    cov_between = (class_means_centered.T @ class_means_centered) / (C - 1)
-
-    # H = tr(Σ_total^{-1} @ Σ_between)
+    # H = tr(Σ_total^{-1} @ S_B)
     try:
         cov_total_inv = linalg.inv(cov_total)
         score = np.trace(cov_total_inv @ cov_between)
     except linalg.LinAlgError:
-        # Fallback: use pseudoinverse
         cov_total_inv = linalg.pinv(cov_total)
         score = np.trace(cov_total_inv @ cov_between)
 
@@ -172,18 +173,14 @@ def leep(
     # Conditional P(y|z) = P(y, z) / P(z)
     p_y_given_z = joint / marginal_z[np.newaxis, :]
 
-    # LEEP = (1/N) Σ_n log(Σ_z P(y_n|z) * θ(z|x_n))
-    # Create target class index mapping
+    # LEEP = (1/N) Σ_n log(Σ_z P(y_n|z) * θ(z|x_n))  — vectorised
     label_to_idx = {c: i for i, c in enumerate(classes)}
-    label_indices = np.array([label_to_idx[l] for l in labels])
+    label_indices = np.array([label_to_idx[l] for l in labels])  # (N,)
 
-    leep_score = 0.0
-    for n in range(N):
-        y_idx = label_indices[n]
-        prob = np.dot(p_y_given_z[y_idx], theta[n])
-        leep_score += np.log(prob + _EPS)
-
-    return float(leep_score / N)
+    # p_y_given_z[label_indices] selects the row for each sample's true class → (N, C_source)
+    # element-wise multiply with theta (N, C_source) then sum over source classes → (N,)
+    probs = (p_y_given_z[label_indices] * theta).sum(axis=1)  # (N,)
+    return float(np.log(probs + _EPS).mean())
 
 
 # ---------------------------------------------------------------------------
@@ -313,7 +310,11 @@ def nce(
     if source_predictions is not None:
         z = source_predictions.astype(int)
     else:
-        z = np.argmax(features, axis=1).astype(int)
+        # features may be raw embeddings — apply softmax so argmax is meaningful
+        # as a proxy for the source model's predicted class
+        logits = features - features.max(axis=1, keepdims=True)
+        probs = np.exp(logits) / np.exp(logits).sum(axis=1, keepdims=True)
+        z = np.argmax(probs, axis=1).astype(int)
 
     target_classes = np.unique(labels)
     source_classes = np.unique(z)
@@ -407,11 +408,11 @@ def nleep(
 
     # Dimensionality reduction if D is very large (for GMM stability)
     if D > 256:
-        # PCA via SVD (numpy only)
+        # PCA via SVD (numpy only) — use n_pca to avoid shadowing loop var k below
         f_centered = features - features.mean(axis=0)
         _, _, Vt = np.linalg.svd(f_centered, full_matrices=False)
-        k = min(256, N - 1, D)
-        features_reduced = f_centered @ Vt[:k].T
+        n_pca = min(256, N - 1, D)
+        features_reduced = f_centered @ Vt[:n_pca].T
     else:
         features_reduced = features
 
