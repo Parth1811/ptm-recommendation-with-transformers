@@ -12,7 +12,7 @@ from tqdm import tqdm
 from config import ConfigParser, TestTransformerConfig
 from dataloader import build_combined_similarity_loader
 from loss import ranking_loss
-from model import RankingCrossAttentionTransformer
+from model import CustomSimilarityTransformer
 
 logger.name = "TransformerTest"
 
@@ -28,7 +28,7 @@ def test_transformer():
     logger.info(f"Using device: {device}")
 
     # Initialize model
-    model = RankingCrossAttentionTransformer()
+    model = CustomSimilarityTransformer()
     model.to(device)
 
     # Load checkpoint
@@ -61,7 +61,7 @@ def test_transformer():
                 dataset_tokens = dataset_tokens.squeeze(0)
 
             # Forward pass
-            logits = model(dataset_tokens, model_tokens)
+            logits = model(model_tokens, dataset_tokens)
 
             # Compute loss
             loss = ranking_loss(logits, true_ranks, reverse_order=True, temperature=1.0)
