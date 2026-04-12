@@ -40,9 +40,11 @@ class BaseExtractor(ABC):
         if len(matrix) == 0:
             raise ValueError("No parameters found to extract.")
 
+        # FAISS requires ~39× cluster_count training points to avoid segfaults
+        min_points_for_kmeans = self.cluster_count * 39
         clustered_columns = [
             self.k_means_clustering(column, self.cluster_count)
-            if len(column) >= self.cluster_count else column.flatten()
+            if len(column) >= min_points_for_kmeans else column.flatten()
             for column in matrix
         ]
 
