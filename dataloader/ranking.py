@@ -90,6 +90,7 @@ def compute_true_ranks(dataset_name: str, model_names: Sequence[str], one_index:
     dataset_key = _normalize_name(dataset_name)
 
     scores = []
+    zero_score_models = []
     for model_name in model_names:
         model_key = _normalize_name(model_name)
         direct_score = dataset_map.get(dataset_key, {}).get(model_key)
@@ -97,7 +98,16 @@ def compute_true_ranks(dataset_name: str, model_names: Sequence[str], one_index:
             score = float(direct_score) + 1
         else:
             score = _compute_weighted_score(dataset_key, model_key, dataset_map, model_map, similarity_matrix)
+            if score == 0.0:
+                zero_score_models.append(model_name)
         scores.append(score)
+
+    if zero_score_models:
+        logging.warning(
+            "Dataset '%s': %d/%d models have score=0.0 (not in performance DB): %s",
+            dataset_name, len(zero_score_models), len(model_names),
+            zero_score_models[:3],
+        )
 
     if not scores:
         return torch.tensor([], dtype=torch.long)

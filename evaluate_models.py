@@ -64,6 +64,9 @@ def _load_model_and_predict(
     if model_class == "cross_select":
         from model import CustomSimilarityTransformer
         model = CustomSimilarityTransformer()
+    elif model_class == "ranking_cross_attention":
+        from model import RankingCrossAttentionTransformer
+        model = RankingCrossAttentionTransformer()
     elif model_class == "self_attention":
         from model import SelfAttentionBaseline
         model = SelfAttentionBaseline()
@@ -120,6 +123,8 @@ def _load_model_and_predict(
 
                 if model_class == "cross_select":
                     scores = model(m_tokens, dataset_tokens)        # (B, num_models)
+                elif model_class == "ranking_cross_attention":
+                    scores = model(dataset_tokens, m_tokens)        # (B, num_models) - note swapped arg order
                 else:  # self_attention
                     _, scores = model(
                         m_tokens, dataset_tokens, return_attention_weights=True
@@ -237,6 +242,28 @@ def run_cross_select_evaluation(
     return _evaluate_trained_model(
         model_class="cross_select",
         method_name="Cross-Select",
+        checkpoint_path=checkpoint_path,
+        dataset_tokens_dir=dataset_tokens_dir,
+        model_embeddings_dir=model_embeddings_dir,
+        csv_path=csv_path,
+        test_datasets=test_datasets,
+        device=device,
+    )
+
+
+def run_ranking_transformer_evaluation(
+    checkpoint_path: str | Path,
+    dataset_tokens_dir: str | Path = "artifacts/extracted/datasets",
+    model_embeddings_dir: str | Path = "artifacts/extracted/model_embeddings",
+    csv_path: str | Path = "constants/model_spider_baseline_results.csv",
+    test_datasets: list[str] | None = None,
+    device: str = "cuda",
+) -> list[BenchmarkResult]:
+    """Evaluate a trained RankingCrossAttentionTransformer on the Model Spider benchmark."""
+    print("Running RankingCrossAttentionTransformer evaluation...")
+    return _evaluate_trained_model(
+        model_class="ranking_cross_attention",
+        method_name="Ranking-CrossAttn-Transformer",
         checkpoint_path=checkpoint_path,
         dataset_tokens_dir=dataset_tokens_dir,
         model_embeddings_dir=model_embeddings_dir,

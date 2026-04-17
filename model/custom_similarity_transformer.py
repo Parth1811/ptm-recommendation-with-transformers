@@ -123,6 +123,7 @@ class CustomSimilarityTransformer(nn.Module):
         self,
         model_tokens: torch.Tensor,
         dataset_tokens: torch.Tensor,
+        dataset_pad_mask: torch.Tensor | None = None,
         return_attention_weights: bool = False,
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         """Compute cross-attention scores and probability distribution over models.
@@ -142,6 +143,9 @@ class CustomSimilarityTransformer(nn.Module):
                 - B: batch size (matches model_tokens if B > 1)
                 - M: number of dataset tokens (variable length is OK)
                 - D: embedding dimension (must equal self.embed_dim)
+            dataset_pad_mask: Optional boolean tensor of shape (B, M) where True indicates
+                padded positions in dataset_tokens. Padded positions are excluded from
+                attention and mean pooling.
             return_attention_weights: If True, also return raw attention weights
                 before softmax normalization. Useful for interpretability and debugging.
 
@@ -225,13 +229,12 @@ class CustomSimilarityTransformer(nn.Module):
             zip(self.cross_attention_layers, self.layer_norms)
         ):
             # Cross-attention: Q from dataset_tokens, K,V from model_tokens
-            # Returns: (output, attention_weights)
-            # output shape: (B, M, D)
-            # attention_weights shape: (B * num_heads, M, N)
+            # key_padding_mask masks padded query positions from attending
             attn_output, attn_weights = attn_layer(
                 query=x,
                 key=model_tokens,
                 value=model_tokens,
+                key_padding_mask=None,  # No mask on model tokens (fixed set)
                 need_weights=True,
                 average_attn_weights=True,  # Average over heads: (B, M, N)
             )
@@ -247,9 +250,14 @@ class CustomSimilarityTransformer(nn.Module):
                 attention_output = attn_weights  # (B, M, N)
 
         # Aggregate dataset token representations via mean pooling
-        # This collapses the sequence dimension (M) into a single representation
-        # allowing dataset features to collectively vote on model preferences
-        pooled_dataset_repr = x.mean(dim=1)  # (B, D)
+        # Exclude padded positions from the mean if a mask is provided
+        if dataset_pad_mask is not None:
+            # dataset_pad_mask: (B, M) True for padded
+            real_mask = ~dataset_pad_mask  # (B, M) True for real tokens
+            real_mask_expanded = real_mask.unsqueeze(-1).float()  # (B, M, 1)
+            pooled_dataset_repr = (x * real_mask_expanded).sum(dim=1) / real_mask_expanded.sum(dim=1).clamp(min=1)
+        else:
+            pooled_dataset_repr = x.mean(dim=1)  # (B, D)
 
         # Compute final attention scores via dot product with models
         # This is a learned similarity measure between pooled dataset and each model

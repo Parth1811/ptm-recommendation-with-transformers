@@ -25,9 +25,10 @@ class CombinedSimilarityBatch(TypedDict, total=False):
     """
 
     # Core tensors
-    dataset_tokens: torch.Tensor  # Shape: (B, M, D) - batch of dataset token sequences
+    dataset_tokens: torch.Tensor  # Shape: (B, M_max, D) - padded dataset token sequences
     model_tokens: torch.Tensor    # Shape: (B, N, D) - batch of model embeddings
     true_ranks: torch.Tensor      # Shape: (B, N) - batch of ground truth rankings
+    dataset_pad_mask: torch.Tensor  # Shape: (B, M_max) - True for padded positions
 
     # Metadata
     model_names: list[list[str]]  # Length B, each sublist length N
@@ -155,7 +156,16 @@ class CombinedSimilarityDataset(Dataset):
         return len(self.dataset_entries)
 
     def __getitem__(self, index: int) -> dict[str, Any]:
-        """Get item with pre-loaded model embeddings and on-demand dataset tokens."""
+        """Get a single sample: one dataset shard with its model embeddings and rankings.
+
+        Returns a dict with:
+            dataset_tokens: (num_batches, num_classes, D) - raw shard features
+            model_tokens: (N, D) - model embeddings (shared, not repeated)
+            true_ranks: (N,) - ground truth ranking for this dataset
+            model_names: list[str] of length N
+            model_indices: (N,)
+            dataset_name: str
+        """
         dataset_name, shard_path = self.dataset_entries[index]
 
         # Sample models for this dataset
@@ -176,11 +186,11 @@ class CombinedSimilarityDataset(Dataset):
 
         return {
             "dataset_name": dataset_name,
-            "dataset_tokens": dataset_tokens,
-            "model_tokens": torch.repeat_interleave(model_tokens.unsqueeze(0), repeats=dataset_tokens.shape[0], dim=0),
-            "model_names": [model_names] * dataset_tokens.shape[0],
-            "model_indices": torch.repeat_interleave(model_indices.unsqueeze(0), repeats=dataset_tokens.shape[0], dim=0),
-            "true_ranks": torch.repeat_interleave(true_ranks.unsqueeze(0), repeats=dataset_tokens.shape[0], dim=0),
+            "dataset_tokens": dataset_tokens,       # (num_batches, num_classes, D)
+            "model_tokens": model_tokens,            # (N, D)
+            "model_names": model_names,              # list[str] of length N
+            "model_indices": model_indices,           # (N,)
+            "true_ranks": true_ranks,                 # (N,)
         }
 
     def _load_dataset_tokens(self, shard_path: Path) -> torch.Tensor:
@@ -201,40 +211,77 @@ class CombinedSimilarityDataset(Dataset):
 
 
 def _collate_batch(batch: Sequence[dict]) -> CombinedSimilarityBatch:
-    """Collate items into batch with padding for variable-length dataset tokens."""
+    """Collate items into batch with padding for variable-length dataset tokens.
+
+    Each item has dataset_tokens of shape (num_batches_i, num_classes_i, D).
+    We flatten the first two dims to get (M_i, D) per item, then pad to max M.
+
+    Returns a CombinedSimilarityBatch with:
+        dataset_tokens: (B, M_max, D) - padded
+        dataset_pad_mask: (B, M_max) - True where padded
+        model_tokens: (B, N, D)
+        true_ranks: (B, N)
+    """
     if not batch:
         raise ValueError("Empty batch")
 
-    if len(batch) > 1:
-        raise ValueError(f"Expected batch size of 1, got {len(batch)}")
+    B = len(batch)
+    D = batch[0]["model_tokens"].shape[-1]
 
-    item = batch[0]
+    # Flatten dataset tokens: (num_batches, num_classes, D) -> (M, D)
+    flat_dataset_tokens = []
+    for item in batch:
+        dt = item["dataset_tokens"]
+        if dt.dim() == 3:
+            dt = dt.reshape(-1, D)  # (num_batches * num_classes, D)
+        flat_dataset_tokens.append(dt)
+
+    # Pad dataset tokens to max length
+    max_seq_len = max(dt.shape[0] for dt in flat_dataset_tokens)
+    padded_dt = torch.zeros(B, max_seq_len, D, dtype=flat_dataset_tokens[0].dtype)
+    pad_mask = torch.ones(B, max_seq_len, dtype=torch.bool)  # True = padded
+    for i, dt in enumerate(flat_dataset_tokens):
+        seq_len = dt.shape[0]
+        padded_dt[i, :seq_len] = dt
+        pad_mask[i, :seq_len] = False  # False = real data
+
+    # Stack model tokens and ranks (same shape across batch since models are shared)
+    model_tokens = torch.stack([item["model_tokens"] for item in batch], dim=0)
+    true_ranks = torch.stack([item["true_ranks"] for item in batch], dim=0)
+    model_indices = torch.stack([item["model_indices"] for item in batch], dim=0)
+
+    # Collect metadata
+    model_names = [item["model_names"] for item in batch]
+    dataset_names = [item["dataset_name"] for item in batch]
 
     return CombinedSimilarityBatch(
-        dataset_tokens=item["dataset_tokens"],
-        model_tokens=item["model_tokens"],
-        true_ranks=item["true_ranks"],
-        model_names=item["model_names"],
-        model_indices=item["model_indices"],
-        dataset_names=item["dataset_name"],
-        batch_size=len(batch),
+        dataset_tokens=padded_dt,         # (B, M_max, D)
+        dataset_pad_mask=pad_mask,        # (B, M_max) - True for padded
+        model_tokens=model_tokens,        # (B, N, D)
+        true_ranks=true_ranks,            # (B, N)
+        model_names=model_names,          # list of B lists
+        model_indices=model_indices,      # (B, N)
+        dataset_names=dataset_names,      # list of B strings
+        batch_size=B,
     )
 
 
-def build_combined_similarity_loader(split: str) -> DataLoader:
+def build_combined_similarity_loader(split: str, batch_size: int | None = None) -> DataLoader:
     """Build DataLoader for combined similarity training.
 
     Args:
         split: Dataset split to include
+        batch_size: Override batch size (default: from config, typically 4)
 
     Returns:
         DataLoader yielding CombinedSimilarityBatch items
     """
     dataset = CombinedSimilarityDataset(split=split)
+    bs = batch_size if batch_size is not None else dataset.dataset_cfg.batch_size
 
     return DataLoader(
         dataset,
-        batch_size=1,
+        batch_size=bs,
         shuffle=dataset.dataset_cfg.shuffle,
         num_workers=dataset.dataset_cfg.num_workers,
         pin_memory=dataset.dataset_cfg.pin_memory,
