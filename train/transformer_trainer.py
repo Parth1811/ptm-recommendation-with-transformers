@@ -11,6 +11,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau, CosineAnnealingWarmResta
 
 from config import ConfigParser, TransformerTrainerConfig
 from dataloader import build_combined_similarity_loader
+from dataloader.ranking import configure_ranking_paths
 from loss import TemperatureScheduler, pairwise_ranking_loss, ranking_loss
 from model import CustomSimilarityTransformer, RankingCrossAttentionTransformer
 
@@ -26,6 +27,18 @@ class TransformerTrainer(BaseTrainer):
         """Initialize TransformerTrainer."""
         # 1. Load config FIRST
         self.config = ConfigParser.get(TransformerTrainerConfig)
+
+        # 1b. Configure ranking data paths if specified
+        if self.config.performance_json or self.config.similarity_json:
+            configure_ranking_paths(
+                performance_json=self.config.performance_json,
+                similarity_json=self.config.similarity_json,
+            )
+            logger.info(
+                "Ranking paths: perf=%s, sim=%s",
+                self.config.performance_json or "(default)",
+                self.config.similarity_json or "(default)",
+            )
 
         # 2. Initialize model based on config
         model_type = getattr(self.config, 'model_type', 'custom_similarity')

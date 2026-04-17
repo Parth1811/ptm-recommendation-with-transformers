@@ -95,6 +95,10 @@ class TransformerTrainerConfig(BaseTrainerConfig):
     temperature_schedule: str = "cosine"  # "linear", "exponential", or "cosine"
     temperature_warmup_steps: int = 0
 
+    # Ranking data paths (None = use defaults from constants/)
+    performance_json: Path | None = None
+    similarity_json: Path | None = None
+
     # Load from checkpoint
     load_from_checkpoint: bool = False
     checkpoint_path: Path | None = None

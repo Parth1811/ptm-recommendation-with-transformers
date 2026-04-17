@@ -1,0 +1,1388 @@
+{
+  "caltech101": [
+    {
+      "model_name": "resnet50_cifar10",
+      "model_type": "resnet50",
+      "accuracy": 0.957414,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet50_oxford_pets",
+      "model_type": "resnet50",
+      "accuracy": 0.955513,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet50_voc2007",
+      "model_type": "resnet50",
+      "accuracy": 0.955513,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet50_imagenet",
+      "model_type": "resnet50",
+      "accuracy": 0.952852,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet50_stanford_dogs",
+      "model_type": "resnet50",
+      "accuracy": 0.949049,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet50_cub200",
+      "model_type": "resnet50",
+      "accuracy": 0.945247,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "resnet50_nabird",
+      "model_type": "resnet50",
+      "accuracy": 0.915209,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "googlenet_cifar10",
+      "model_type": "googlenet",
+      "accuracy": 0.88251,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet18_imagenet",
+      "model_type": "resnet18",
+      "accuracy": 0.876806,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet18_oxford_pets",
+      "model_type": "resnet18",
+      "accuracy": 0.874144,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "googlenet_voc2007",
+      "model_type": "googlenet",
+      "accuracy": 0.873384,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet18_voc2007",
+      "model_type": "resnet18",
+      "accuracy": 0.871863,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "googlenet_stanford_dogs",
+      "model_type": "googlenet",
+      "accuracy": 0.86616,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "googlenet_imagenet",
+      "model_type": "googlenet",
+      "accuracy": 0.865399,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "googlenet_oxford_pets",
+      "model_type": "googlenet",
+      "accuracy": 0.862357,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "alexnet_imagenet",
+      "model_type": "alexnet",
+      "accuracy": 0.855513,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "alexnet_oxford_pets",
+      "model_type": "alexnet",
+      "accuracy": 0.853992,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "alexnet_voc2007",
+      "model_type": "alexnet",
+      "accuracy": 0.85057,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "googlenet_cub200",
+      "model_type": "googlenet",
+      "accuracy": 0.840304,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "resnet18_stanford_dogs",
+      "model_type": "resnet18",
+      "accuracy": 0.838023,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "alexnet_stanford_dogs",
+      "model_type": "alexnet",
+      "accuracy": 0.836502,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "alexnet_cifar10",
+      "model_type": "alexnet",
+      "accuracy": 0.835741,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet18_cifar10",
+      "model_type": "resnet18",
+      "accuracy": 0.826996,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "alexnet_cub200",
+      "model_type": "alexnet",
+      "accuracy": 0.824715,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "googlenet_nabird",
+      "model_type": "googlenet",
+      "accuracy": 0.814449,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "alexnet_nabird",
+      "model_type": "alexnet",
+      "accuracy": 0.806084,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet18_nabird",
+      "model_type": "resnet18",
+      "accuracy": 0.61635,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet18_cub200",
+      "model_type": "resnet18",
+      "accuracy": 0.432319,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    }
+  ],
+  "cifar10": [
+    {
+      "model_name": "resnet18_imagenet",
+      "model_type": "resnet18",
+      "accuracy": 0.9586,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet18_voc2007",
+      "model_type": "resnet18",
+      "accuracy": 0.9565,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet18_caltech101",
+      "model_type": "resnet18",
+      "accuracy": 0.9563,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_oxford_pets",
+      "model_type": "resnet18",
+      "accuracy": 0.9558,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet18_stanford_dogs",
+      "model_type": "resnet18",
+      "accuracy": 0.9541,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet50_oxford_pets",
+      "model_type": "resnet50",
+      "accuracy": 0.9457,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet50_imagenet",
+      "model_type": "resnet50",
+      "accuracy": 0.9453,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet50_voc2007",
+      "model_type": "resnet50",
+      "accuracy": 0.9445,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet50_caltech101",
+      "model_type": "resnet50",
+      "accuracy": 0.9442,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_nabird",
+      "model_type": "resnet18",
+      "accuracy": 0.9435,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet50_stanford_dogs",
+      "model_type": "resnet50",
+      "accuracy": 0.9416,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet18_cub200",
+      "model_type": "resnet18",
+      "accuracy": 0.9325,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "resnet50_cub200",
+      "model_type": "resnet50",
+      "accuracy": 0.9309,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "alexnet_oxford_pets",
+      "model_type": "alexnet",
+      "accuracy": 0.9305,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "alexnet_imagenet",
+      "model_type": "alexnet",
+      "accuracy": 0.9289,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "alexnet_caltech101",
+      "model_type": "alexnet",
+      "accuracy": 0.9287,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "alexnet_cub200",
+      "model_type": "alexnet",
+      "accuracy": 0.9286,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "alexnet_voc2007",
+      "model_type": "alexnet",
+      "accuracy": 0.9276,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "alexnet_stanford_dogs",
+      "model_type": "alexnet",
+      "accuracy": 0.9261,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "alexnet_nabird",
+      "model_type": "alexnet",
+      "accuracy": 0.9231,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet50_nabird",
+      "model_type": "resnet50",
+      "accuracy": 0.8997,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "googlenet_stanford_dogs",
+      "model_type": "googlenet",
+      "accuracy": 0.8944,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "googlenet_oxford_pets",
+      "model_type": "googlenet",
+      "accuracy": 0.8872,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "googlenet_imagenet",
+      "model_type": "googlenet",
+      "accuracy": 0.887,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "googlenet_cub200",
+      "model_type": "googlenet",
+      "accuracy": 0.8847,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "googlenet_voc2007",
+      "model_type": "googlenet",
+      "accuracy": 0.8782,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "googlenet_caltech101",
+      "model_type": "googlenet",
+      "accuracy": 0.8763,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "googlenet_nabird",
+      "model_type": "googlenet",
+      "accuracy": 0.8616,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    }
+  ],
+  "cub200": [
+    {
+      "model_name": "resnet50_nabird",
+      "model_type": "resnet50",
+      "accuracy": 0.847428,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet50_imagenet",
+      "model_type": "resnet50",
+      "accuracy": 0.796686,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet50_cifar10",
+      "model_type": "resnet50",
+      "accuracy": 0.794788,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet50_stanford_dogs",
+      "model_type": "resnet50",
+      "accuracy": 0.789955,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet50_voc2007",
+      "model_type": "resnet50",
+      "accuracy": 0.789092,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet50_oxford_pets",
+      "model_type": "resnet50",
+      "accuracy": 0.78426,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet50_caltech101",
+      "model_type": "resnet50",
+      "accuracy": 0.782016,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_nabird",
+      "model_type": "resnet18",
+      "accuracy": 0.710217,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "googlenet_nabird",
+      "model_type": "googlenet",
+      "accuracy": 0.704522,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet18_oxford_pets",
+      "model_type": "resnet18",
+      "accuracy": 0.691923,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet18_imagenet",
+      "model_type": "resnet18",
+      "accuracy": 0.689852,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet18_caltech101",
+      "model_type": "resnet18",
+      "accuracy": 0.68778,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_voc2007",
+      "model_type": "resnet18",
+      "accuracy": 0.685882,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet18_stanford_dogs",
+      "model_type": "resnet18",
+      "accuracy": 0.676907,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet18_cifar10",
+      "model_type": "resnet18",
+      "accuracy": 0.672765,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "alexnet_nabird",
+      "model_type": "alexnet",
+      "accuracy": 0.612012,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "alexnet_imagenet",
+      "model_type": "alexnet",
+      "accuracy": 0.539869,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "alexnet_oxford_pets",
+      "model_type": "alexnet",
+      "accuracy": 0.538488,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "alexnet_voc2007",
+      "model_type": "alexnet",
+      "accuracy": 0.535554,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "alexnet_stanford_dogs",
+      "model_type": "alexnet",
+      "accuracy": 0.533656,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "alexnet_caltech101",
+      "model_type": "alexnet",
+      "accuracy": 0.512427,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "alexnet_cifar10",
+      "model_type": "alexnet",
+      "accuracy": 0.506386,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "googlenet_imagenet",
+      "model_type": "googlenet",
+      "accuracy": 0.494477,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "googlenet_oxford_pets",
+      "model_type": "googlenet",
+      "accuracy": 0.470314,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "googlenet_stanford_dogs",
+      "model_type": "googlenet",
+      "accuracy": 0.453918,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "googlenet_cifar10",
+      "model_type": "googlenet",
+      "accuracy": 0.453227,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "googlenet_caltech101",
+      "model_type": "googlenet",
+      "accuracy": 0.447532,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "googlenet_voc2007",
+      "model_type": "googlenet",
+      "accuracy": 0.43545,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    }
+  ],
+  "nabird": [
+    {
+      "model_name": "resnet50_imagenet",
+      "model_type": "resnet50",
+      "accuracy": 0.771932,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet50_cifar10",
+      "model_type": "resnet50",
+      "accuracy": 0.771201,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet50_voc2007",
+      "model_type": "resnet50",
+      "accuracy": 0.77043,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet50_oxford_pets",
+      "model_type": "resnet50",
+      "accuracy": 0.770268,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet50_cub200",
+      "model_type": "resnet50",
+      "accuracy": 0.769293,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "resnet50_stanford_dogs",
+      "model_type": "resnet50",
+      "accuracy": 0.769212,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet50_caltech101",
+      "model_type": "resnet50",
+      "accuracy": 0.765721,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_voc2007",
+      "model_type": "resnet18",
+      "accuracy": 0.702878,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet18_stanford_dogs",
+      "model_type": "resnet18",
+      "accuracy": 0.701173,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet18_caltech101",
+      "model_type": "resnet18",
+      "accuracy": 0.700524,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_imagenet",
+      "model_type": "resnet18",
+      "accuracy": 0.700118,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet18_oxford_pets",
+      "model_type": "resnet18",
+      "accuracy": 0.69894,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet18_cifar10",
+      "model_type": "resnet18",
+      "accuracy": 0.692364,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet18_cub200",
+      "model_type": "resnet18",
+      "accuracy": 0.67779,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "googlenet_caltech101",
+      "model_type": "googlenet",
+      "accuracy": 0.548086,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "googlenet_voc2007",
+      "model_type": "googlenet",
+      "accuracy": 0.538749,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "googlenet_oxford_pets",
+      "model_type": "googlenet",
+      "accuracy": 0.538059,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "googlenet_imagenet",
+      "model_type": "googlenet",
+      "accuracy": 0.528316,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "googlenet_stanford_dogs",
+      "model_type": "googlenet",
+      "accuracy": 0.526651,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "googlenet_cub200",
+      "model_type": "googlenet",
+      "accuracy": 0.489547,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "googlenet_cifar10",
+      "model_type": "googlenet",
+      "accuracy": 0.479722,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "alexnet_cub200",
+      "model_type": "alexnet",
+      "accuracy": 0.473836,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "alexnet_stanford_dogs",
+      "model_type": "alexnet",
+      "accuracy": 0.471644,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "alexnet_voc2007",
+      "model_type": "alexnet",
+      "accuracy": 0.466813,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "alexnet_imagenet",
+      "model_type": "alexnet",
+      "accuracy": 0.464702,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "alexnet_cifar10",
+      "model_type": "alexnet",
+      "accuracy": 0.463119,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "alexnet_oxford_pets",
+      "model_type": "alexnet",
+      "accuracy": 0.462794,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "alexnet_caltech101",
+      "model_type": "alexnet",
+      "accuracy": 0.461211,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    }
+  ],
+  "oxford_pets": [
+    {
+      "model_name": "resnet50_stanford_dogs",
+      "model_type": "resnet50",
+      "accuracy": 0.912783,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet50_imagenet",
+      "model_type": "resnet50",
+      "accuracy": 0.908694,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet50_cifar10",
+      "model_type": "resnet50",
+      "accuracy": 0.900245,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet50_voc2007",
+      "model_type": "resnet50",
+      "accuracy": 0.892614,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet18_stanford_dogs",
+      "model_type": "resnet18",
+      "accuracy": 0.891796,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet50_caltech101",
+      "model_type": "resnet50",
+      "accuracy": 0.888253,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_imagenet",
+      "model_type": "resnet18",
+      "accuracy": 0.88689,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet18_caltech101",
+      "model_type": "resnet18",
+      "accuracy": 0.883074,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_voc2007",
+      "model_type": "resnet18",
+      "accuracy": 0.882529,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet18_cifar10",
+      "model_type": "resnet18",
+      "accuracy": 0.870809,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet50_cub200",
+      "model_type": "resnet50",
+      "accuracy": 0.857454,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "googlenet_stanford_dogs",
+      "model_type": "googlenet",
+      "accuracy": 0.828836,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "alexnet_stanford_dogs",
+      "model_type": "alexnet",
+      "accuracy": 0.790951,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "alexnet_imagenet",
+      "model_type": "alexnet",
+      "accuracy": 0.78332,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "alexnet_cub200",
+      "model_type": "alexnet",
+      "accuracy": 0.775961,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "alexnet_cifar10",
+      "model_type": "alexnet",
+      "accuracy": 0.766966,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "alexnet_caltech101",
+      "model_type": "alexnet",
+      "accuracy": 0.766421,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "alexnet_nabird",
+      "model_type": "alexnet",
+      "accuracy": 0.764513,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "alexnet_voc2007",
+      "model_type": "alexnet",
+      "accuracy": 0.75988,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "googlenet_imagenet",
+      "model_type": "googlenet",
+      "accuracy": 0.753066,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "googlenet_voc2007",
+      "model_type": "googlenet",
+      "accuracy": 0.727174,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet50_nabird",
+      "model_type": "resnet50",
+      "accuracy": 0.724721,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "googlenet_caltech101",
+      "model_type": "googlenet",
+      "accuracy": 0.699646,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "googlenet_cub200",
+      "model_type": "googlenet",
+      "accuracy": 0.688744,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "googlenet_cifar10",
+      "model_type": "googlenet",
+      "accuracy": 0.672118,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet18_nabird",
+      "model_type": "resnet18",
+      "accuracy": 0.650859,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "googlenet_nabird",
+      "model_type": "googlenet",
+      "accuracy": 0.511584,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet18_cub200",
+      "model_type": "resnet18",
+      "accuracy": 0.397383,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    }
+  ],
+  "stanford_dogs": [
+    {
+      "model_name": "resnet50_imagenet",
+      "model_type": "resnet50",
+      "accuracy": 0.84289,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet50_voc2007",
+      "model_type": "resnet50",
+      "accuracy": 0.832284,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet50_cifar10",
+      "model_type": "resnet50",
+      "accuracy": 0.831469,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet50_oxford_pets",
+      "model_type": "resnet50",
+      "accuracy": 0.830186,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet50_caltech101",
+      "model_type": "resnet50",
+      "accuracy": 0.809441,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_voc2007",
+      "model_type": "resnet18",
+      "accuracy": 0.798019,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "resnet18_imagenet",
+      "model_type": "resnet18",
+      "accuracy": 0.797436,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet18_oxford_pets",
+      "model_type": "resnet18",
+      "accuracy": 0.790793,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet18_caltech101",
+      "model_type": "resnet18",
+      "accuracy": 0.788578,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet50_cub200",
+      "model_type": "resnet50",
+      "accuracy": 0.785431,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "resnet18_cifar10",
+      "model_type": "resnet18",
+      "accuracy": 0.771678,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "googlenet_voc2007",
+      "model_type": "googlenet",
+      "accuracy": 0.724009,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "googlenet_imagenet",
+      "model_type": "googlenet",
+      "accuracy": 0.715618,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "googlenet_oxford_pets",
+      "model_type": "googlenet",
+      "accuracy": 0.712704,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "googlenet_cifar10",
+      "model_type": "googlenet",
+      "accuracy": 0.705944,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "googlenet_caltech101",
+      "model_type": "googlenet",
+      "accuracy": 0.701981,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "googlenet_cub200",
+      "model_type": "googlenet",
+      "accuracy": 0.688695,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "resnet18_nabird",
+      "model_type": "resnet18",
+      "accuracy": 0.663753,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "alexnet_imagenet",
+      "model_type": "alexnet",
+      "accuracy": 0.620746,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "alexnet_oxford_pets",
+      "model_type": "alexnet",
+      "accuracy": 0.618182,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "alexnet_voc2007",
+      "model_type": "alexnet",
+      "accuracy": 0.617016,
+      "trained_on_dataset": false,
+      "source_dataset": "voc2007"
+    },
+    {
+      "model_name": "alexnet_caltech101",
+      "model_type": "alexnet",
+      "accuracy": 0.614219,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "alexnet_cub200",
+      "model_type": "alexnet",
+      "accuracy": 0.60641,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "alexnet_cifar10",
+      "model_type": "alexnet",
+      "accuracy": 0.598485,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "alexnet_nabird",
+      "model_type": "alexnet",
+      "accuracy": 0.596154,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet18_cub200",
+      "model_type": "resnet18",
+      "accuracy": 0.590443,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "resnet50_nabird",
+      "model_type": "resnet50",
+      "accuracy": 0.588462,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "googlenet_nabird",
+      "model_type": "googlenet",
+      "accuracy": 0.564336,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    }
+  ],
+  "voc2007": [
+    {
+      "model_name": "resnet50_imagenet",
+      "model_type": "resnet50",
+      "accuracy": 0.974719,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet50_oxford_pets",
+      "model_type": "resnet50",
+      "accuracy": 0.974681,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet50_cifar10",
+      "model_type": "resnet50",
+      "accuracy": 0.974565,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet50_stanford_dogs",
+      "model_type": "resnet50",
+      "accuracy": 0.974315,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet50_caltech101",
+      "model_type": "resnet50",
+      "accuracy": 0.972921,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet50_cub200",
+      "model_type": "resnet50",
+      "accuracy": 0.971729,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "resnet18_imagenet",
+      "model_type": "resnet18",
+      "accuracy": 0.96744,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "resnet18_oxford_pets",
+      "model_type": "resnet18",
+      "accuracy": 0.966247,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "resnet18_caltech101",
+      "model_type": "resnet18",
+      "accuracy": 0.965642,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "resnet18_cifar10",
+      "model_type": "resnet18",
+      "accuracy": 0.963805,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "googlenet_cifar10",
+      "model_type": "googlenet",
+      "accuracy": 0.96217,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "resnet18_stanford_dogs",
+      "model_type": "resnet18",
+      "accuracy": 0.961709,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "resnet50_nabird",
+      "model_type": "resnet50",
+      "accuracy": 0.960699,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "googlenet_oxford_pets",
+      "model_type": "googlenet",
+      "accuracy": 0.959718,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "googlenet_imagenet",
+      "model_type": "googlenet",
+      "accuracy": 0.959545,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "alexnet_oxford_pets",
+      "model_type": "alexnet",
+      "accuracy": 0.959545,
+      "trained_on_dataset": false,
+      "source_dataset": "oxford_pets"
+    },
+    {
+      "model_name": "alexnet_imagenet",
+      "model_type": "alexnet",
+      "accuracy": 0.959362,
+      "trained_on_dataset": false,
+      "source_dataset": "imagenet"
+    },
+    {
+      "model_name": "alexnet_caltech101",
+      "model_type": "alexnet",
+      "accuracy": 0.959237,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "googlenet_caltech101",
+      "model_type": "googlenet",
+      "accuracy": 0.958872,
+      "trained_on_dataset": false,
+      "source_dataset": "caltech101"
+    },
+    {
+      "model_name": "alexnet_cifar10",
+      "model_type": "alexnet",
+      "accuracy": 0.958122,
+      "trained_on_dataset": false,
+      "source_dataset": "cifar10"
+    },
+    {
+      "model_name": "googlenet_cub200",
+      "model_type": "googlenet",
+      "accuracy": 0.957978,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "googlenet_stanford_dogs",
+      "model_type": "googlenet",
+      "accuracy": 0.957843,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "alexnet_stanford_dogs",
+      "model_type": "alexnet",
+      "accuracy": 0.957766,
+      "trained_on_dataset": false,
+      "source_dataset": "stanford_dogs"
+    },
+    {
+      "model_name": "alexnet_cub200",
+      "model_type": "alexnet",
+      "accuracy": 0.957747,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    },
+    {
+      "model_name": "alexnet_nabird",
+      "model_type": "alexnet",
+      "accuracy": 0.955035,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "googlenet_nabird",
+      "model_type": "googlenet",
+      "accuracy": 0.947823,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet18_nabird",
+      "model_type": "resnet18",
+      "accuracy": 0.94163,
+      "trained_on_dataset": false,
+      "source_dataset": "nabird"
+    },
+    {
+      "model_name": "resnet18_cub200",
+      "model_type": "resnet18",
+      "accuracy": 0.936562,
+      "trained_on_dataset": false,
+      "source_dataset": "cub200"
+    }
+  ]
+}
