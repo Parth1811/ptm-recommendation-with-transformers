@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import torch
 from beautilog import logger
 from torch import nn
