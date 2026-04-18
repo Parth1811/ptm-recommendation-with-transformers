@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import torch
 from beautilog import logger
 from torch import nn
@@ -35,33 +37,29 @@ class RankingCrossAttentionTransformer(nn.Module):
     def forward(
         self,
         dataset_tokens: torch.Tensor,
-        model_tokens: torch.Tensor
+        model_tokens: torch.Tensor,
+        src_key_padding_mask: torch.Tensor | None = None,
     ) -> torch.Tensor:
         """Forward pass through cross-attention transformer.
 
         Args:
             dataset_tokens: Shape (batch_size, seq_len, d_model) - dataset features
             model_tokens: Shape (batch_size, num_models, d_model) - model embeddings
+            src_key_padding_mask: Shape (batch_size, seq_len) - True for padded positions
 
         Returns:
             logits: Shape (batch_size, num_models) - ranking scores
         """
-        # Transformer expects (batch_size, seq_len, d_model) for both inputs
-        # dataset_tokens -> encoder (source/memory)
-        # model_tokens -> decoder (target)
-
         # Pass through transformer with cross-attention
-        # output shape: (batch_size, num_models, d_model)
+        # dataset_tokens -> encoder (source/memory)
+        # model_tokens -> decoder (target, attends to encoder via cross-attention)
         output = self.transformer(
-            src=dataset_tokens,  # Encoder input
-            tgt=model_tokens,    # Decoder input (attends to encoder via cross-attention)
+            src=dataset_tokens,
+            tgt=model_tokens,
+            src_key_padding_mask=src_key_padding_mask,
+            memory_key_padding_mask=src_key_padding_mask,
         )
 
-        # Project to scalar scores: (batch_size, num_models, d_model) -> (batch_size, num_models, 1)
-        logits = self.output_projection(output)
-
-        # Squeeze last dimension: (batch_size, num_models, 1) -> (batch_size, num_models)
-        logits = logits.squeeze(-1)
-        # Return raw logits - ranking loss will handle score transformation via logsumexp
-
+        # Project to scalar scores: (batch_size, num_models, d_model) -> (batch_size, num_models)
+        logits = self.output_projection(output).squeeze(-1)
         return logits

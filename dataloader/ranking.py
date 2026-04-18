@@ -13,6 +13,31 @@ import torch
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 
+# Configurable paths — override these before first use to switch benchmarks.
+# Defaults point to the original HuggingFace model zoo files.
+_performance_json_path: Path | None = None
+_similarity_json_path: Path | None = None
+
+
+def configure_ranking_paths(
+    performance_json: str | Path | None = None,
+    similarity_json: str | Path | None = None,
+) -> None:
+    """Set custom paths for ranking data files. Call before any training starts.
+
+    Args:
+        performance_json: Path to dataset_model_performance.json
+        similarity_json: Path to dataset_similarity.json
+    """
+    global _performance_json_path, _similarity_json_path
+    if performance_json is not None:
+        _performance_json_path = Path(performance_json)
+    if similarity_json is not None:
+        _similarity_json_path = Path(similarity_json)
+    # Clear caches so new paths take effect
+    _load_dataset_performance_maps.cache_clear()
+    _load_similarity_matrix.cache_clear()
+
 
 def _normalize_name(name: str) -> str:
     return name.lower().replace("-", "_").replace(" ", "_").replace("_embedding", "").strip()
@@ -20,7 +45,7 @@ def _normalize_name(name: str) -> str:
 
 @lru_cache(maxsize=None)
 def _load_dataset_performance_maps() -> Tuple[Dict[str, list[Tuple[str, float]]], Dict[str, str]]:
-    path = BASE_DIR / "constants" / "dataset_model_performance.json"
+    path = _performance_json_path or (BASE_DIR / "constants" / "dataset_model_performance.json")
     if not path.exists():
         return {}, {}
 
@@ -46,7 +71,7 @@ def _load_dataset_performance_maps() -> Tuple[Dict[str, list[Tuple[str, float]]]
 
 @lru_cache(maxsize=None)
 def _load_similarity_matrix() -> Dict[str, Dict[str, float]]:
-    path = BASE_DIR / "constants" / "dataset_similarity.json"
+    path = _similarity_json_path or (BASE_DIR / "constants" / "dataset_similarity.json")
     if not path.exists():
         return {}
 
@@ -58,7 +83,6 @@ def _load_similarity_matrix() -> Dict[str, Dict[str, float]]:
     for dataset_name, similarities in raw.items():
         dataset_key = _normalize_name(dataset_name)
         matrix[dataset_key] = { _normalize_name(other_dataset): float(score) for other_dataset, score in similarities.items() }
-        # matrix[dataset_key] = dict(sorted(matrix[dataset_key].items(), key=lambda x: x[1], reverse=True))
 
     return matrix
 
@@ -90,6 +114,7 @@ def compute_true_ranks(dataset_name: str, model_names: Sequence[str], one_index:
     dataset_key = _normalize_name(dataset_name)
 
     scores = []
+    zero_score_models = []
     for model_name in model_names:
         model_key = _normalize_name(model_name)
         direct_score = dataset_map.get(dataset_key, {}).get(model_key)
@@ -97,7 +122,16 @@ def compute_true_ranks(dataset_name: str, model_names: Sequence[str], one_index:
             score = float(direct_score) + 1
         else:
             score = _compute_weighted_score(dataset_key, model_key, dataset_map, model_map, similarity_matrix)
+            if score == 0.0:
+                zero_score_models.append(model_name)
         scores.append(score)
+
+    if zero_score_models:
+        logging.warning(
+            "Dataset '%s': %d/%d models have score=0.0 (not in performance DB): %s",
+            dataset_name, len(zero_score_models), len(model_names),
+            zero_score_models[:3],
+        )
 
     if not scores:
         return torch.tensor([], dtype=torch.long)
@@ -116,4 +150,4 @@ def compute_true_ranks(dataset_name: str, model_names: Sequence[str], one_index:
         return sorted_indices
 
 
-__all__ = ["compute_true_ranks"]
+__all__ = ["compute_true_ranks", "configure_ranking_paths"]

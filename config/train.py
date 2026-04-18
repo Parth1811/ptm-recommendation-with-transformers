@@ -64,7 +64,10 @@ class TransformerTrainerConfig(BaseTrainerConfig):
 
     SECTION: ClassVar[str] = "transformer_trainer"
 
-    # Model architecture
+    # Model selection: "custom_similarity" or "ranking_cross_attention"
+    model_type: str = "custom_similarity"
+
+    # Model architecture (used when model_type is ranking_cross_attention)
     d_model: int = 512
     nhead: int = 8
     num_encoder_layers: int = 6
@@ -80,11 +83,43 @@ class TransformerTrainerConfig(BaseTrainerConfig):
     smooth_l1_weight: float = 0.1
     model_save_directory: Path = Path("artifacts/models/transformer")
 
+    # LR scheduler type: "reduce_on_plateau" or "cosine_warm_restarts"
+    scheduler_type: str = "reduce_on_plateau"
+    cosine_t0: int = 50
+    cosine_t_mult: int = 2
+
+    # Temperature scheduling
+    use_temperature_scheduler: bool = True
+    initial_temperature: float = 2.0
+    final_temperature: float = 1.0
+    temperature_schedule: str = "cosine"  # "linear", "exponential", or "cosine"
+    temperature_warmup_steps: int = 0
+
+    # Ranking data paths (None = use defaults from constants/)
+    performance_json: Path | None = None
+    similarity_json: Path | None = None
+
+    # Load from checkpoint
+    load_from_checkpoint: bool = False
+    checkpoint_path: Path | None = None
+    only_load_model_weights: bool = False
+
+
+@dataclass
+class SelfAttentionBaselineTrainerConfig(BaseTrainerConfig):
+    """Configuration for training the SelfAttentionBaseline (Model Spider proxy)."""
+
+    SECTION: ClassVar[str] = "self_attention_baseline_trainer"
+
+    shuffle: bool = True
+    validate_every_n_epochs: int = 1
+    model_save_directory: Path = Path("artifacts/models/self_attention_baseline")
+
     # Temperature scheduling
     use_temperature_scheduler: bool = True
     initial_temperature: float = 3.0
     final_temperature: float = 1.0
-    temperature_schedule: str = "cosine"  # "linear", "exponential", or "cosine"
+    temperature_schedule: str = "cosine"
     temperature_warmup_steps: int = 0
 
     # Load from checkpoint

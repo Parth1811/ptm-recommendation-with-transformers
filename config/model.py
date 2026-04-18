@@ -57,3 +57,38 @@ class RankingCrossAttentionTransformerConfig(SubSectionParser):
     dim_feedforward: int = 2048
     dropout: float = 0.1
     num_models: int = 16
+
+
+@dataclass
+class CustomSimilarityTransformerConfig(SubSectionParser):
+    """Configuration for the cross-attention similarity transformer (correct architecture).
+
+    Uses nn.MultiheadAttention directly (no causal masking) with
+    dataset tokens as queries and model tokens as keys/values.
+    """
+
+    SECTION: ClassVar[str] = "custom_similarity_transformer"
+
+    embed_dim: int = 512
+    num_heads: int = 8
+    num_layers: int = 1
+    dropout: float = 0.1
+    batch_first: bool = True
+
+
+@dataclass
+class SelfAttentionBaselineConfig(SubSectionParser):
+    """Configuration for the self-attention baseline (Model Spider proxy).
+
+    Concatenates model + dataset tokens and applies self-attention,
+    serving as ablation A1 to compare against Cross-Select's cross-attention.
+    """
+
+    SECTION: ClassVar[str] = "self_attention_baseline"
+
+    embed_dim: int = 512
+    num_heads: int = 8
+    num_layers: int = 1
+    dropout: float = 0.1
+    use_learnable_model_tokens: bool = False
+    num_models: int = 10

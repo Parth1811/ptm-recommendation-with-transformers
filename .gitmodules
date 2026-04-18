@@ -1,0 +1,3 @@
+[submodule "parc"]
+	path = parc
+	url = https://github.com/Parth1811/parc.git
